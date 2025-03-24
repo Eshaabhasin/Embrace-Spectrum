@@ -1,6 +1,6 @@
 import React from "react";
 import image from "../../assets/boy.png";
-
+import { NavLink } from "react-router-dom";
 function Home() {
     return (
         <>
@@ -9,7 +9,7 @@ function Home() {
                 <div className="flex justify-end mr-7">
                     <ul className="flex space-x-12 mt-7 text-[24px] text-white font-semibold">
                         <li>Home</li>
-                        <li>Talk Coach</li>
+                       <NavLink to='/chatbot'> <li>Talk Coach</li></NavLink>
                         <li>Calm Assistant</li>
                         <li>Easy Read</li>
                         <li>Inclusive Job & Community Hub</li>
