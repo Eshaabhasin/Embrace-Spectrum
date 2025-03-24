@@ -7,7 +7,7 @@ const AuthForm = () => {
     const [password, setPassword] = useState("");
     const [isSignUp, setIsSignUp] = useState(false);
     const [error, setError] = useState("");
-    const navigate = useNavigate(); // ✅ Use navigate for redirection
+    const navigate = useNavigate(); 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -28,7 +28,7 @@ const AuthForm = () => {
         try {
             await dosignInWithGoogle();
             alert("Signed in with Google!");
-            navigate("/home"); // ✅ Redirect after Google Sign-in
+            navigate("/home");
         } catch (err) {
             setError(err.message);
         }

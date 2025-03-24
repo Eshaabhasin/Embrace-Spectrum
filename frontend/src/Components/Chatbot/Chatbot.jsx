@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import NavBar from "../NavBar/NavBar";
 
 function Chatbot() {
     const [messages, setMessages] = useState([]);
@@ -10,7 +11,7 @@ function Chatbot() {
 
         const userMessage = { text: input, sender: "user" };
         setMessages((prev) => [...prev, userMessage]);
-        setInput(""); // Clear input immediately
+        setInput("");
 
         try {
             const response = await fetch("http://localhost:5001/chat", {
@@ -42,7 +43,7 @@ function Chatbot() {
 
         recognition.onresult = (event) => {
             const transcript = event.results[0][0].transcript;
-            setInput(transcript); // Set transcribed speech as input
+            setInput(transcript); 
         };
 
         recognition.start();
@@ -50,33 +51,22 @@ function Chatbot() {
 
     return (
         <div className="bg-[#5C7EEC] min-h-screen px-10 flex flex-col">
-            {/* Navbar */}
-            <div className="flex justify-end mr-7">
-                <ul className="flex space-x-12 mt-7 text-[24px] text-white font-semibold">
-                    <li>Home</li>
-                    <li>Talk Coach</li>
-                    <li>Calm Assistant</li>
-                    <li>Easy Read</li>
-                    <li>Inclusive Job & Community Hub</li>
-                </ul>
-            </div>
-
+            <NavBar></NavBar>
             {/* Main Section */}
-            <div className="mt-20 px-20 flex justify-between items-start">
+            <div className="mt-20 flex justify-between items-start">
                 {/* Left Section - Talk Coach Text */}
                 <div>
-                    <h1 className="text-yellow-300 text-[50px] font-extrabold tracking-wide drop-shadow-lg">
-                        Talk Coach 👩🏻‍💼
-                    </h1>
-                    <p className="text-gray-200 text-lg font-bold mt-4 text-[27px]">
+                <h1 className="bg-gradient-to-r from-yellow-100 via-orange-300 to-red-300 bg-clip-text text-transparent text-8xl mt-10 font-extrabold tracking-wide">
+                    Talk Coach
+                </h1>
+                    <p className="text-gray-200 text-2xl font-bold mt-8">
                         Your personal AI-powered communication mentor. Whether it's <br />
                         public speaking, social conversations, or professional discussions, <br />
-                        Talk Coach is here to help 🤝.
+                        Talk Coach is here to help.
                     </p>
                 </div>
 
-                {/* Right Section - Chatbox (Extreme Right) */}
-                <div className="absolute right-10 bottom-10 bg-white p-6 rounded-xl shadow-lg w-[500px] h-[660px] flex flex-col">
+                <div className="absolute right-5 bottom-8 backdrop-blur-sm bg-white/70 p-6 rounded-xl shadow-lg w-[450px] h-[550px] flex flex-col">
                     <div className="flex-1 overflow-y-auto space-y-4 flex flex-col">
                         {messages.map((msg, index) => (
                             <div
