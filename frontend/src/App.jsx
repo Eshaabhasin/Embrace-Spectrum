@@ -6,6 +6,7 @@ import Chatbot from './Components/Chatbot/Chatbot';
 import ImageGenerator from './Components/ImageGenerator/ImageGenerator';
 import './App.css';
 import SentimentAnalyser from './Components/SentimentAnalysis/SentimentAnalyser';
+import PaintApp from './Components/PaintApp/PaintApp';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/chatbot" element={<Chatbot/>}/>
         <Route path="/image" element={<ImageGenerator/>}/>
         <Route path="/Sentiment" element={<SentimentAnalyser/>}/>
+        <Route path="/paint" element={<PaintApp/>}/>
       </Routes>
     </Router>
   );
