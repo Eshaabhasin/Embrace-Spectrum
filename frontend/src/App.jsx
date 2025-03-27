@@ -7,7 +7,7 @@ import ImageGenerator from './Components/ImageGenerator/ImageGenerator';
 import './App.css';
 import SentimentAnalyser from './Components/SentimentAnalysis/SentimentAnalyser';
 import PaintApp from './Components/PaintApp/PaintApp';
-import Journal from './Components/Journal/Journal';
+import JournalBoard from './Components/JournalBoard/JournalBoard';
 function App() {
   return (
     <Router> 
@@ -18,7 +18,7 @@ function App() {
         <Route path="/image" element={<ImageGenerator/>}/>
         <Route path="/Sentiment" element={<SentimentAnalyser/>}/>
         <Route path="/paint" element={<PaintApp/>}/>
-        <Route path="/journal" element={<Journal/>}/>
+        <Route path="/journalboard" element={<JournalBoard/>}/>
       </Routes>
     </Router>
   );
