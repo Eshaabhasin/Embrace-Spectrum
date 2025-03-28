@@ -1,10 +1,9 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { 
   Book, Mic, Target, Sparkles, X, Check, 
-  PlusCircle, Clock, AlertCircle, Brain, 
+  PlusCircle, Clock, Edit3, Trash2, 
   Headphones, Sun, Move, UserCheck, 
-  Paperclip, ArrowRight, Stars, Lightbulb, Smile
+  Paperclip, ArrowRight, Stars, Lightbulb, Smile, Brain
 } from 'lucide-react';
 
 const JournalBoard = () => {
@@ -35,6 +34,7 @@ const JournalBoard = () => {
   const [newTask, setNewTask] = useState("");
   const [draggedTask, setDraggedTask] = useState(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [editingEntry, setEditingEntry] = useState(null);
   
   // Sensory and Emotional Support
   const [sensoryProfile, setSensoryProfile] = useState({
@@ -156,6 +156,57 @@ const JournalBoard = () => {
 
     entryTitleRef.current?.focus();
     alert("Journal entry saved successfully!");
+  };
+
+  // Edit Entry Function
+  const startEditingEntry = (entry) => {
+    setEditingEntry(entry);
+    setSelectedView('journal');
+    setCurrentEntry({
+      id: entry.id,
+      title: entry.title,
+      content: entry.content,
+      mood: entry.mood,
+      tags: entry.tags || [],
+      attachments: entry.attachments || [],
+      timestamp: entry.timestamp,
+      emojis: entry.emojis || []
+    });
+  };
+
+  // Update Existing Entry
+  const updateEntry = () => {
+    if (!currentEntry.content.trim() && !currentEntry.title.trim()) {
+      alert("Please add a title or content before saving.");
+      return;
+    }
+
+    setEntries(prev => prev.map(entry => 
+      entry.id === currentEntry.id 
+        ? { ...currentEntry, timestamp: new Date() } 
+        : entry
+    ));
+    
+    // Reset entry and editing state
+    setCurrentEntry({
+      title: '',
+      content: '',
+      mood: null,
+      tags: [],
+      attachments: [],
+      timestamp: null,
+      emojis: []
+    });
+    setEditingEntry(null);
+    alert("Journal entry updated successfully!");
+  };
+
+  // Delete Entry Function
+  const deleteEntry = (entryId) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this journal entry?");
+    if (confirmDelete) {
+      setEntries(prev => prev.filter(entry => entry.id !== entryId));
+    }
   };
 
   // Add Attachment
@@ -285,12 +336,12 @@ const JournalBoard = () => {
 
   return (
     <div className={`
-      flex h-screen bg-blue-50
+      flex h-screen bg-gradient-to-br from-indigo-50 to-sky-100
       ${assistiveTools.textSize === 'small' ? 'text-sm' : 
         assistiveTools.textSize === 'large' ? 'text-lg' : 'text-base'}
     `}>
       {/* Sidebar */}
-      <div className="w-64 bg-blue-100 border-r border-blue-200 p-4 flex flex-col">
+      <div className="w-64 bg-white/70 backdrop-blur-md border-r border-indigo-100 p-4 flex flex-col shadow-md">
         <div className="flex items-center mb-6">
           <Brain className="w-6 h-6 mr-2 text-blue-700" />
           <h1 className="text-xl font-bold text-blue-900">NeuroJournal</h1>
