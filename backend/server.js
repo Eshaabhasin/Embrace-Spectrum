@@ -1,4 +1,3 @@
-
 import express from "express";
 import cors from "cors";
 import { GoogleGenerativeAI } from "@google/generative-ai";
@@ -11,7 +10,7 @@ const genAI = new GoogleGenerativeAI("AIzaSyBHBovnMnVte6fOiONYQB64svJ3R8WBNdw");
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: "10mb" })); // Increased limit for handling images
 
 // Function to clean up responses
 const trimResponse = (message) => {
@@ -45,16 +44,21 @@ app.post("/chat", async (req, res) => {
 
 // 📌 **Story & Image Generation Endpoint**
 app.post("/generate-story", async (req, res) => {
-  const { prompt } = req.body;
+  const { prompt, image } = req.body;
 
   if (!prompt) {
     return res.status(400).json({ error: "Prompt is required." });
   }
 
   try {
+    // Include image data in the prompt if available
+    const imageContext = image ? "This is the related image: " + image : "No image provided.";
+
     // Generate a simplified story
     const storyResult = await model.generateContent(
-      `Write a simple, engaging, and autism-friendly story based on this prompt: ${prompt}. The story should be easy to read and visualize.`
+      `Write a simple, engaging, and autism-friendly story based on this prompt: ${prompt}. 
+       Also, consider this image input while writing the story: ${imageContext}.
+       The story should be easy to read and visualize.`
     );
     const storyResponse = await storyResult.response;
     const storyText =
