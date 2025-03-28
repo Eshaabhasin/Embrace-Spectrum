@@ -9,7 +9,7 @@ const NavBar = () => {
     };
 
     return (
-        <nav className=" w-[97vw] ml-4 rounded-[1.3vw] fixed top-5  z-[999]">
+        <div className=" w-[97vw] ml-4 rounded-[1.3vw] fixed top-5 z-[999]">
             <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
                 <a href="" className="flex items-center space-x-3 rtl:space-x-reverse">
                 </a>
@@ -37,7 +37,7 @@ const NavBar = () => {
                             <Link to='/Investimate'><span className="block py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0  md:p-0 dark:text-white md:dark:hover:text-blue-900 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Calm Assistant</span></Link>
                         </li>
                         <li>
-                            <Link to='/SamvaadAI'><span className="block py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0  md:p-0 dark:text-white md:dark:hover:text-blue-900 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Easy Read</span></Link>
+                            <Link to='/FeelReader'><span className="block py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0  md:p-0 dark:text-white md:dark:hover:text-blue-900 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Feel Reader</span></Link>
                         </li>
                         <li>
                             <Link to='/Paths'><span className="block py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0  md:p-0 dark:text-white md:dark:hover:text-blue-900 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Job & Community Hub</span></Link>
@@ -45,7 +45,7 @@ const NavBar = () => {
                     </ul>
                 </div>
             </div>
-        </nav>
+        </div>
     );
 };
 

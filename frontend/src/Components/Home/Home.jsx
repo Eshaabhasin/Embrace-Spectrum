@@ -1,9 +1,7 @@
 import React from "react";
-import image from "../../assets/boy.png";
-import { NavLink } from "react-router-dom";
 import NavBar from "../NavBar/NavBar";
 function Home() {
-    return (
+    return (    
         <>
         <NavBar></NavBar>
             <div className="bg-[#5C7EEC] min-h-screen px-10">
