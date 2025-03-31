@@ -1,1 +1,1 @@
-EmbraceSpectrum is an inclusive platform designed to support neurodivergent individuals by providing an intuitive and structured environment for journaling, task management, and creative expression.
+​EmbraceSpectrum is an inclusive platform meticulously designed to support neurodivergent individuals by providing an intuitive, structured, and sensory-friendly environment for journaling, task management, and creative expression. By integrating user-centered design principles, EmbraceSpectrum aims to enhance daily productivity and well-being for its users.​
