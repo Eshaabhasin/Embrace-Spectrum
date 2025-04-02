@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import NavBar from '../NavBar/NavBar';
 
 const NeurodiversityJobPortal = () => {
   const [step, setStep] = useState(1);
@@ -576,10 +577,15 @@ const NeurodiversityJobPortal = () => {
   );
 
   return (
-    <div className="max-w-7xl mx-auto p-4">
-      <header className="mb-8">
+    <div className="w-8xl px-20 p-4 py-10">
+      <header className="mb-8 flex">
+        <a href="/Home" className="flex items-center justify-center w-10 h-10 border-1 border-black rounded-full text-black hover:bg-blue-100 transition">
+          ←
+        </a>
+        <div className='ml-5'>
         <h1 className="text-5xl font-bold mb-2">NeuroTalent</h1>
         <p className="text-gray-600">Connecting neurodivergent talent with inclusive employers</p>
+        </div>
       </header>
       
       <div className="mb-8">
