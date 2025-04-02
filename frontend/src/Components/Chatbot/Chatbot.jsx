@@ -57,7 +57,7 @@ function Chatbot() {
                 {/* Left Section - Talk Coach Text */}
                 <div>
                 <h1 className="bg-gradient-to-r from-yellow-100 via-orange-300 to-red-300 bg-clip-text text-transparent text-8xl mt-10 font-extrabold tracking-wide">
-                    Talk Coach
+                    Solace
                 </h1>
                     <p className="text-gray-200 text-2xl font-bold mt-8">
                         Your personal AI-powered communication mentor. Whether it's <br />

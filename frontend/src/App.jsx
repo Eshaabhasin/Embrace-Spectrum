@@ -9,6 +9,7 @@ import SentimentAnalyser from './Components/SentimentAnalysis/SentimentAnalyser'
 import PaintApp from './Components/PaintApp/PaintApp';
 import GeminiLive from './Components/GeminiLive/GeminiLIve';
 import JournalBoard from './Components/JournalBoard/JournalBoard';
+import NeurodiversityJobPortal from './Components/JobSearch/JobSearch';
 function App() {
   return (
     <Router> 
@@ -21,6 +22,7 @@ function App() {
         <Route path="/paint" element={<PaintApp/>}/>
         <Route path="/GeminiLive" element={<GeminiLive/>}/>
         <Route path="/journalboard" element={<JournalBoard/>}/>
+        <Route path="/jobs" element={<NeurodiversityJobPortal/>}/>
       </Routes>
     </Router>
   );

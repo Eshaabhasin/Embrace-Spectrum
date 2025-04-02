@@ -86,9 +86,6 @@
   font-style: italic;
 }
 
-.hidden {
-  display: none;
-}
 
 .flex {
   display: flex;
@@ -102,9 +99,6 @@
   width: 100vw;
 }
 
-.flex-col {
-  flex-direction: column;
-}
 
 @media (prefers-reduced-motion: no-preference) {}
 
@@ -155,12 +149,11 @@
     height: 50%;
     overflow-y: auto;
   }
-}
 
-/* video player */
 .stream {
   flex-grow: 1;
   max-width: 90%;
   border-radius: 32px;
   max-height: fit-content;
+}
 }

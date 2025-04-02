@@ -7,7 +7,6 @@ import {
 } from 'lucide-react';
 
 const JournalBoard = () => {
-  // Enhanced State Management
   const [entries, setEntries] = useState([]);
   const [currentEntry, setCurrentEntry] = useState({
     title: '',
@@ -36,7 +35,6 @@ const JournalBoard = () => {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [editingEntry, setEditingEntry] = useState(null);
   
-  // Sensory and Emotional Support
   const [sensoryProfile, setSensoryProfile] = useState({
     noise: false,
     light: false,
@@ -86,7 +84,6 @@ const JournalBoard = () => {
     }
   ];
 
-  // Format Date Helper
   const formatDate = (date) => {
     return new Date(date).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -97,7 +94,6 @@ const JournalBoard = () => {
     });
   };
 
-  // Speech-to-Text Function
   const handleSpeechToText = () => {
     if (!('webkitSpeechRecognition' in window)) {
       alert("Speech recognition not supported in this browser");
@@ -274,7 +270,6 @@ const JournalBoard = () => {
     }));
   };
 
-  // Toggle Sensory Profile
   const toggleSensoryProfile = (key) => {
     setSensoryProfile(prev => ({
       ...prev,
@@ -282,7 +277,6 @@ const JournalBoard = () => {
     }));
   };
 
-  // Add Emoji to Entry
   const addEmojiToEntry = (emoji) => {
     setCurrentEntry(prev => ({
       ...prev,
@@ -341,11 +335,13 @@ const JournalBoard = () => {
         assistiveTools.textSize === 'large' ? 'text-lg' : 'text-base'}
     `}>
       {/* Sidebar */}
-      <div className="w-64 bg-white/70 backdrop-blur-md border-r border-indigo-100 p-4 flex flex-col shadow-md">
-        <div className="flex items-center mb-6">
-          <Brain className="w-6 h-6 mr-2 text-blue-700" />
-          <h1 className="text-xl font-bold text-blue-900">NeuroJournal</h1>
-        </div>
+      <div className="w-64 bg-[#65729c] backdrop-blur-md border-r border-indigo-100 p-4 flex flex-col shadow-md">
+      <div className="flex items-center mb-6">
+        <a href="/Home" className="flex items-center justify-center w-10 h-10 border-2 border-white rounded-full text-white hover:bg-white hover:text-black transition">
+          ←
+        </a>
+        <h1 className="text-4xl font-bold text-white ml-4">Journal</h1>
+      </div>
 
         {/* View Selection */}
         <div className="mt-4 space-y-2">
@@ -354,8 +350,8 @@ const JournalBoard = () => {
             className={`
               w-full p-2 rounded-md flex items-center
               ${selectedView === 'journal' 
-                ? 'bg-blue-200 text-blue-800' 
-                : 'hover:bg-blue-100 text-blue-600'}
+                ? 'text-white' 
+                : 'hover:bg-blue-100 text-white'}
             `}
           >
             <Book className="w-5 h-5 mr-2" />
@@ -366,8 +362,8 @@ const JournalBoard = () => {
             className={`
               w-full p-2 rounded-md flex items-center
               ${selectedView === 'history' 
-                ? 'bg-blue-200 text-blue-800' 
-                : 'hover:bg-blue-100 text-blue-600'}
+                ? ' text-white' 
+                : 'hover:bg-blue-300 text-white'}
             `}
           >
             <Clock className="w-5 h-5 mr-2" />
@@ -376,8 +372,8 @@ const JournalBoard = () => {
         </div>
 
         {/* Assistive Tools Section */}
-        <div className="mb-4 bg-blue-200 p-2 rounded-md mt-4">
-          <h3 className="text-sm font-semibold text-blue-900 mb-2">
+        <div className="mb-4 p-2 rounded-md mt-4">
+          <h3 className="text-lg font-semibold text-white mb-2">
             Assistive Tools
           </h3>
           <div className="flex space-x-2">
@@ -415,8 +411,8 @@ const JournalBoard = () => {
               className={`
                 flex items-center w-full p-2 rounded-md transition-colors
                 ${selectedSection === section.id 
-                  ? 'bg-blue-200 text-blue-800' 
-                  : 'hover:bg-blue-100 text-blue-600'}
+                  ? 'bg-blue-400 text-white' 
+                  : 'hover:bg-blue-600 text-white'}
               `}
             >
               {section.icon}
@@ -472,7 +468,7 @@ const JournalBoard = () => {
                 title: e.target.value
               }))}
               placeholder="Entry Title"
-              className="w-full p-2 text-xl font-semibold mb-2 border-b border-blue-200"
+              className="w-full p-2 text-xl font-white font-semibold mb-2 border-b border-blue-200"
             />
 
             {/* Textarea with Emoji Picker */}

@@ -28,19 +28,22 @@ const NavBar = () => {
                 <div className={`${isMenuOpen ? 'block' : 'hidden'} w-full md:block md:w-auto`} id="navbar-default">
                     <ul className="font-bold lg:text-lg text-2xl flex flex-col p-4 md:p-0 mt-4 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 d dark:border-gray-700">
                         <li>
-                            <Link to='/Home'><span className="block py-2 px-3 text-white rounded md:bg-transparent md:p-0 dark:text-white  md:dark:text-blue-900" aria-current="page">Home</span></Link>
+                            <Link to='/Home'><span className="block py-2 px-3 text-white rounded md:bg-transparent md:p-0 dark:text-white md:dark:hover:text-blue-900" aria-current="page">Home</span></Link>
                         </li>
                         <li>
-                            <Link to='/chatbot'><span className="block py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0  md:p-0 dark:text-white md:dark:hover:text-blue-900 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Talk Coach</span></Link>
+                            <Link to='/chatbot'><span className="block py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0  md:p-0 dark:text-white md:dark:hover:text-blue-900 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Solace</span></Link>
                         </li>
                         <li>
-                            <Link to='/calm'><span className="block py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0  md:p-0 dark:text-white md:dark:hover:text-blue-900 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Calm Assistant</span></Link>
+                            <Link to='/Geminilive'><span className="block py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0  md:p-0 dark:text-white md:dark:hover:text-blue-900 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Talk Coach</span></Link>
                         </li>
                         <li>
                             <Link to='/FeelReader'><span className="block py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0  md:p-0 dark:text-white md:dark:hover:text-blue-900 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Feel Reader</span></Link>
                         </li>
                         <li>
-                            <Link to='/Paths'><span className="block py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0  md:p-0 dark:text-white md:dark:hover:text-blue-900 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Job & Community Hub</span></Link>
+                            <Link to='/Journalboard '><span className="block py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0  md:p-0 dark:text-white md:dark:hover:text-blue-900 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Journal</span></Link>
+                        </li>
+                        <li>
+                            <Link to='/jobs'><span className="block py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0  md:p-0 dark:text-white md:dark:hover:text-blue-900 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Job & Community Hub</span></Link>
                         </li>
                     </ul>
                 </div>

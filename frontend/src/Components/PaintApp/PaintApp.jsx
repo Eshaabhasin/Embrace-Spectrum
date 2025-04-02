@@ -25,7 +25,6 @@ const PaintApp = () => {
       ctx.beginPath();
       ctx.moveTo(pos.x, pos.y);
     } else if (shape) {
-      // Create a temporary canvas for shape preview
       const tempCanvas = document.createElement("canvas");
       tempCanvas.width = canvas.width;
       tempCanvas.height = canvas.height;
@@ -87,7 +86,7 @@ const PaintApp = () => {
 
   const stopDrawing = () => {
     setDrawing(false);
-    setMode("brush"); // Reset to brush mode after drawing a shape
+    setMode("brush"); 
   };
 
   const clearCanvas = () => {
@@ -110,14 +109,12 @@ const PaintApp = () => {
       <div className="w-64 bg-[#5C7EEC] text-white p-4 flex flex-col space-y-3">
         <h1 className="text-xl font-bold">🎨 Paint App</h1>
 
-        {/* Tools */}
         <div>
           <h2 className="font-semibold mb-1">Tools</h2>
           <button className={`w-full p-2 rounded ${mode === "brush" ? "bg-gray-600" : ""}`} onClick={() => { setMode("brush"); setShape(null); }}>🖌️ Brush</button>
           <button className={`w-full p-2 rounded ${mode === "eraser" ? "bg-gray-600" : ""}`} onClick={() => { setMode("eraser"); setShape(null); }}>🧽 Eraser</button>
         </div>
 
-        {/* Shapes */}
         <div>
           <h2 className="font-semibold mb-1">Shapes</h2>
           <button className={`w-full p-2 rounded ${shape === "rectangle" ? "bg-gray-600" : ""}`} onClick={() => { setShape("rectangle"); setMode(null); }}>▭ Rectangle</button>
@@ -125,7 +122,6 @@ const PaintApp = () => {
           <button className={`w-full p-2 rounded ${shape === "triangle" ? "bg-gray-600" : ""}`} onClick={() => { setShape("triangle"); setMode(null); }}>🔺 Triangle</button>
         </div>
 
-        {/* Colors */}
         <div>
           <h2 className="font-semibold mb-1">Colors</h2>
           <input type="color" value={brushColor} onChange={(e) => setBrushColor(e.target.value)} className="w-full h-8" />
@@ -133,20 +129,17 @@ const PaintApp = () => {
           <input type="color" value={fillColor} onChange={(e) => setFillColor(e.target.value)} className="w-full h-8" />
         </div>
 
-        {/* Brush Size */}
         <div>
           <h2 className="font-semibold mb-1">Brush Size</h2>
           <input type="range" min="2" max="20" value={brushSize} onChange={(e) => setBrushSize(e.target.value)} className="w-full" />
         </div>
 
-        {/* Actions */}
         <div>
           <button onClick={clearCanvas} className="w-full bg-red-500 p-2 rounded">🗑️ Clear</button>
           <button onClick={saveCanvas} className="w-full bg-green-500 p-2 rounded mt-2">💾 Save</button>
         </div>
       </div>
 
-      {/* Canvas */}
       <div className="flex-1 flex items-center justify-center bg-gray-300">
         <canvas
           ref={canvasRef}

@@ -4,16 +4,14 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import axios from 'axios';
 
 const PDFEmotionReader = () => {
-  const [pdfText, setPdfText] = useState('');
+  const [setPdfText] = useState('');
   const [textWithEmotions, setTextWithEmotions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // API Keys
   const GOOGLE_API_KEY = 'AIzaSyCN7qtGsHboeYuMffK-eyBpvMLVP5XHemc'; 
   const PDFCO_API_KEY = 'prableensingh0401@gmail.com_k0TNlK1YpJ4vrfdUVgbYMQJqFyZiv0Kd7P7mwB7DLj5Jk3XP4NSxb1sulOZDqlYO';
 
-  // Emotion mapping with dynamic color scheme
   const emotionMap = {
     'happy': { 
       color: 'bg-yellow-100 border-yellow-300', 
@@ -41,7 +39,6 @@ const PDFEmotionReader = () => {
     }
   };
 
-  // Extract PDF text (previous implementation remains the same)
   const extractPDFText = async (file) => {
     setIsLoading(true);
     setError(null);
@@ -98,7 +95,6 @@ const PDFEmotionReader = () => {
       const genAI = new GoogleGenerativeAI(GOOGLE_API_KEY);
       const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
-      // Limit text length to prevent exceeding token limit
       const truncatedText = text.slice(0, 5000);
 
       const prompt = `
@@ -242,15 +238,15 @@ const PDFEmotionReader = () => {
                       <div>
                         <span className="font-semibold text-sm capitalize">
                           {item.emotion} Emotion 
-                          <span className="ml-2 text-xs opacity-70">
+                          {/* <span className="ml-2 text-xs opacity-70">
                             (Intensity: {item.intensity})
-                          </span>
+                          </span> */}
                         </span>
                       </div>
                       <button 
                         onClick={() => speakText(item.paragraph)}
                         className={`
-                          px-3 py-1 rounded text-sm 
+                          px-3 py-1 rounded text-sm bg-amber-400 
                           ${emotionDetails.textColor.replace('text-', 'bg-')} 
                           bg-opacity-20 hover:bg-opacity-30 transition-all
                         `}
