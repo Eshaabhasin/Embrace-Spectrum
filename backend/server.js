@@ -5,23 +5,30 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 const app = express();
 const port = 5001;
 
-const genAI = new GoogleGenerativeAI("AIzaSyBdEFLrPJ1pVPZzFJT5m-MOQQ9Y8vMKluU"); 
+// Gemini AI setup
+const genAI = new GoogleGenerativeAI("AIzaSyBdEFLrPJ1pVPZzFJT5m-MOQQ9Y8vMKluU");
 const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
-app.use(cors());
-app.use(express.json({ limit: "50mb" })); 
+// ✅ CORS middleware with allowed origin (your Vercel frontend)
+app.use(cors({
+  origin: "https://embrace-spectrum.vercel.app", // ⬅️ Allow your Vercel frontend
+  methods: ["GET", "POST"],
+  credentials: true
+}));
 
+app.use(express.json({ limit: "50mb" }));
 
+// ✅ Health check route
 app.get("/test", (req, res) => {
   res.status(200).send("✅ Backend is up and running!");
 });
 
-// Clean Response Helper
+// ✅ Clean response helper
 const trimResponse = (message) => {
   return message ? message.trim() : "I couldn't generate a response.";
 };
 
-// Chatbot Endpoint
+// ✅ Chatbot endpoint
 app.post("/chat", async (req, res) => {
   const { message } = req.body;
 
@@ -46,7 +53,7 @@ app.post("/chat", async (req, res) => {
   }
 });
 
-// Generate Story from Paint App Drawing
+// ✅ Generate story from drawing and prompt
 app.post("/generate-story", async (req, res) => {
   const { prompt, imageBase64, includeDrawing = true } = req.body;
 
@@ -56,14 +63,14 @@ app.post("/generate-story", async (req, res) => {
 
   try {
     let generationParts = [];
-    
-    // Add text prompt
+
+    // Add prompt text
     generationParts.push({
       text: `Write a simple, engaging, and autism-friendly story based on this prompt: ${prompt}.
              The story should be easy to read and visualize.`
     });
 
-    // Add image if provided and includedDrawing is true
+    // Add drawing if provided
     if (includeDrawing && imageBase64) {
       generationParts.push({
         inlineData: {
@@ -71,20 +78,18 @@ app.post("/generate-story", async (req, res) => {
           data: imageBase64
         }
       });
-      
-      // Modify the prompt to reference the drawing
+
       generationParts[0].text += " Use the drawing provided to inspire characters, settings, or plot elements in the story.";
     }
 
-    // Generate the story using text and optional image
     const result = await model.generateContent({
       contents: [{ role: "user", parts: generationParts }]
     });
-    
+
     const response = result.response;
     const storyText = response.text() || "I couldn't generate a story.";
 
-    return res.status(200).json({ 
+    return res.status(200).json({
       story: trimResponse(storyText),
       success: true
     });
