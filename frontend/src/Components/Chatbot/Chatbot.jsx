@@ -14,7 +14,7 @@ function Chatbot() {
         setInput("");
 
         try {
-            const response = await fetch("http://localhost:5001/chat", {
+            const response = await fetch("https://embrace-spectrum.onrender.com/chat", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ message: input }),
@@ -50,8 +50,9 @@ function Chatbot() {
     };
 
     return (
+        <>
+        <NavBar></NavBar>
         <div className="bg-[#5C7EEC] min-h-screen px-10 flex flex-col">
-            <NavBar></NavBar>
             {/* Main Section */}
             <div className="mt-20 flex justify-between items-start">
                 {/* Left Section - Talk Coach Text */}
@@ -111,6 +112,7 @@ function Chatbot() {
                 </div>
             </div>
         </div>
+        </>
     );
 }
 

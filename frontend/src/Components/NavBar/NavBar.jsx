@@ -12,6 +12,7 @@ const NavBar = () => {
         <div className=" w-[97vw] ml-4 rounded-[1.3vw] fixed top-5 z-[999]">
             <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
                 <a href="" className="flex items-center space-x-3 rtl:space-x-reverse">
+                <img src="/Embrace_Spectrum_Logo_Navbar.png" className="h-10" alt="Embrace Spectrum Logo" />
                 </a>
                 <button 
                     onClick={toggleMenu}
@@ -38,6 +39,9 @@ const NavBar = () => {
                         </li>
                         <li>
                             <Link to='/FeelReader'><span className="block py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0  md:p-0 dark:text-white md:dark:hover:text-blue-900 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Feel Reader</span></Link>
+                        </li>
+                        <li>
+                            <Link to='/SketchTales'><span className="block py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0  md:p-0 dark:text-white md:dark:hover:text-blue-900 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Sketch Tales</span></Link>
                         </li>
                         <li>
                             <Link to='/Journalboard '><span className="block py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0  md:p-0 dark:text-white md:dark:hover:text-blue-900 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Journal</span></Link>

@@ -4,7 +4,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import axios from 'axios';
 
 const PDFEmotionReader = () => {
-  const [setPdfText] = useState('');
+  const [pdfText, setPdfText] = useState('');
   const [textWithEmotions, setTextWithEmotions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -238,15 +238,12 @@ const PDFEmotionReader = () => {
                       <div>
                         <span className="font-semibold text-sm capitalize">
                           {item.emotion} Emotion 
-                          {/* <span className="ml-2 text-xs opacity-70">
-                            (Intensity: {item.intensity})
-                          </span> */}
                         </span>
                       </div>
                       <button 
                         onClick={() => speakText(item.paragraph)}
                         className={`
-                          px-3 py-1 rounded text-sm bg-amber-400 
+                          px-3 py-1 rounded text-sm bg-amber-50 
                           ${emotionDetails.textColor.replace('text-', 'bg-')} 
                           bg-opacity-20 hover:bg-opacity-30 transition-all
                         `}
