@@ -35,17 +35,17 @@ const AuthForm = () => {
     };
 
     return (
-        <div className="flex min-h-screen items-center justify-center bg-gray-100">
-            <div className="w-[1050px] h-[600px] bg-[#5C7EEC] shadow-lg rounded-lg flex">
+        <div className="flex min-h-screen items-center justify-center bg-[#5C7EEC]">
+            <div className="w-[1050px] h-[600px] bg-[#5C7EEC] rounded-lg flex">
                 {/* Left Side: Branding */}
                 <div className="w-2/5 flex flex-col items-center justify-center bg-[#5C7EEC] rounded-l-lg px-8">
-                    <h1 className="text-2xl font-bold text-white text-center">Embrace Spectrum</h1>
+                <img src="/Embrace_Spectrum_Logo_Navbar.png" className="h-30" alt="Embrace Spectrum Logo" />
                 </div>
 
                 {/* Right Side: Authentication Form */}
-                <div className="w-3/5 p-10 flex flex-col justify-center">
+                <div className="w-3/5 ml-5 p-10 flex flex-col justify-center">
                     <h2 className="text-3xl font-bold text-white text-center mb-6">
-                        {isSignUp ? "Sign Up" : "Sign In"}
+                        {isSignUp ? "Sign Up" : "Sign In to start a new journey"}
                     </h2>
                     {error && <p className="text-red-400 text-sm text-center mb-2">{error}</p>}
 
@@ -55,7 +55,7 @@ const AuthForm = () => {
                             placeholder="Email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 text-gray-800"
+                            className="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 text-white"
                             required
                         />
                         <input
@@ -63,7 +63,7 @@ const AuthForm = () => {
                             placeholder="Password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 text-gray-800"
+                            className="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 text-white"
                             required
                         />
                         <button

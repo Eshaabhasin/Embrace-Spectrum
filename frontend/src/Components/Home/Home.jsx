@@ -1,5 +1,7 @@
 import React from "react";
 import NavBar from "../NavBar/NavBar";
+import ImageCollage from "./Collage";
+
 function Home() {
     return (    
         <>
@@ -9,8 +11,7 @@ function Home() {
                 <div className="flex justify-end mr-7">
                 </div>
  
-                <div className="flex justify-between mt-60 ml-10">
-                    
+                <div className="flex justify-between mt-50 ml-10">
                     <div className="">
                         <h1 className="text-5xl text-white font-bold leading-tight ">
                             Celebrating Neurodiversity,  
@@ -20,6 +21,7 @@ function Home() {
                             Unlock potential, foster inclusion, and embrace the strengths<br></br> of every neurodiverse individual.
                         </p>
                     </div>
+                    <ImageCollage></ImageCollage>
                 </div>
             </div>
         </>

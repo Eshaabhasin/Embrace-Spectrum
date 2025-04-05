@@ -8,9 +8,6 @@ import cn from "classnames";
 import NavBar from "../NavBar/NavBar";
 
 const API_KEY = "AIzaSyCN7qtGsHboeYuMffK-eyBpvMLVP5XHemc";
-if (typeof API_KEY !== "string" || API_KEY.trim() === "") {
-  throw new Error("API Key is missing. Please provide a valid API key.");
-}
 
 const host = "generativelanguage.googleapis.com";
 const uri = `wss://${host}/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent`;

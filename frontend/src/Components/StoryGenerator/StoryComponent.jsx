@@ -29,7 +29,7 @@ function StoryGenerator({ getCanvasImage }) {
           requestData.includeDrawing = true;
         }
   
-        const response = await axios.post("http://localhost:5001/generate-story", requestData);
+        const response = await axios.post("https://embrace-spectrum.onrender.com/generate-story", requestData);
   
         if (response.data && response.data.story) {
           setStory(response.data.story);
