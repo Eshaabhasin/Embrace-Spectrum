@@ -17,7 +17,7 @@ Using **Gemini Live**, this feature allows users to practice live conversations 
 ### 📄 Feel Reader – Emotion Detection from PDFs  
 Upload any PDF (story, article, journal, etc.) and receive visual emotion insights using emojis and tone analysis to help understand content emotionally.
 
-### 🎨 SketchTails – Draw-to-Story Generator  
+### 🎨 SketchTales – Draw-to-Story Generator  
 A creative tool where users can draw anything, and Gemini will turn the image into a simplified story—ideal for visual expression and creative thinking.
 
 ### 📔 Journal – Mood & Reflection Tracker  
