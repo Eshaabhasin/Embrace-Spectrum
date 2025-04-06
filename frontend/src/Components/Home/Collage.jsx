@@ -1,7 +1,6 @@
 import React from 'react';
 
 const ImageCollage = () => {
-  // Fixed image URLs for the 2x2 grid
   const imageUrls = [
     'https://images.moneycontrol.com/static-mcnews/2025/01/20250107064538_autism.png?impolicy=website&width=770&height=431',
     'https://sp-ao.shortpixel.ai/client/to_webp,q_glossy,ret_img/https://freshstartmediation.com.au/wp-content/uploads/2022/04/alireza-attari-SBIak0pKUIE-unsplash-1-scaled.jpg',
@@ -11,7 +10,6 @@ const ImageCollage = () => {
   
   return (
     <div className="max-w-xl mt-[-16vh] ml-7 mx-auto p-4">
-          {/* Main grid container */}
       <div className="grid grid-cols-2 gap-4">
         {imageUrls.map((url, index) => (
           <div key={index} className="aspect-square overflow-hidden rounded-lg">

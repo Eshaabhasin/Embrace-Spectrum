@@ -37,12 +37,10 @@ const AuthForm = () => {
     return (
         <div className="flex min-h-screen items-center justify-center bg-[#5C7EEC]">
             <div className="w-[1050px] h-[600px] bg-[#5C7EEC] rounded-lg flex">
-                {/* Left Side: Branding */}
                 <div className="w-2/5 flex flex-col items-center justify-center bg-[#5C7EEC] rounded-l-lg px-8">
                 <img src="/Embrace_Spectrum_Logo_Navbar.png" className="h-30" alt="Embrace Spectrum Logo" />
                 </div>
 
-                {/* Right Side: Authentication Form */}
                 <div className="w-3/5 ml-5 p-10 flex flex-col justify-center">
                     <h2 className="text-3xl font-bold text-white text-center mb-6">
                         {isSignUp ? "Sign Up" : "Sign In to start a new journey"}
@@ -83,7 +81,7 @@ const AuthForm = () => {
                         </button>
                     </div>
 
-                    <p className="text-center text-md text-white mt-5">
+                    {/* <p className="text-center text-md text-white mt-5">
                         {isSignUp ? "Already have an account?" : "Don't have an account?"}{" "}
                         <span
                             className="text-yellow-300 cursor-pointer hover:underline"
@@ -91,7 +89,7 @@ const AuthForm = () => {
                         >
                             {isSignUp ? "Sign In" : "Sign Up"}
                         </span>
-                    </p>
+                    </p> */}
                 </div>
             </div>
         </div>
