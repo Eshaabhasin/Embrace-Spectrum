@@ -1,49 +1,89 @@
 # 🌈 Embrace Spectrum
 
-**Embrace Spectrum** is an inclusive, AI-powered platform designed to support and empower neurodiverse individuals—especially those with autism, ADHD, dyslexia, and other cognitive variations. By integrating powerful tools like **Gemini**, **Gemini Live**, and **Firebase**, it offers a safe, structured, and personalized space for emotional expression, communication practice, creativity, and career enablement.
+Embrace Spectrum is an inclusive, AI-powered platform designed to empower neurodiverse individuals by supporting emotional well-being, communication, creativity, and career development. Built with state-of-the-art technologies like Google Gemini, Gemini Live, and Firebase, the platform offers a personalized and sensory-friendly experience.
 
-## 🧠 Problem Statement
+---
 
-Neurodiverse individuals face unique challenges in emotional regulation, communication, learning, and employment. Despite their potential, they often encounter stigma, a lack of support systems, and inaccessible digital environments. There is an urgent need for tech-driven, empathetic platforms that cater to their diverse cognitive needs and empower them to thrive independently.
+## ✨ Features
 
-## ✨ Key Features
+- 💬 **Solace** – Gemini-powered AI chatbot for emotional support.
+- 🗣️ **Talk Coach** – Real-time communication training using Gemini Live.
+- 📄 **Feel Reader** – Emotion detection in PDFs and documents.
+- 🎨 **SketchTales** – Turn drawings into AI-generated stories.
+- 📔 **Journal** – Mood tracking and reflection with a calming UI.
+- 💼 **Job & Community Hub** – Curated employment and peer connection space.
 
-### 💬 Solace – Emotional Support Chatbot  
-A Gemini-powered AI chatbot that provides personalized emotional guidance and answers, available 24/7 for comfort, clarity, and support.
+---
 
-### 🗣️ Talk Coach – Real-Time Conversation Practice  
-Using **Gemini Live**, this feature allows users to practice live conversations (voice or text), improving their communication skills in a safe and judgment-free space.
+## 🧠 Problem It Solves
 
-### 📄 Feel Reader – Emotion Detection from PDFs  
-Upload any PDF (story, article, journal, etc.) and receive visual emotion insights using emojis and tone analysis to help understand content emotionally.
+Neurodiverse individuals often face:
+- Emotional isolation  
+- Communication difficulties  
+- Limited creative expression tools  
+- Barriers in employment
 
-### 🎨 SketchTales – Draw-to-Story Generator  
-A creative tool where users can draw anything, and Gemini will turn the image into a simplified story—ideal for visual expression and creative thinking.
+Embrace Spectrum solves this through an all-in-one AI-powered, multimodal platform that adapts to diverse cognitive needs and encourages independence.
 
-### 📔 Journal – Mood & Reflection Tracker  
-Users can log daily feelings through emoji selection, voice notes, and text reflections. Includes mood-based prompts and a calming, Kanban-style interface.
+---
 
-### 💼 Job & Community Hub – Personalized Careers & Connections  
-Users fill out a short form, and the platform recommends inclusive job listings and communities. Builds independence and belonging through curated opportunities and peer interaction.
+## 🧩 Tech Stack
 
+| Area             | Tech Used                   |
+|------------------|-----------------------------|
+| Frontend         | React.js, Tailwind CSS       |
+| Backend          | Express.js                  |
+| Authentication   | Firebase Authentication     |
+| Database & Hosting | Firebase                  |
+| AI & Live Communication | Google Gemini & Gemini Live |
+| Creative Tools   | Canvas / Drawing libraries  |
 
-## 🔒 Authentication
+---
 
-We use **Firebase Authentication** to ensure secure sign-in and personalized experiences. It supports:
-- Email/password login
-- Google Sign-In (OAuth2)
-- Data privacy and session management
+## 🚀 Getting Started
 
-## ⚙️ Tech Stack
+### Prerequisites
 
-- **React.js** (Frontend)
-- **Firebase** (Authentication & Hosting)
-- **Gemini & Gemini Live APIs** (AI capabilities)
-- **Tailwind CSS** (UI/UX design)
-- **Canvas / Drawing Libraries** for SketchTails
+- Node.js & npm
+- Git (optional but recommended)
 
-## 🧩 How It Solves the Problem
+### Clone the Repository
 
-Embrace Spectrum offers an all-in-one platform that adapts to diverse learning and communication styles using AI. Its **multimodal interaction** (voice, text, visuals, drawing, emoji) ensures every individual can express themselves, develop life skills, and access tailored opportunities—all within a sensory-friendly environment.
+```bash
+git clone https://github.com/your-username/embrace-spectrum.git
+cd embrace-spectrum
+```
 
+### 🔧 Run Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+### 🔧 Run Backend (in a separate terminal)
+
+```bash
+cd backend
+npm install
+npm run dev
+```
+
+Frontend usually runs on: `http://localhost:5173`  
+Backend usually runs on: `http://localhost:5001`
+
+---
+
+## 🛡️ Authentication
+
+Powered by Firebase Authentication:
+- Secure login (Email/Password, Google Sign-In)
+
+---
+
+## 🌐 Live Demo
+
+Try the live version of Embrace Spectrum:  
+🔗 [https://embrace-spectrum.vercel.app/]
 
