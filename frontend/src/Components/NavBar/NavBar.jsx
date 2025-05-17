@@ -1,59 +1,89 @@
 import React, { useState } from 'react';
 import { Link } from "react-router-dom";
+import { SignInButton, UserButton, useUser } from '@clerk/clerk-react';
 
 const NavBar = () => {
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { isSignedIn } = useUser();
 
-    const toggleMenu = () => {
-        setIsMenuOpen(!isMenuOpen);
-    };
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
 
-    return (
-        <div className=" w-[97vw] ml-4 rounded-[1.3vw] fixed top-5 z-[999]">
-            <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-                <a href="" className="flex items-center space-x-3 rtl:space-x-reverse">
-                <img src="/Embrace_Spectrum_Logo_Navbar.png" className="h-10" alt="Embrace Spectrum Logo" />
-                </a>
-                <button 
-                    onClick={toggleMenu}
-                    type="button" 
-                    className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden focus:outline-none"
-                    aria-controls="navbar-default" 
-                    aria-expanded={isMenuOpen}
-                >
-                    <span className="sr-only">Open main menu</span>
-                    <svg className="w-5 h-5" aria-hidden="true" fill="none" viewBox="0 0 17 14">
-                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 1h15M1 7h15M1 13h15"/>
-                    </svg>
-                </button>
-                <div className={`${isMenuOpen ? 'block' : 'hidden'} w-full md:block md:w-auto`} id="navbar-default">
-                    <ul className="font-bold lg:text-lg text-2xl flex flex-col p-4 md:p-0 mt-4 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 d dark:border-gray-700">
-                        <li>
-                            <Link to='/Home'><span className="block py-2 px-3 text-white rounded md:bg-transparent md:p-0 dark:text-white md:dark:hover:text-blue-900" aria-current="page">Home</span></Link>
-                        </li>
-                        <li>
-                            <Link to='/chatbot'><span className="block py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0  md:p-0 dark:text-white md:dark:hover:text-blue-900 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Solace</span></Link>
-                        </li>
-                        <li>
-                            <Link to='/Geminilive'><span className="block py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0  md:p-0 dark:text-white md:dark:hover:text-blue-900 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Talk Coach</span></Link>
-                        </li>
-                        <li>
-                            <Link to='/FeelReader'><span className="block py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0  md:p-0 dark:text-white md:dark:hover:text-blue-900 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Feel Reader</span></Link>
-                        </li>
-                        <li>
-                            <Link to='/SketchTales'><span className="block py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0  md:p-0 dark:text-white md:dark:hover:text-blue-900 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Sketch Tales</span></Link>
-                        </li>
-                        <li>
-                            <Link to='/Journalboard '><span className="block py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0  md:p-0 dark:text-white md:dark:hover:text-blue-900 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Journal</span></Link>
-                        </li>
-                        <li>
-                            <Link to='/jobs'><span className="block py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0  md:p-0 dark:text-white md:dark:hover:text-blue-900 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Job & Community Hub</span></Link>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+  return (
+    <div className="w-[97vw] ml-4 rounded-[1.3vw] fixed top-5 z-[999] backdrop-blur-lg bg-[rgba(255,255,255,0.2)] border border-[rgba(255,255,255,0.3)] shadow-lg">
+      <div className="max-w-screen-xl mx-auto p-4 flex items-center justify-between">
+        {/* Logo */}
+        <a href="/" className="flex items-center space-x-3 rtl:space-x-reverse">
+          <img src="/Embrace_Spectrum_Logo_Navbar.png" className="h-10" alt="Embrace Spectrum Logo" />
+        </a>
+
+        {/* Hamburger Menu Toggle (Mobile) */}
+        <button
+          onClick={toggleMenu}
+          type="button"
+          className="md:hidden inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg"
+          aria-controls="navbar-menu"
+          aria-expanded={isMenuOpen}
+        >
+          <span className="sr-only">Open main menu</span>
+          <svg className="w-5 h-5" aria-hidden="true" fill="none" viewBox="0 0 17 14">
+            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 1h15M1 7h15M1 13h15" />
+          </svg>
+        </button>
+
+        {/* Desktop Menu + Auth Button */}
+        <div className="hidden md:flex md:items-center md:space-x-6">
+          <ul className="flex space-x-6 font-bold lg:text-lg text-base text-white items-center">
+            <li><Link to="/Home" className="hover:text-[#fffccf]">Home</Link></li>
+            <li><Link to="/chatbot" className="hover:text-[#fffccf]">Solace</Link></li>
+            <li><Link to="/Geminilive" className="hover:text-[#fffccf]">Talk Coach</Link></li>
+            <li><Link to="/FeelReader" className="hover:text-[#fffccf]">Feel Reader</Link></li>
+            <li><Link to="/SketchTales" className="hover:text-[#fffccf]">Sketch Tales</Link></li>
+            <li><Link to="/Journalboard" className="hover:text-[#fffccf]">Journal</Link></li>
+            <li><Link to="/jobs" className="hover:text-[#fffccf]">Job & Community Hub</Link></li>
+          </ul>
+          {!isSignedIn ? (
+            <SignInButton mode="modal">
+              <button className="ml-4 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition">
+                Sign In
+              </button>
+            </SignInButton>
+          ) : (
+            <UserButton afterSignOutUrl="/" />
+          )}
         </div>
-    );
+      </div>
+
+      {/* Mobile Menu */}
+      {isMenuOpen && (
+        <div className="md:hidden px-4 pb-4">
+          <ul className="flex flex-col space-y-4 font-bold text-white text-lg">
+            <li><Link to="/Home" onClick={() => setIsMenuOpen(false)}>Home</Link></li>
+            <li><Link to="/chatbot" onClick={() => setIsMenuOpen(false)}>Solace</Link></li>
+            <li><Link to="/Geminilive" onClick={() => setIsMenuOpen(false)}>Talk Coach</Link></li>
+            <li><Link to="/FeelReader" onClick={() => setIsMenuOpen(false)}>Feel Reader</Link></li>
+            <li><Link to="/SketchTales" onClick={() => setIsMenuOpen(false)}>Sketch Tales</Link></li>
+            <li><Link to="/Journalboard" onClick={() => setIsMenuOpen(false)}>Journal</Link></li>
+            <li><Link to="/jobs" onClick={() => setIsMenuOpen(false)}>Job & Community Hub</Link></li>
+            <li>
+              {!isSignedIn ? (
+                <SignInButton mode="modal">
+                  <button className="w-full bg-[#fffccf] text-white font-medium py-2 px-4 rounded-lg transition">
+                    Sign In
+                  </button>
+                </SignInButton>
+              ) : (
+                <div className="mt-2">
+                  <UserButton afterSignOutUrl="/" />
+                </div>
+              )}
+            </li>
+          </ul>
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default NavBar;

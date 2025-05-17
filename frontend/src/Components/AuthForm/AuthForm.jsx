@@ -35,12 +35,11 @@ const AuthForm = () => {
     };
 
     return (
-        <div className="flex min-h-screen items-center justify-center bg-[#5C7EEC]">
-            <div className="w-[1050px] h-[600px] bg-[#5C7EEC] rounded-lg flex">
-                <div className="w-2/5 flex flex-col items-center justify-center bg-[#5C7EEC] rounded-l-lg px-8">
+        <div className="flex min-h-screen items-center justify-center bg-[#6488EA]">
+            <div className="w-[1050px] h-[600px] bg-[#6488EA] rounded-lg flex">
+                <div className="w-2/5 flex flex-col items-center justify-center bg-[#6488EA] rounded-l-lg px-8">
                 <img src="/Embrace_Spectrum_Logo_Navbar.png" className="h-30" alt="Embrace Spectrum Logo" />
                 </div>
-
                 <div className="w-3/5 ml-5 p-10 flex flex-col justify-center">
                     <h2 className="text-3xl font-bold text-white text-center mb-6">
                         {isSignUp ? "Sign Up" : "Sign In to start a new journey"}

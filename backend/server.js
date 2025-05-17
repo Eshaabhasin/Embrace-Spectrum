@@ -3,7 +3,7 @@ import cors from "cors";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const app = express();
-const port = 5001;
+const port = 3000;
 
 // Gemini AI setup
 const genAI = new GoogleGenerativeAI("AIzaSyBdEFLrPJ1pVPZzFJT5m-MOQQ9Y8vMKluU");
@@ -11,7 +11,7 @@ const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
 // ✅ CORS middleware with allowed origin (your Vercel frontend)
 app.use(cors({
-  origin: "https://embrace-spectrum.vercel.app", // ⬅️ Allow your Vercel frontend
+  origin: ["https://embrace-spectrum.vercel.app", "http://localhost:5173"], // ⬅️ Allow your Vercel frontend
   methods: ["GET", "POST"],
   credentials: true
 }));

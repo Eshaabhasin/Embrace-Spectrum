@@ -10,7 +10,7 @@ function PaintAndStory() {
     };
   
     return (
-      <div className="bg-[#5C7EEC]">
+      <div className="bg-[#6488EA]">
         <div className="flex ml-8 py-8">
           <a href="/Home" className="flex mt-3 items-center justify-center w-10 h-10 border-1 border-black rounded-full text-black hover:bg-blue-100 transition">
             ←

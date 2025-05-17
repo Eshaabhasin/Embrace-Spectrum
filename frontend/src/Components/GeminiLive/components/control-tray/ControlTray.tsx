@@ -1,5 +1,22 @@
-import React, { memo, ReactNode, RefObject, useEffect, useRef, useState } from "react";
+/**
+ * Copyright 2024 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import cn from "classnames";
+
+import { memo, ReactNode, RefObject, useEffect, useRef, useState } from "react";
 import { useLiveAPIContext } from "../../contexts/LiveAPIContext";
 import { UseMediaStreamResult } from "../../hooks/use-media-stream-mux";
 import { useScreenCapture } from "../../hooks/use-screen-capture";
@@ -13,6 +30,7 @@ export type ControlTrayProps = {
   children?: ReactNode;
   supportsVideo: boolean;
   onVideoStreamChange?: (stream: MediaStream | null) => void;
+  enableEditingSettings?: boolean;
 };
 
 type MediaStreamButtonProps = {
@@ -23,9 +41,6 @@ type MediaStreamButtonProps = {
   stop: () => any;
 };
 
-/**
- * button used for triggering webcam or screen-capture
- */
 const MediaStreamButton = memo(
   ({ isStreaming, onIcon, offIcon, start, stop }: MediaStreamButtonProps) =>
     isStreaming ? (
@@ -44,6 +59,7 @@ function ControlTray({
   children,
   onVideoStreamChange = () => {},
   supportsVideo,
+  enableEditingSettings,
 }: ControlTrayProps) {
   const videoStreams = [useWebcam(), useScreenCapture()];
   const [activeVideoStream, setActiveVideoStream] =
@@ -66,7 +82,7 @@ function ControlTray({
   useEffect(() => {
     document.documentElement.style.setProperty(
       "--volume",
-      `${Math.max(5, Math.min(inVolume * 200, 8))}px`,
+      `${Math.max(5, Math.min(inVolume * 200, 8))}px`
     );
   }, [inVolume]);
 
@@ -127,29 +143,22 @@ function ControlTray({
 
   //handler for swapping from one video-stream to the next
   const changeStreams = (next?: UseMediaStreamResult) => async () => {
-    try {
-      if (next) {
-        const mediaStream = await next.start();
-        setActiveVideoStream(mediaStream);
-        onVideoStreamChange(mediaStream);
-      } else {
-        setActiveVideoStream(null);
-        onVideoStreamChange(null);
-      }
-
-      videoStreams.filter((msr) => msr !== next).forEach((msr) => msr.stop());
-    } catch (error) {
-      console.error("Error changing streams:", error);
-      // Optional: Handle permission denial or other errors
+    if (next) {
+      const mediaStream = await next.start();
+      setActiveVideoStream(mediaStream);
+      onVideoStreamChange(mediaStream);
+    } else {
       setActiveVideoStream(null);
       onVideoStreamChange(null);
     }
+
+    videoStreams.filter((msr) => msr !== next).forEach((msr) => msr.stop());
   };
 
   return (
     <section className="control-tray">
       <canvas style={{ display: "none" }} ref={renderCanvasRef} />
-      <div className={cn("actions-nav", { disabled: !connected })}>
+      <nav className={cn("actions-nav", { disabled: !connected })}>
         <button
           className={cn("action-button mic-button")}
           onClick={() => setMuted(!muted)}
@@ -164,8 +173,27 @@ function ControlTray({
         <div className="action-button no-action outlined">
           <AudioPulse volume={volume} active={connected} hover={false} />
         </div>
+
+        {supportsVideo && (
+          <>
+            {/* <MediaStreamButton
+              isStreaming={screenCapture.isStreaming}
+              start={changeStreams(screenCapture)}
+              stop={changeStreams()}
+              onIcon="cancel_presentation"
+              offIcon="present_to_all"
+            /> */}
+            <MediaStreamButton
+              isStreaming={webcam.isStreaming}
+              start={changeStreams(webcam)}
+              stop={changeStreams()}
+              onIcon="videocam_off"
+              offIcon="videocam"
+            />
+          </>
+        )}
         {children}
-      </div>
+      </nav>
 
       <div className={cn("connection-container", { connected })}>
         <div className="connection-button-container">
@@ -179,7 +207,6 @@ function ControlTray({
             </span>
           </button>
         </div>
-        <span className="text-indicator">Streaming</span>
       </div>
     </section>
   );

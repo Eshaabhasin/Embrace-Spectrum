@@ -14,7 +14,7 @@ function Chatbot() {
         setInput("");
 
         try {
-            const response = await fetch("https://embrace-spectrum.onrender.com/chat", {
+            const response = await fetch("http://localhost:3000/chat", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ message: input }),
@@ -29,6 +29,11 @@ function Chatbot() {
     };
 
     const startListening = () => {
+
+
+
+
+
         if (!("webkitSpeechRecognition" in window)) {
             alert("Your browser does not support Speech Recognition.");
             return;
@@ -52,7 +57,7 @@ function Chatbot() {
     return (
         <>
         <NavBar></NavBar>
-        <div className="bg-[#5C7EEC] min-h-screen px-10 flex flex-col">
+        <div className="bg-[#6488EA] min-h-screen px-10 flex flex-col">
             {/* Main Section */}
             <div className="mt-20 flex justify-between items-start">
                 {/* Left Section - Talk Coach Text */}

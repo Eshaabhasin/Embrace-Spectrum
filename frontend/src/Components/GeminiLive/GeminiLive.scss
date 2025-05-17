@@ -151,8 +151,10 @@
   }
 
 .stream {
-  flex-grow: 1;
-  max-width: 90%;
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  max-width: 20%;
   border-radius: 32px;
   max-height: fit-content;
 }
