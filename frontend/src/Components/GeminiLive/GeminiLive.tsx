@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import "./GeminiLive.scss"
+import "./GeminiLive.scss";
 import { LiveAPIProvider } from "./contexts/LiveAPIContext";
 import { Altair } from "./components/altair/Altair";
 import ControlTray from "./components/control-tray/ControlTray";
@@ -8,22 +8,21 @@ import cn from "classnames";
 import NavBar from "../NavBar/NavBar";
 
 const API_KEY = "AIzaSyCN7qtGsHboeYuMffK-eyBpvMLVP5XHemc";
-
 const host = "generativelanguage.googleapis.com";
 const uri = `wss://${host}/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent`;
 
 function GeminiLive() {
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null!); // non-null assertion
   const [videoStream, setVideoStream] = useState<MediaStream | null>(null);
 
   return (
     <div className="App">
-      <NavBar></NavBar>
+      <NavBar />
       <LiveAPIProvider url={uri} apiKey={API_KEY}>
         <div className="streaming-console">
-        <h1 className="bg-gradient-to-r from-blue-100 ml-10 via-white to-blue-400 bg-clip-text text-transparent absolute text-7xl mt-20 font-extrabold tracking-wide">
+          <h1 className="bg-gradient-to-r from-blue-100 ml-10 via-white to-blue-400 bg-clip-text text-transparent absolute text-7xl mt-20 font-extrabold tracking-wide">
             Talk Coach
-        </h1>
+          </h1>
           <HaloEffect />
           <main>
             <div className="main-app-area">
@@ -42,9 +41,7 @@ function GeminiLive() {
               videoRef={videoRef}
               supportsVideo={true}
               onVideoStreamChange={setVideoStream}
-            >
-            </ControlTray>
-
+            />
           </main>
         </div>
       </LiveAPIProvider>
