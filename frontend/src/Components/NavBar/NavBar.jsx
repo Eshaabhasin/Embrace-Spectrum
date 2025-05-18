@@ -15,7 +15,7 @@ const NavBar = () => {
       <div className="max-w-screen-xl mx-auto p-4 flex items-center justify-between">
         {/* Logo */}
         <a href="/" className="flex items-center space-x-3 rtl:space-x-reverse">
-          <img src="/Embrace_Spectrum_Logo_Navbar.png" className="h-10" alt="Embrace Spectrum Logo" />
+          <img src="/Embrace Spectrum White.png" className="h-10" alt="Embrace Spectrum Logo" />
         </a>
 
         {/* Hamburger Menu Toggle (Mobile) */}
@@ -35,7 +35,7 @@ const NavBar = () => {
         {/* Desktop Menu + Auth Button */}
         <div className="hidden md:flex md:items-center md:space-x-6">
           <ul className="flex space-x-6 font-bold lg:text-lg text-base text-white items-center">
-            <li><Link to="/Home" className="hover:text-[#fffccf]">Home</Link></li>
+            <li><Link to="/" className="hover:text-[#fffccf]">Home</Link></li>
             <li><Link to="/chatbot" className="hover:text-[#fffccf]">Solace</Link></li>
             <li><Link to="/Geminilive" className="hover:text-[#fffccf]">Talk Coach</Link></li>
             <li><Link to="/FeelReader" className="hover:text-[#fffccf]">Feel Reader</Link></li>
@@ -59,7 +59,7 @@ const NavBar = () => {
       {isMenuOpen && (
         <div className="md:hidden px-4 pb-4">
           <ul className="flex flex-col space-y-4 font-bold text-white text-lg">
-            <li><Link to="/Home" onClick={() => setIsMenuOpen(false)}>Home</Link></li>
+            <li><Link to="/" onClick={() => setIsMenuOpen(false)}>Home</Link></li>
             <li><Link to="/chatbot" onClick={() => setIsMenuOpen(false)}>Solace</Link></li>
             <li><Link to="/Geminilive" onClick={() => setIsMenuOpen(false)}>Talk Coach</Link></li>
             <li><Link to="/FeelReader" onClick={() => setIsMenuOpen(false)}>Feel Reader</Link></li>
