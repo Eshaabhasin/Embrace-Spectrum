@@ -1,6 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '@clerk/clerk-react';
+import { initializeApp } from 'firebase/app';
+import { getFirestore, doc, setDoc, getDoc } from 'firebase/firestore';
+import { getAuth, signInWithCustomToken } from 'firebase/auth';
+
+// Initialize Firebase (replace with your config)
+const firebaseConfig = {
+  apiKey: "AIzaSyDhTHAeIbIAT0bm3DOTHG1yTpAYCuIrsik",
+  authDomain: "embrace-spectrum-4e8c2.firebaseapp.com",
+  projectId: "embrace-spectrum-4e8c2",
+  storageBucket: "embrace-spectrum-4e8c2.firebasestorage.app",
+  messagingSenderId: "659544849252",
+  appId: "1:659544849252:web:986409723e1035ef9a5871",
+  measurementId: "G-E0VES4105M"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
 
 const OnboardingForm = () => {
   const navigate = useNavigate();
@@ -22,6 +41,9 @@ const OnboardingForm = () => {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [customGoal, setCustomGoal] = useState('');
   const [customNeurodiversity, setCustomNeurodiversity] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
+  const [firebaseUser, setFirebaseUser] = useState(null);
 
   // Form options
   const ageGroups = ['Under 13', '13–17', '18–25', '26–40', 'Over 40'];
@@ -32,7 +54,20 @@ const OnboardingForm = () => {
   const mainGoalOptions = ['Improve speaking', 'Learn routines', 'Play learning games', 'Coaching', 'Explore resources', 'Other'];
   const supportContexts = ['Yes, with a parent', 'Yes, with a therapist', 'Yes, with an educator', 'No, I\'m using it alone'];
 
-  // Check if user is already logged in
+  // Alternative: Save data without Firebase Authentication (using public write rules)
+  const saveToFirestoreWithoutAuth = async (userData) => {
+    try {
+      // Using a different collection structure that doesn't require auth
+      const userDoc = doc(db, "onboardingData", user.id);
+      await setDoc(userDoc, userData, { merge: true });
+      return true;
+    } catch (error) {
+      console.error('Error saving to Firestore:', error);
+      throw error;
+    }
+  };
+
+  // Check if user is already logged in and pre-fill data
   useEffect(() => {
     if (isSignedIn && user) {
       // Pre-fill name if available from Clerk
@@ -40,6 +75,9 @@ const OnboardingForm = () => {
         ...prevData,
         preferredName: user.firstName || ''
       }));
+
+      // Try to authenticate with Firebase
+      authenticateWithFirebase();
     }
   }, [isSignedIn, user]);
 
@@ -96,25 +134,52 @@ const OnboardingForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
+    if (!user) {
+      setSubmitError("User isn't authenticated. Please sign in.");
+      return;
+    }
+    
+    setIsSubmitting(true);
+    setSubmitError(null);
+    
     try {
-      // Here you would normally save the data to your database
-      console.log('Form submitted:', formData);
+      // Prepare the data for Firebase
+      const userData = {
+        ...formData,
+        userId: user.id,
+        email: user.primaryEmailAddress?.emailAddress || '',
+        clerkUserId: user.id,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
       
-      // Save onboarding completion status to localStorage immediately
-      if (user) {
-        localStorage.setItem(`onboarding-${user.id}`, 'true');
+      // Try to save to Firestore
+      try {
+        await saveToFirestoreWithoutAuth(userData);
+        console.log('Data successfully saved to Firebase');
+      } catch (firestoreError) {
+        console.error('Firestore save failed, trying localStorage fallback:', firestoreError);
+        
+        // Fallback to localStorage if Firestore fails
+        localStorage.setItem(`userData-${user.id}`, JSON.stringify(userData));
+        console.log('Data saved to localStorage as fallback');
       }
+      
+      // Save onboarding completion status to localStorage
+      localStorage.setItem(`onboarding-${user.id}`, 'true');
       
       // Mark as completed
       setFormSubmitted(true);
       
-      // Important: Force a delay before redirect to ensure localStorage is saved
+      // Force a delay before redirect
       setTimeout(() => {
-        // Force reload the page to ensure AuthWrapper picks up the localStorage change
-        window.location.href = '/';
+        navigate('/');
       }, 2000);
     } catch (error) {
       console.error('Error submitting form:', error);
+      setSubmitError(error.message || 'Failed to save data. Please try again.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -157,6 +222,18 @@ const OnboardingForm = () => {
     );
   }
 
+  // Show loading if user is not yet loaded
+  if (!isSignedIn || !user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#8faaf1] via-[#6488e9] to-[#3c5bbd] p-4">
       <div className="max-w-4xl w-full bg-white rounded-xl shadow-lg p-8">
@@ -167,6 +244,12 @@ const OnboardingForm = () => {
         </div>
         
         {renderProgressBar()}
+        
+        {submitError && (
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <p className="text-red-600">{submitError}</p>
+          </div>
+        )}
         
         <form onSubmit={handleSubmit}>
           {/* Step 1: Basic Information */}
@@ -447,9 +530,22 @@ const OnboardingForm = () => {
                 </button>
                 <button
                   type="submit"
-                  className="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-6 rounded-lg transition"
+                  disabled={isSubmitting}
+                  className={`${
+                    isSubmitting ? 'bg-gray-400' : 'bg-green-600 hover:bg-green-700'
+                  } text-white font-medium py-2 px-6 rounded-lg transition flex items-center`}
                 >
-                  Complete Setup
+                  {isSubmitting ? (
+                    <>
+                      <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      Saving...
+                    </>
+                  ) : (
+                    'Complete Setup'
+                  )}
                 </button>
               </div>
             </div>

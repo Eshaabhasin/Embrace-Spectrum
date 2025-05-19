@@ -12,7 +12,7 @@ function PaintAndStory() {
     return (
       <div className="bg-[#6488EA]">
         <div className="flex ml-8 py-8">
-          <a href="/Home" className="flex mt-3 items-center justify-center w-10 h-10 border-1 border-black rounded-full text-black hover:bg-blue-100 transition">
+          <a href="/" className="flex mt-3 items-center justify-center w-10 h-10 border-1 border-black rounded-full text-black hover:bg-blue-100 transition">
             ←
           </a>
           <h1 className="bg-gradient-to-r from-blue-100 via-white to-blue-400 bg-clip-text text-transparent ml-7 text-6xl font-extrabold">Sketch Tales</h1>

@@ -20,7 +20,7 @@ function GeminiLive() {
       <NavBar />
       <LiveAPIProvider url={uri} apiKey={API_KEY}>
         <div className="streaming-console">
-          <h1 className="bg-gradient-to-r from-blue-100 ml-10 via-white to-blue-400 bg-clip-text text-transparent absolute text-7xl mt-20 font-extrabold tracking-wide">
+          <h1 className="bg-gradient-to-r from-blue-100 ml-10 via-white to-blue-400 bg-clip-text text-transparent absolute text-7xl mt-27 font-extrabold tracking-wide">
             Talk Coach
           </h1>
           <HaloEffect />
