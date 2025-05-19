@@ -4,11 +4,12 @@ import { useUser, ClerkProvider } from '@clerk/clerk-react';
 import Home from './Components/Home/Home';
 import Chatbot from './Components/Chatbot/Chatbot';
 import SentimentAnalyser from './Components/SentimentAnalysis/SentimentAnalyser';
-import GeminiLive from './Components/GeminiLive/GeminiLIve';
+import GeminiLive from './Components/GeminiLive/GeminiLive';
 import NeurodiversityJobPortal from './Components/JobSearch/JobSearch';
 import JournalBoard from './Components/JournalBoard/JournalBoard';
 import PaintAndStory from './Components/StoryGenerator/StoryGeneratorComponent';
 import OnboardingForm from './Components/OnboardingForm/OnboardingForm';
+import LifeSkillsTracker from './Components/LifeSkillTracker/LifeSkillTracker';
 import './App.css';
 
 // Auth wrapper component to handle redirect to onboarding
@@ -111,6 +112,7 @@ function App() {
               <Route path="/geminiLive" element={<GeminiLive />} />
               <Route path="/journalboard" element={<JournalBoard />} />
               <Route path="/jobs" element={<NeurodiversityJobPortal />} />
+              <Route path="/tracker" element={<LifeSkillsTracker />} />
             </Routes>
           </>
         } />

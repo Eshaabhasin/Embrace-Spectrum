@@ -11,7 +11,10 @@ const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
 // ✅ CORS middleware with allowed origin (your Vercel frontend)
 app.use(cors({
-  origin: ["https://embrace-spectrum.vercel.app", "http://localhost:5173"], // ⬅️ Allow your Vercel frontend
+  origin: [
+    "https://embrace-spectrum.vercel.app",
+    "http://localhost:5173" // ✅ Add this line
+  ],
   methods: ["GET", "POST"],
   credentials: true
 }));
@@ -31,18 +34,18 @@ const trimResponse = (message) => {
 // ✅ Chatbot endpoint
 app.post("/chat", async (req, res) => {
   const { message } = req.body;
-
+  
   if (!message) {
     return res.status(400).json({ error: "Message is required." });
   }
-
+  
   try {
     const result = await model.generateContent(message);
     const response = await result.response;
-    const text =
-      response.candidates?.[0]?.content?.parts?.[0]?.text ||
+    const text = 
+      response.candidates?.[0]?.content?.parts?.[0]?.text || 
       "I'm not sure how to respond.";
-
+    
     return res.status(200).json({ reply: trimResponse(text) });
   } catch (error) {
     console.error("Error in chat request:", error);
@@ -53,23 +56,93 @@ app.post("/chat", async (req, res) => {
   }
 });
 
-// ✅ Generate story from drawing and prompt
-app.post("/generate-story", async (req, res) => {
-  const { prompt, imageBase64, includeDrawing = true } = req.body;
-
+// ✅ Generate jobs based on profile
+app.post("/generate-jobs", async (req, res) => {
+  const { prompt } = req.body;
+  
   if (!prompt) {
     return res.status(400).json({ error: "Prompt is required." });
   }
+  
+  try {
+    // Enhance the prompt to ensure it returns valid JSON
+    const enhancedPrompt = `${prompt}
+    
+Important: Your response must be valid JSON following this structure exactly:
+{
+  "jobs": [
+    {
+      "id": 1,
+      "title": "Job Title",
+      "company": "Company Name",
+      "location": "Location",
+      "description": "Job description text",
+      "match": "Match percentage (e.g. 92% Match)",
+      "accommodations": ["Accommodation 1", "Accommodation 2", "Accommodation 3"]
+    },
+    {
+      "id": 2,
+      ...
+    },
+    {
+      "id": 3,
+      ...
+    }
+  ]
+}
 
+Do not include any text before or after the JSON. Reply only with the JSON object.`;
+
+    const result = await model.generateContent(enhancedPrompt);
+    const response = await result.response;
+    const text = response.text() || "";
+    
+    // Try to extract and parse JSON
+    try {
+      const jsonMatch = text.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        const jobsData = JSON.parse(jsonMatch[0]);
+        return res.status(200).json(jobsData);
+      } else {
+        throw new Error("No JSON found in response");
+      }
+    } catch (jsonError) {
+      console.error("Error parsing JSON from Gemini response:", jsonError);
+      console.log("Raw response:", text);
+      
+      // Return a formatted error with the raw text for debugging
+      return res.status(500).json({
+        error: "Failed to parse job recommendations",
+        rawResponse: text,
+        message: jsonError.message
+      });
+    }
+  } catch (error) {
+    console.error("Error generating jobs:", error);
+    return res.status(500).json({
+      error: `Internal Server Error: ${error.message}`,
+      details: error.toString()
+    });
+  }
+});
+
+// ✅ Generate story from drawing and prompt
+app.post("/generate-story", async (req, res) => {
+  const { prompt, imageBase64, includeDrawing = true } = req.body;
+  
+  if (!prompt) {
+    return res.status(400).json({ error: "Prompt is required." });
+  }
+  
   try {
     let generationParts = [];
-
+    
     // Add prompt text
     generationParts.push({
       text: `Write a simple, engaging, and autism-friendly story based on this prompt: ${prompt}.
-             The story should be easy to read and visualize.`
+            The story should be easy to read and visualize.`
     });
-
+    
     // Add drawing if provided
     if (includeDrawing && imageBase64) {
       generationParts.push({
@@ -78,17 +151,17 @@ app.post("/generate-story", async (req, res) => {
           data: imageBase64
         }
       });
-
+      
       generationParts[0].text += " Use the drawing provided to inspire characters, settings, or plot elements in the story.";
     }
-
+    
     const result = await model.generateContent({
       contents: [{ role: "user", parts: generationParts }]
     });
-
+    
     const response = result.response;
     const storyText = response.text() || "I couldn't generate a story.";
-
+    
     return res.status(200).json({
       story: trimResponse(storyText),
       success: true
