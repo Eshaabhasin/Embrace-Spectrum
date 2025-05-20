@@ -1,6 +1,8 @@
 import express from "express";
 import cors from "cors";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+// import admin from 'firebase-admin';
+// import { ClerkExpressRequireAuth } from '@clerk/clerk-sdk-node';
 import axios from "axios"; // Add axios for API requests
 
 const app = express();
@@ -15,6 +17,7 @@ const JOBS_API_KEY = process.env.JOBS_API_KEY || "5c0cee33bbmsh8e649a10fa36eaep1
 
 // ✅ CORS middleware with allowed origin (your Vercel frontend)
 app.use(cors({
+  origin: ["https://embrace-spectrum.vercel.app", "http://localhost:5173"], // ⬅️ Allow your Vercel frontend
   origin: [
     "https://embrace-spectrum.vercel.app",
     "http://localhost:5173"
@@ -38,18 +41,18 @@ const trimResponse = (message) => {
 // ✅ Chatbot endpoint
 app.post("/chat", async (req, res) => {
   const { message } = req.body;
-  
+
   if (!message) {
     return res.status(400).json({ error: "Message is required." });
   }
-  
+
   try {
     const result = await model.generateContent(message);
     const response = await result.response;
-    const text = 
-      response.candidates?.[0]?.content?.parts?.[0]?.text || 
+    const text =
+      response.candidates?.[0]?.content?.parts?.[0]?.text ||
       "I'm not sure how to respond.";
-    
+
     return res.status(200).json({ reply: trimResponse(text) });
   } catch (error) {
     console.error("Error in chat request:", error);
@@ -270,20 +273,20 @@ app.post("/generate-jobs", async (req, res) => {
 // ✅ Generate story from drawing and prompt
 app.post("/generate-story", async (req, res) => {
   const { prompt, imageBase64, includeDrawing = true } = req.body;
-  
+
   if (!prompt) {
     return res.status(400).json({ error: "Prompt is required." });
   }
-  
+
   try {
     let generationParts = [];
-    
+
     // Add prompt text
     generationParts.push({
       text: `Write a simple, engaging, and autism-friendly story based on this prompt: ${prompt}.
-            The story should be easy to read and visualize.`
+             The story should be easy to read and visualize.`
     });
-    
+
     // Add drawing if provided
     if (includeDrawing && imageBase64) {
       generationParts.push({
@@ -292,17 +295,17 @@ app.post("/generate-story", async (req, res) => {
           data: imageBase64
         }
       });
-      
+
       generationParts[0].text += " Use the drawing provided to inspire characters, settings, or plot elements in the story.";
     }
-    
+
     const result = await model.generateContent({
       contents: [{ role: "user", parts: generationParts }]
     });
-    
+
     const response = result.response;
     const storyText = response.text() || "I couldn't generate a story.";
-    
+
     return res.status(200).json({
       story: trimResponse(storyText),
       success: true
