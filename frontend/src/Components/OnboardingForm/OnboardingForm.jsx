@@ -77,7 +77,7 @@ const OnboardingForm = () => {
       }));
 
       // Try to authenticate with Firebase
-      authenticateWithFirebase();
+      // authenticateWithFirebase();
     }
   }, [isSignedIn, user]);
 
