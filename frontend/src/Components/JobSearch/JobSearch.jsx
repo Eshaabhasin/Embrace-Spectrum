@@ -118,44 +118,27 @@ const NeurodiversityJobPortal = () => {
             .replace(/^./, str => str.toUpperCase())
         });
       
-      // Create prompt for Gemini
-      const prompt = `Generate 3 personalized job recommendations for a neurodivergent job seeker with the following profile:
+      // Extract skills as array (for the new API format)
+      const skillsArray = formData.skills
+        .split(',')
+        .map(skill => skill.trim())
+        .filter(skill => skill.length > 0);
       
-Name: ${formData.name}
-Location: ${formData.location}
-Neurodiversity Type: ${formData.neurodiversityType || "Not specified"}
-Preferred Work Arrangement: ${formData.preferredWorkArrangement}
-Education Level: ${formData.highestEducation}
-Experience Level: ${formData.yearsOfExperience}
-Skills: ${formData.skills}
-Unique Strengths: ${formData.strengths}
-Preferred Industries: ${formData.preferredIndustries}
-Needed Accommodations: ${selectedAccommodations.join(', ')}${formData.additionalAccommodations ? ', ' + formData.additionalAccommodations : ''}
-
-For each job recommendation, please provide the following in JSON format:
-{
-  "jobs": [
-    {
-      "id": number,
-      "title": "job title",
-      "company": "company name",
-      "location": "job location",
-      "description": "job description with emphasis on neurodiversity inclusion",
-      "match": "match percentage",
-      "accommodations": ["accommodation1", "accommodation2", "etc"]
-    },
-    {...},
-    {...}
-  ]
-}`;
-
-      // Call backend API
-      const response = await fetch('http://localhost:3000/generate-jobs', {
+      // Format data for the new API
+      const apiData = {
+        skills: skillsArray,
+        location: formData.location,
+        accommodations: selectedAccommodations,
+        jobTitle: formData.preferredIndustries // Using industries as a job title search term
+      };
+      
+      // Call updated backend API endpoint
+      const response = await fetch('http://localhost:3002/generate-jobs', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ prompt }),
+        body: JSON.stringify(apiData),
       });
       
       if (!response.ok) {
@@ -164,60 +147,12 @@ For each job recommendation, please provide the following in JSON format:
       
       const data = await response.json();
       
-      // Parse the response
-      let jobRecommendations = [];
-      try {
-        // Handle different response formats
-        if (data.jobs) {
-          // If the API already returned properly formatted JSON
-          jobRecommendations = data.jobs;
-        } else if (data.reply) {
-          // If using the /chat endpoint which returns {reply: string}
-          const jsonMatch = data.reply.match(/\{[\s\S]*\}/);
-          if (jsonMatch) {
-            const parsedData = JSON.parse(jsonMatch[0]);
-            jobRecommendations = parsedData.jobs || [];
-          }
-        }
-        
-        // If we still don't have recommendations, use fallback
-        if (!jobRecommendations.length) {
-          throw new Error("Could not parse job recommendations");
-        }
-        
-        setRecommendations(jobRecommendations);
-      } catch (parseError) {
-        console.error("Failed to parse job recommendations:", parseError);
-        // Fallback to mock data
-        setRecommendations([
-          {
-            id: 1,
-            title: "UX Designer - Neurodiversity Program",
-            company: "Inclusive Tech Solutions",
-            location: "Remote",
-            description: "Looking for detail-oriented UX designers with unique perspectives. Our neurodiversity program provides accommodations including flexible schedules and quiet workspaces.",
-            match: "92% Match",
-            accommodations: ["Flexible Hours", "Quiet Workspace", "Written Instructions"]
-          },
-          {
-            id: 2,
-            title: "Software Developer - Autism at Work Program",
-            company: "Global Software Inc.",
-            location: "New York, NY (Hybrid)",
-            description: "Join our specialized program for neurodivergent developers. We value your unique abilities and provide a supportive environment with needed accommodations.",
-            match: "88% Match",
-            accommodations: ["Structured Environment", "Mentorship", "Sensory-friendly Office"]
-          },
-          {
-            id: 3,
-            title: "Data Analyst - Neurodiversity Hiring Initiative",
-            company: "DataFirst Analytics",
-            location: "Remote",
-            description: "Our neurodiversity hiring initiative seeks detail-focused analysts. We offer clear instructions and accommodate different working styles.",
-            match: "85% Match",
-            accommodations: ["Remote Work", "Visual Documentation", "Flexible Hours"]
-          },
-        ]);
+      // The new API should return data in the format {jobs: [...]}
+      if (data.jobs && Array.isArray(data.jobs)) {
+        setRecommendations(data.jobs);
+      } else {
+        console.error("Invalid response format:", data);
+        throw new Error("Invalid response format from server");
       }
     } catch (err) {
       console.error("Error fetching job recommendations:", err);
@@ -260,7 +195,8 @@ For each job recommendation, please provide the following in JSON format:
 
   // Step 1: Basic Information
   const renderStep1 = () => (
-    <div className="bg-white p-6 rounded-lg shadow-md">
+    <div className="bg-white/10 p-6 rounded-2xl shadow-xl backdrop-blur-md border border-white/20">
+
       <h2 className="text-2xl font-bold mb-6">Tell us about yourself</h2>
       
       <div className="space-y-4">
@@ -389,6 +325,7 @@ For each job recommendation, please provide the following in JSON format:
             value={formData.skills}
             onChange={(e) => handleInputChange('skills', e.target.value)}
           ></textarea>
+          <p className="text-sm text-gray-500 mt-1">Separate skills with commas (e.g., Python, JavaScript, Project Management)</p>
         </div>
         
         <div>
@@ -402,14 +339,15 @@ For each job recommendation, please provide the following in JSON format:
         </div>
         
         <div>
-          <label className="block font-medium mb-1">Preferred Industries</label>
+          <label className="block font-medium mb-1">Job Titles or Industries You're Interested In</label>
           <input 
             type="text" 
             className="w-full p-3 border rounded-md" 
-            placeholder="e.g., Technology, Healthcare, Education"
+            placeholder="e.g., Software Developer, Data Analyst, Marketing"
             value={formData.preferredIndustries}
             onChange={(e) => handleInputChange('preferredIndustries', e.target.value)}
           />
+          <p className="text-sm text-gray-500 mt-1">This will be used for job search terms</p>
         </div>
       </div>
       
@@ -565,7 +503,7 @@ For each job recommendation, please provide the following in JSON format:
       ) : (
         <>
           <p className="mb-6 text-gray-600">
-            Based on your profile and preferences, our AI found these jobs that might be a good fit:
+            Based on your profile and preferences, we found these real jobs that might be a good fit:
           </p>
           
           <div className="space-y-6">
@@ -581,7 +519,7 @@ For each job recommendation, please provide the following in JSON format:
                 <p className="mt-3 text-gray-600">{job.description}</p>
                 
                 <div className="mt-4">
-                  <p className="text-sm font-medium mb-2">Accommodations offered:</p>
+                  <p className="text-sm font-medium mb-2">Recommended accommodations:</p>
                   <div className="flex flex-wrap gap-2">
                     {job.accommodations.map((accommodation, index) => (
                       <span 
@@ -649,8 +587,9 @@ For each job recommendation, please provide the following in JSON format:
             </button>
             <button 
               className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+              onClick={findJobs}
             >
-              See More Jobs
+              Search More Jobs
             </button>
           </div>
         </>
@@ -680,7 +619,7 @@ For each job recommendation, please provide the following in JSON format:
         ></div>
       </div>
       
-      <div className="flex justify-between mt-2 text-xs text-gray-600">
+      <div className="flex justify-between mt-2 text-[17px] text-white">
         <span>Basic Info</span>
         <span>Skills & Experience</span>
         <span>Accommodations</span>
