@@ -319,6 +319,27 @@ app.post("/generate-story", async (req, res) => {
     });
   }
 });
+app.post('/api/learn',async(req,res)=>{
+  const userMessage=req.body.message
+  if(!userMessage){
+    return res.status(400).json({error:'Message is required.'});
+  }
+    try {
+    // Generate content using Gemini
+    const result = await model.generateContent(userMessage);
+    const response = await result.response;  // Await the response object
+    const text = response.candidates[0].content.parts[0].text; // Correct way to access text
+
+    return res.status(200).json({ message: trimResponse(text) });
+  } catch (error) {
+    console.error("Error in chat request:", error);
+
+    return res.status(500).json({
+      error: `Internal Server Error: ${error.message}`,
+      details: error.response?.data || 'No details available',
+    });
+  }
+});
 
 app.listen(port, () => {
   console.log(`✅ Server is running on port ${port}`);
