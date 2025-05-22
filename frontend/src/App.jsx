@@ -11,6 +11,7 @@ import PaintAndStory from './Components/StoryGenerator/StoryGeneratorComponent';
 import OnboardingForm from './Components/OnboardingForm/OnboardingForm';
 import LifeSkillsTracker from './Components/LifeSkillTracker/LifeSkillTracker';
 import LearnPath from './Components/LearningPath/AllLearnpath';
+import LifeSkillsQuiz from './Components/Quiz/LifeSkillsQuiz';
 import './App.css';
 
 // Auth wrapper component to handle redirect to onboarding
@@ -114,7 +115,8 @@ function App() {
               <Route path="/journalboard" element={<JournalBoard />} />
               <Route path="/jobs" element={<NeurodiversityJobPortal />} />
               <Route path="/tracker" element={<LifeSkillsTracker />} />
-                <Route path="/learn" element={<LearnPath />} />
+              <Route path="/learn" element={<LearnPath />} />
+               <Route path="/quiz" element={<LifeSkillsQuiz/>} />
             </Routes>
           </>
         } />

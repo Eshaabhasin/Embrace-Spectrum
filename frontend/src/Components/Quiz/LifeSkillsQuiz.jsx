@@ -323,7 +323,7 @@ const LifeSkillsQuiz = () => {
 
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2 drop-shadow-lg mt-7">Life Skills Challenge</h1>
+          <h1 className="text-4xl font-bold text-white mb-2 drop-shadow-lg mt-8">Life Skills Challenge</h1>
           <p className="text-blue-100 text-lg">Navigate real-world scenarios with confidence</p>
         </div>
 
