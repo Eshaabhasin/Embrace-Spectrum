@@ -133,7 +133,7 @@ const NeurodiversityJobPortal = () => {
       };
       
       // Call updated backend API endpoint
-      const response = await fetch('http://localhost:3002/generate-jobs', {
+      const response = await fetch('http://localhost:3000/generate-jobs', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -195,7 +195,7 @@ const NeurodiversityJobPortal = () => {
 
   // Step 1: Basic Information
   const renderStep1 = () => (
-    <div className="bg-white/10 p-6 rounded-2xl shadow-xl backdrop-blur-md border border-white/20">
+    <div className="bg-white p-6 rounded-2xl shadow-xl backdrop-blur-md border border-white/20">
 
       <h2 className="text-2xl font-bold mb-6">Tell us about yourself</h2>
       

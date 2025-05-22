@@ -67,7 +67,6 @@ const OnboardingForm = () => {
     }
   };
 
-  // Check if user is already logged in and pre-fill data
   useEffect(() => {
     if (isSignedIn && user) {
       // Pre-fill name if available from Clerk
@@ -75,9 +74,6 @@ const OnboardingForm = () => {
         ...prevData,
         preferredName: user.firstName || ''
       }));
-
-      // Try to authenticate with Firebase
-      // authenticateWithFirebase();
     }
   }, [isSignedIn, user]);
 

@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import NavBar from "../NavBar/NavBar";
+import { Mic, Send } from "lucide-react";
+import ReactMarkdown from "react-markdown";
 
 function Chatbot() {
     const [messages, setMessages] = useState([]);
@@ -29,11 +31,6 @@ function Chatbot() {
     };
 
     const startListening = () => {
-
-
-
-
-
         if (!("webkitSpeechRecognition" in window)) {
             alert("Your browser does not support Speech Recognition.");
             return;
@@ -48,7 +45,7 @@ function Chatbot() {
 
         recognition.onresult = (event) => {
             const transcript = event.results[0][0].transcript;
-            setInput(transcript); 
+            setInput(transcript);
         };
 
         recognition.start();
@@ -56,67 +53,69 @@ function Chatbot() {
 
     return (
         <>
-        <NavBar></NavBar>
-        <div className="bg-[#6488EA] min-h-screen px-10 flex flex-col">
-            {/* Main Section */}
-            <div className="mt-20 flex justify-between items-start">
-                {/* Left Section - Talk Coach Text */}
-                <div>
-                <h1 className="bg-gradient-to-r from-yellow-100 via-orange-300 to-red-300 bg-clip-text text-transparent text-8xl mt-10 font-extrabold tracking-wide">
-                    Solace
-                </h1>
-                    <p className="text-gray-200 text-2xl font-bold mt-8">
-                        Your personal AI-powered communication mentor. Whether it's <br />
-                        public speaking, social conversations, or professional discussions, <br />
-                        Talk Coach is here to help.
-                    </p>
-                </div>
-
-                <div className="absolute right-5 bottom-8 backdrop-blur-sm bg-white/70 p-6 rounded-xl shadow-lg w-[450px] h-[550px] flex flex-col">
-                    <div className="flex-1 overflow-y-auto space-y-4 flex flex-col">
-                        {messages.map((msg, index) => (
-                            <div
-                                key={index}
-                                className={`p-3 rounded-lg max-w-[75%] ${
-                                    msg.sender === "user"
-                                        ? "bg-blue-500 text-white self-end text-right"
-                                        : "bg-gray-200 text-black self-start text-left"
-                                }`}
-                            >
-                                {msg.text}
-                            </div>
-                        ))}
+            <NavBar />
+            <div className="bg-[#6488EA] min-h-screen px-10 flex flex-col">
+                <div className="mt-20 flex justify-between items-start">
+                    <div>
+                        <h1 className="bg-gradient-to-r from-yellow-100 via-orange-300 to-red-300 bg-clip-text text-transparent text-7xl mt-10 font-extrabold tracking-wide">
+                            Solace
+                        </h1>
+                        <p className="text-gray-200 text-2xl font-bold mt-3">
+                            Your personal AI-powered communication mentor. Whether it's <br />
+                            public speaking, social conversations, or professional discussions, <br />
+                            Talk Coach is here to help.
+                        </p>
                     </div>
 
-                    {/* Input Field with Speech-to-Text Button */}
-                    <div className="mt-auto flex">
-                        <input
-                            type="text"
-                            className="flex-1 border p-2 rounded-lg"
-                            placeholder="Type or speak your message..."
-                            value={input}
-                            onChange={(e) => setInput(e.target.value)}
-                            onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-                        />
-                        <button
-                            onClick={startListening}
-                            className={`ml-2 bg-blue-500 text-white px-4 py-2 rounded-lg ${
-                                isListening ? "opacity-50" : ""
-                            }`}
-                            disabled={isListening}
-                        >
-                            🎤
-                        </button>
-                        <button
-                            onClick={sendMessage}
-                            className="ml-2 bg-blue-500 text-white px-4 py-2 rounded-lg"
-                        >
-                            Send
-                        </button>
+                    <div className="absolute right-7 bottom-8 backdrop-blur-sm bg-white/60 p-6 rounded-xl shadow-lg w-[420px] h-[530px] flex flex-col">
+                        <div className="flex-1 overflow-y-auto space-y-4 flex flex-col scrollbar-hide">
+                            {messages.map((msg, index) => (
+                                <div
+                                    key={index}
+                                    className={`p-3 rounded-lg max-w-[75%] whitespace-pre-wrap ${
+                                        msg.sender === "user"
+                                            ? "bg-blue-500 text-white self-end text-right"
+                                            : "bg-gray-200 text-black self-start text-left"
+                                    }`}
+                                >
+                                    {msg.sender === "bot" ? (
+                                        <ReactMarkdown>{msg.text}</ReactMarkdown>
+                                    ) : (
+                                        msg.text
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Input Field with Speech-to-Text and Send Buttons */}
+                        <div className="mt-3 flex items-center">
+                            <input
+                                type="text"
+                                className="flex-1 border p-2 rounded-2xl"
+                                placeholder="Type or speak your message..."
+                                value={input}
+                                onChange={(e) => setInput(e.target.value)}
+                                onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+                            />
+                            <button
+                                onClick={startListening}
+                                className={`ml-2 bg-blue-500 text-white p-2 rounded-lg flex items-center justify-center ${
+                                    isListening ? "opacity-50" : ""
+                                }`}
+                                disabled={isListening}
+                            >
+                                <Mic size={20} />
+                            </button>
+                            <button
+                                onClick={sendMessage}
+                                className="ml-2 bg-blue-500 text-white p-2 rounded-lg flex items-center justify-center"
+                            >
+                                <Send size={20} />
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
         </>
     );
 }

@@ -1,12 +1,10 @@
 import express from "express";
 import cors from "cors";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-// import admin from 'firebase-admin';
-// import { ClerkExpressRequireAuth } from '@clerk/clerk-sdk-node';
-import axios from "axios"; // Add axios for API requests
+import axios from "axios"; 
 
 const app = express();
-const port = 3002;
+const port = 3000;
 
 // Gemini AI setup
 const genAI = new GoogleGenerativeAI("AIzaSyBdEFLrPJ1pVPZzFJT5m-MOQQ9Y8vMKluU");

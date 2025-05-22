@@ -254,7 +254,7 @@ Guidelines:
     setErrorMessage("");
 
     try {
-      const response = await axios.post("http://localhost:3002/api/learn", {
+      const response = await axios.post("http://localhost:3000/api/learn", {
         message: formatDataToString(),
       });
 

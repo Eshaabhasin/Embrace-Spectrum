@@ -85,7 +85,7 @@ const AuthWrapper = () => {
   }
 
   // For protected routes, redirect if not signed in or onboarding not completed
-  const protectedRoutes = ['/chatbot', '/sketchTales', '/feelReader', '/geminiLive', '/journalboard', '/jobs'];
+  const protectedRoutes = ['/chatbot', '/sketchTales', '/feelReader', '/geminiLive', '/journalboard', '/jobs' , '/quiz'];
   if (protectedRoutes.includes(location.pathname)) {
     if (!isSignedIn) {
       return <Navigate to="/" replace />;
@@ -116,7 +116,7 @@ function App() {
               <Route path="/jobs" element={<NeurodiversityJobPortal />} />
               <Route path="/tracker" element={<LifeSkillsTracker />} />
               <Route path="/learn" element={<LearnPath />} />
-               <Route path="/quiz" element={<LifeSkillsQuiz/>} />
+              <Route path="/quiz" element={<LifeSkillsQuiz/>} />
             </Routes>
           </>
         } />
