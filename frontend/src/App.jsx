@@ -5,7 +5,7 @@ import Home from './Components/Home/Home';
 import Chatbot from './Components/Chatbot/Chatbot';
 import SentimentAnalyser from './Components/SentimentAnalysis/SentimentAnalyser';
 import GeminiLive from './Components/GeminiLive/GeminiLive';
-import NeurodiversityJobPortal from './Components/JobSearch/JobSearch';
+import JobSearchComponent from './Components/JobSearch/JobSearch'
 import JournalBoard from './Components/JournalBoard/JournalBoard';
 import PaintAndStory from './Components/StoryGenerator/StoryGeneratorComponent';
 import OnboardingForm from './Components/OnboardingForm/OnboardingForm';
@@ -113,7 +113,7 @@ function App() {
               <Route path="/feelReader" element={<SentimentAnalyser />} />
               <Route path="/geminiLive" element={<GeminiLive />} />
               <Route path="/journalboard" element={<JournalBoard />} />
-              <Route path="/jobs" element={<NeurodiversityJobPortal />} />
+              <Route path="/jobs" element={<JobSearchComponent />} />
               <Route path="/tracker" element={<LifeSkillsTracker />} />
               <Route path="/learn" element={<LearnPath />} />
               <Route path="/quiz" element={<LifeSkillsQuiz/>} />
