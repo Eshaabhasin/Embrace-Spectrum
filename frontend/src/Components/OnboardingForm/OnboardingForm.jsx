@@ -5,7 +5,6 @@ import { initializeApp } from 'firebase/app';
 import { getFirestore, doc, setDoc, getDoc } from 'firebase/firestore';
 import { getAuth, signInWithCustomToken } from 'firebase/auth';
 
-// Initialize Firebase (replace with your config)
 const firebaseConfig = {
   apiKey: "AIzaSyDhTHAeIbIAT0bm3DOTHG1yTpAYCuIrsik",
   authDomain: "embrace-spectrum-4e8c2.firebaseapp.com",

@@ -1,12 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, MapPin, Briefcase, Heart, Settings, Search, Loader2, BookOpen, Award, Users, Clock, Home, Wifi, Plus, X } from 'lucide-react';
 import NavBar from '../NavBar/NavBar';
+import { initializeApp } from 'firebase/app';
+import { getFirestore } from 'firebase/firestore';
+import { useUser } from '@clerk/clerk-react';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
 
-// Import your Firebase config here
-// import { db } from '../firebase/config';
-// import { doc, setDoc, getDoc } from 'firebase/firestore';
+const firebaseConfig = {
+  apiKey: "AIzaSyDhTHAeIbIAT0bm3DOTHG1yTpAYCuIrsik",
+  authDomain: "embrace-spectrum-4e8c2.firebaseapp.com",
+  projectId: "embrace-spectrum-4e8c2",
+  storageBucket: "embrace-spectrum-4e8c2.firebasestorage.app",
+  messagingSenderId: "659544849252",
+  appId: "1:659544849252:web:986409723e1035ef9a5871",
+  measurementId: "G-E0VES4105M"
+};
 
-const JobSearchComponent = ({ clerkUserId }) => {
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const JobSearchComponent = () => {
+  const { isLoaded, user } = useUser();
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [jobsLoading, setJobsLoading] = useState(false);
@@ -44,26 +58,46 @@ const JobSearchComponent = ({ clerkUserId }) => {
     additionalAccommodations: ''
   });
 
+
+  // Get the user ID
+  const clerkUserId = user?.id;
+
   // Load existing profile on mount
   useEffect(() => {
     const loadExistingProfile = async () => {
-      if (!clerkUserId) return;
+      if (!clerkUserId || !isLoaded) return; // CHANGED: Added !isLoaded check
       
       try {
-        // Replace with your Firebase implementation
-        // const docRef = doc(db, 'jobSearchProfiles', clerkUserId);
-        // const docSnap = await getDoc(docRef);
-        // if (docSnap.exists()) {
-        //   setFormData(docSnap.data());
-        // }
-        console.log('Loading profile for user:', clerkUserId);
+        const docRef = doc(db, 'jobSearchProfiles', clerkUserId);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const profileData = docSnap.data();
+          setFormData(profileData);
+          console.log('Profile loaded successfully:', profileData);
+        } else {
+          console.log('No existing profile found');
+        }
       } catch (error) {
         console.error('Error loading profile:', error);
+        // Optional: Show user-friendly error message
+        alert('Failed to load your profile. Please try again.');
       }
     };
-    
+
     loadExistingProfile();
-  }, [clerkUserId]);
+    }, [clerkUserId, isLoaded]); 
+
+
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+        <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
+          <Loader2 className="animate-spin text-blue-600 mx-auto mb-4" size={48} />
+          <p className="text-xl text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   const updateFormData = (field, value) => {
     setFormData(prev => ({
@@ -114,53 +148,140 @@ const JobSearchComponent = ({ clerkUserId }) => {
   const saveToFirebase = async () => {
     if (!clerkUserId) {
       console.error('No user ID provided');
+      alert('User authentication required. Please log in again.');
       return false;
     }
 
     try {
-      // Replace with your Firebase implementation
-      // await setDoc(doc(db, 'jobSearchProfiles', clerkUserId), {
-      //   ...formData,
-      //   updatedAt: new Date().toISOString()
-      // });
-      console.log('Profile saved for user:', clerkUserId, formData);
+      await setDoc(doc(db, 'jobSearchProfiles', clerkUserId), {
+        ...formData,
+        userId: clerkUserId,
+        updatedAt: new Date().toISOString(),
+        createdAt: formData.createdAt || new Date().toISOString()
+      });
+      console.log('Profile saved successfully for user:', clerkUserId);
       return true;
     } catch (error) {
       console.error('Error saving profile:', error);
+      alert('Failed to save your profile. Please check your connection and try again.');
       return false;
     }
   };
 
   const fetchJobs = async () => {
     try {
-      // Replace with your Google Jobs API implementation
-      // const response = await fetch('/api/jobs/search', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({
-      //     location: formData.location,
-      //     skills: formData.skills,
-      //     industries: formData.preferredIndustries,
-      //     workArrangement: formData.preferredWorkArrangement,
-      //     accommodations: formData.jobPreferences
-      //   })
-      // });
-      // const jobsData = await response.json();
-      // setJobs(jobsData);
+      // Construct search query
+      let query = '';
       
-      console.log('Fetching jobs with params:', {
-        location: formData.location,
-        skills: formData.skills,
-        industries: formData.preferredIndustries,
-        workArrangement: formData.preferredWorkArrangement
+      // Add skills to query
+      if (formData.skills && formData.skills.length > 0) {
+        query += formData.skills.join(' OR ') + ' ';
+      }
+      
+      // Add industries to query
+      if (formData.preferredIndustries && formData.preferredIndustries.length > 0) {
+        query += formData.preferredIndustries.join(' OR ') + ' ';
+      }
+
+      // Add work arrangement preferences
+      if (formData.preferredWorkArrangement === 'remote') {
+        query += 'remote OR "work from home" ';
+      } else if (formData.preferredWorkArrangement === 'hybrid') {
+        query += 'hybrid OR flexible ';
+      }
+
+      // Add neurodiversity-friendly terms
+      query += 'inclusive OR diversity OR "neurodiversity friendly" OR accommodations';
+
+      // Clean up the query
+      query = query.trim();
+      if (!query) {
+        query = 'jobs'; // fallback query
+      }
+
+      // OPTION 1: Using SerpAPI (Google Jobs) - Direct frontend call
+      const serpApiUrl = `https://cors-anywhere.herokuapp.com/https://serpapi.com/search.json?engine=google_jobs&q=${encodeURIComponent(query)}&location=${encodeURIComponent(formData.location || '')}&api_key=${import.meta.env.VITE_SERPAPI_KEY}&num=20&start=0`;      
+      const response = await fetch(serpApiUrl);
+      
+      if (!response.ok) {
+        throw new Error(`API request failed: ${response.status}`);
+      }
+
+      const data = await response.json();
+      
+      // Transform SerpAPI data to match your component's expected format
+      const jobs = data.jobs_results?.map((job, index) => ({
+        id: job.job_id || `job-${index}`,
+        title: job.title || 'No title available',
+        company: job.company_name || 'Company not specified',
+        location: job.location || formData.location || 'Location not specified',
+        description: job.description || job.snippet || 'No description available',
+        salary: job.detected_extensions?.salary || job.salary_highlight || null,
+        posted_date: job.detected_extensions?.posted_at || null,
+        apply_link: job.apply_link || null,
+        source: job.via || 'Unknown source',
+        job_highlights: job.job_highlights || null,
+        work_from_home: job.detected_extensions?.work_from_home || false
+      })) || [];
+
+      // Filter jobs based on user preferences
+      const filteredJobs = jobs.filter(job => {
+        // Prioritize remote jobs if user prefers remote work
+        if (formData.jobPreferences?.remoteWork) {
+          const isRemoteJob = job.work_from_home || 
+                            job.title.toLowerCase().includes('remote') || 
+                            job.description.toLowerCase().includes('remote') ||
+                            job.description.toLowerCase().includes('work from home');
+          if (isRemoteJob) return true;
+        }
+        
+        // Check for accommodation-related keywords
+        if (formData.jobPreferences?.flexibleHours) {
+          const hasFlexibleHours = job.description.toLowerCase().includes('flexible') ||
+                                  job.description.toLowerCase().includes('flex');
+          if (hasFlexibleHours) return true;
+        }
+        
+        return true; // Return all jobs, but prioritized ones come first
       });
+
+      // Sort to put preferred jobs first
+      const sortedJobs = filteredJobs.sort((a, b) => {
+        let scoreA = 0;
+        let scoreB = 0;
+        
+        // Score based on work arrangement preference
+        if (formData.preferredWorkArrangement === 'remote') {
+          if (a.work_from_home || a.title.toLowerCase().includes('remote')) scoreA += 10;
+          if (b.work_from_home || b.title.toLowerCase().includes('remote')) scoreB += 10;
+        }
+        
+        // Score based on skills match
+        formData.skills?.forEach(skill => {
+          if (a.description.toLowerCase().includes(skill.toLowerCase())) scoreA += 5;
+          if (b.description.toLowerCase().includes(skill.toLowerCase())) scoreB += 5;
+        });
+        
+        return scoreB - scoreA; // Higher score first
+      });
+
+      setJobs(sortedJobs);
+      console.log('Jobs fetched successfully:', sortedJobs.length, 'jobs found');
       
-      // For now, set empty array - you'll populate this with actual API response
-      setJobs([]);
     } catch (error) {
       console.error('Error fetching jobs:', error);
+      
+      // Provide more specific error messages
+      if (error.message.includes('429')) {
+        alert('Too many requests. Please wait a moment and try again.');
+      } else if (error.message.includes('401')) {
+        alert('API key error. Please check your configuration.');
+      } else if (error.message.includes('Network')) {
+        alert('Network error. Please check your internet connection.');
+      } else {
+        alert('Failed to fetch jobs. Please try again later.');
+      }
+      
       setJobs([]);
     }
   };
@@ -222,29 +343,83 @@ const JobSearchComponent = ({ clerkUserId }) => {
                 <p className="text-xl text-gray-600">Finding perfect jobs for you...</p>
               </div>
             ) : jobs.length > 0 ? (
-              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {jobs.map((job) => (
-                  <div key={job.id} className="bg-gradient-to-br from-white to-gray-50 rounded-xl shadow-md p-6 border border-gray-200 hover:shadow-lg transition-shadow">
-                    <h3 className="text-xl font-bold text-gray-800 mb-2">{job.title}</h3>
-                    <p className="text-gray-600 mb-3 flex items-center gap-2">
-                      <Briefcase size={16} />
-                      {job.company}
-                    </p>
-                    <p className="text-gray-600 mb-3 flex items-center gap-2">
-                      <MapPin size={16} />
-                      {job.location}
-                    </p>
-                    <p className="text-gray-700 mb-4">{job.description}</p>
-                    {job.salary && (
-                      <p className="text-green-600 font-medium mb-4">{job.salary}</p>
-                    )}
-                    <button className="w-full bg-blue-600 text-white py-3 rounded-xl hover:bg-blue-700 transition-colors font-medium">
-                      View Details
-                    </button>
-                  </div>
-                ))}
-              </div>
-            ) : (
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                  {jobs.map((job) => (
+                    <div key={job.id} className="bg-gradient-to-br from-white to-gray-50 rounded-xl shadow-md p-6 border border-gray-200 hover:shadow-lg transition-all duration-300 hover:scale-105">
+                      <div className="flex justify-between items-start mb-3">
+                        <h3 className="text-xl font-bold text-gray-800 line-clamp-2 flex-1">{job.title}</h3>
+                        {job.work_from_home && (
+                          <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full ml-2 flex-shrink-0">
+                            Remote
+                          </span>
+                        )}
+                      </div>
+                      
+                      <p className="text-gray-600 mb-2 flex items-center gap-2">
+                        <Briefcase size={16} className="flex-shrink-0" />
+                        <span className="truncate">{job.company}</span>
+                      </p>
+                      
+                      <p className="text-gray-600 mb-3 flex items-center gap-2">
+                        <MapPin size={16} className="flex-shrink-0" />
+                        <span className="truncate">{job.location}</span>
+                      </p>
+                      
+                      <p className="text-gray-700 mb-4 line-clamp-3 text-sm leading-relaxed">
+                        {job.description.length > 150 
+                          ? job.description.substring(0, 150) + '...' 
+                          : job.description}
+                      </p>
+                      
+                      {job.salary && (
+                        <p className="text-green-600 font-semibold mb-3 flex items-center gap-2">
+                          <span className="text-green-500">💰</span>
+                          {job.salary}
+                        </p>
+                      )}
+                      
+                      {job.posted_date && (
+                        <p className="text-gray-500 text-sm mb-4 flex items-center gap-2">
+                          <Clock size={14} />
+                          Posted: {new Date(job.posted_date).toLocaleDateString()}
+                        </p>
+                      )}
+                      
+                      <div className="flex gap-2">
+                        <button 
+                          onClick={() => window.open(job.apply_link, '_blank')}
+                          disabled={!job.apply_link}
+                          className={`flex-1 py-3 rounded-xl font-medium transition-colors ${
+                            job.apply_link 
+                              ? 'bg-blue-600 text-white hover:bg-blue-700 cursor-pointer' 
+                              : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                          }`}
+                        >
+                          {job.apply_link ? 'Apply Now' : 'No Link Available'}
+                        </button>
+                        
+                        <button 
+                          onClick={() => {
+                            // You can implement a "save job" functionality here
+                            console.log('Saving job:', job);
+                            alert('Job saved! (Feature to be implemented)');
+                          }}
+                          className="bg-gray-100 text-gray-600 px-4 py-3 rounded-xl hover:bg-gray-200 transition-colors"
+                          title="Save Job"
+                        >
+                          <Heart size={18} />
+                        </button>
+                      </div>
+                      
+                      {job.source && (
+                        <p className="text-xs text-gray-400 mt-2 text-center">
+                          via {job.source}
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              ) : (
               <div className="text-center py-12">
                 <Search className="mx-auto text-gray-400 mb-4" size={64} />
                 <h3 className="text-2xl font-bold text-gray-600 mb-2">No jobs found yet</h3>
