@@ -12,7 +12,7 @@ const host = "generativelanguage.googleapis.com";
 const uri = `wss://${host}/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent`;
 
 function GeminiLive() {
-  const videoRef = useRef<HTMLVideoElement>(null!); // non-null assertion
+  const videoRef = useRef<HTMLVideoElement>(null!);
   const [videoStream, setVideoStream] = useState<MediaStream | null>(null);
 
   return (

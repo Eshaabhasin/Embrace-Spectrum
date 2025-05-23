@@ -169,64 +169,40 @@ const JobSearchComponent = () => {
   };
 
   const fetchJobs = async () => {
-    try {
-      // Construct search query
-      let query = '';
-      
-      // Add skills to query
-      if (formData.skills && formData.skills.length > 0) {
-        query += formData.skills.join(' OR ') + ' ';
-      }
-      
-      // Add industries to query
-      if (formData.preferredIndustries && formData.preferredIndustries.length > 0) {
-        query += formData.preferredIndustries.join(' OR ') + ' ';
-      }
+  try {
+    // Prepare the request payload
+      const requestPayload = {
+        query: '', // Let the backend construct the query
+        location: formData.location || '',
+        workArrangement: formData.preferredWorkArrangement,
+        skills: formData.skills || [],
+        industries: formData.preferredIndustries || []
+      };
 
-      // Add work arrangement preferences
-      if (formData.preferredWorkArrangement === 'remote') {
-        query += 'remote OR "work from home" ';
-      } else if (formData.preferredWorkArrangement === 'hybrid') {
-        query += 'hybrid OR flexible ';
-      }
+      console.log('Sending request to backend:', requestPayload);
 
-      // Add neurodiversity-friendly terms
-      query += 'inclusive OR diversity OR "neurodiversity friendly" OR accommodations';
-
-      // Clean up the query
-      query = query.trim();
-      if (!query) {
-        query = 'jobs'; // fallback query
-      }
-
-      // OPTION 1: Using SerpAPI (Google Jobs) - Direct frontend call
-      const serpApiUrl = `https://cors-anywhere.herokuapp.com/https://serpapi.com/search.json?engine=google_jobs&q=${encodeURIComponent(query)}&location=${encodeURIComponent(formData.location || '')}&api_key=${import.meta.env.VITE_SERPAPI_KEY}&num=20&start=0`;      
-      const response = await fetch(serpApiUrl);
+      // Make request to your backend server
+      const API_BASE_URL = 'http://localhost:3000';
+      const response = await fetch(`${API_BASE_URL}/api/search-jobs`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestPayload)
+      });
       
       if (!response.ok) {
-        throw new Error(`API request failed: ${response.status}`);
+        const errorData = await response.json();
+        throw new Error(errorData.message || `API request failed: ${response.status}`);
       }
 
       const data = await response.json();
       
-      // Transform SerpAPI data to match your component's expected format
-      const jobs = data.jobs_results?.map((job, index) => ({
-        id: job.job_id || `job-${index}`,
-        title: job.title || 'No title available',
-        company: job.company_name || 'Company not specified',
-        location: job.location || formData.location || 'Location not specified',
-        description: job.description || job.snippet || 'No description available',
-        salary: job.detected_extensions?.salary || job.salary_highlight || null,
-        posted_date: job.detected_extensions?.posted_at || null,
-        apply_link: job.apply_link || null,
-        source: job.via || 'Unknown source',
-        job_highlights: job.job_highlights || null,
-        work_from_home: job.detected_extensions?.work_from_home || false
-      })) || [];
+      // The backend already transforms the data, so we can use it directly
+      const jobs = data.jobs || [];
 
-      // Filter jobs based on user preferences
+      // Filter jobs based on user preferences (same logic as before)
       const filteredJobs = jobs.filter(job => {
-        // Prioritize remote jobs if user prefers remote work
         if (formData.jobPreferences?.remoteWork) {
           const isRemoteJob = job.work_from_home || 
                             job.title.toLowerCase().includes('remote') || 
@@ -235,34 +211,31 @@ const JobSearchComponent = () => {
           if (isRemoteJob) return true;
         }
         
-        // Check for accommodation-related keywords
         if (formData.jobPreferences?.flexibleHours) {
           const hasFlexibleHours = job.description.toLowerCase().includes('flexible') ||
                                   job.description.toLowerCase().includes('flex');
           if (hasFlexibleHours) return true;
         }
         
-        return true; // Return all jobs, but prioritized ones come first
+        return true;
       });
 
-      // Sort to put preferred jobs first
+      // Sort to put preferred jobs first (same logic as before)
       const sortedJobs = filteredJobs.sort((a, b) => {
         let scoreA = 0;
         let scoreB = 0;
         
-        // Score based on work arrangement preference
         if (formData.preferredWorkArrangement === 'remote') {
           if (a.work_from_home || a.title.toLowerCase().includes('remote')) scoreA += 10;
           if (b.work_from_home || b.title.toLowerCase().includes('remote')) scoreB += 10;
         }
         
-        // Score based on skills match
         formData.skills?.forEach(skill => {
           if (a.description.toLowerCase().includes(skill.toLowerCase())) scoreA += 5;
           if (b.description.toLowerCase().includes(skill.toLowerCase())) scoreB += 5;
         });
         
-        return scoreB - scoreA; // Higher score first
+        return scoreB - scoreA;
       });
 
       setJobs(sortedJobs);
@@ -274,12 +247,12 @@ const JobSearchComponent = () => {
       // Provide more specific error messages
       if (error.message.includes('429')) {
         alert('Too many requests. Please wait a moment and try again.');
-      } else if (error.message.includes('401')) {
-        alert('API key error. Please check your configuration.');
-      } else if (error.message.includes('Network')) {
-        alert('Network error. Please check your internet connection.');
+      } else if (error.message.includes('401') || error.message.includes('Authentication')) {
+        alert('API authentication error. Please check the server configuration.');
+      } else if (error.message.includes('Network') || error.message.includes('fetch')) {
+        alert('Network error. Please check your internet connection and ensure the server is running.');
       } else {
-        alert('Failed to fetch jobs. Please try again later.');
+        alert(`Failed to fetch jobs: ${error.message}`);
       }
       
       setJobs([]);
@@ -321,8 +294,10 @@ const JobSearchComponent = () => {
 
   if (showJobs) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
-        <div className="max-w-6xl mx-auto">
+      <>
+      <NavBar></NavBar>
+      <div className="min-h-screen p-6">
+        <div className="max-w-8xl mt-25 mx-auto">
           <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-3xl font-bold text-gray-800 flex items-center gap-3">
@@ -435,6 +410,7 @@ const JobSearchComponent = () => {
           </div>
         </div>
       </div>
+      </>
     );
   }
 
@@ -442,7 +418,7 @@ const JobSearchComponent = () => {
     <>
     <NavBar></NavBar>
     <div className="min-h-screen">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <div className="bg-white mt-30 mb-20 rounded-2xl shadow-lg overflow-hidden">
           {/* Header */}
           <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-8">

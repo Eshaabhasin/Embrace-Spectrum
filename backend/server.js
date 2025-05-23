@@ -2,6 +2,9 @@ import express from "express";
 import cors from "cors";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import axios from "axios"; 
+import { config } from 'dotenv';
+
+config();
 
 const app = express();
 const port = 3000;
@@ -59,6 +62,169 @@ app.post("/chat", async (req, res) => {
       details: error.response?.data || "No additional details available.",
     });
   }
+});
+
+app.post('/api/search-jobs', async (req, res) => {
+  try {
+    const { query, location, workArrangement, skills, industries, nextPageToken } = req.body;
+    
+    console.log('Received job search request:', req.body);
+    
+    // Build search query
+    let searchQuery = '';
+    
+    // Add skills to query
+    if (skills && skills.length > 0) {
+      searchQuery += skills.join(' OR ') + ' ';
+    }
+    
+    // Add industries to query
+    if (industries && industries.length > 0) {
+      searchQuery += industries.join(' OR ') + ' ';
+    }
+    
+    // Add work arrangement preferences
+    if (workArrangement === 'remote') {
+      searchQuery += 'remote OR "work from home" ';
+    }
+    
+    // Add inclusive terms
+    searchQuery += 'inclusive OR diversity OR "neurodiversity friendly" OR accommodations';
+    
+    // SerpAPI parameters - REMOVED the deprecated 'start' parameter
+    const serpApiParams = {
+      engine: 'google_jobs',
+      q: searchQuery.trim(),
+      location: location || 'United States',
+      api_key: process.env.SERPAPI_KEY || '1615a613583f9917df741f179948e331838515f1d5078c9b415be8f017dc2fbf',
+      num: 20
+    };
+    
+    // Add next_page_token for pagination if provided (DON'T use start parameter)
+    if (nextPageToken) {
+      serpApiParams.next_page_token = nextPageToken;
+    }
+    
+    console.log('SerpAPI Request params:', serpApiParams);
+    
+    // Make request to SerpAPI
+    const response = await axios.get('https://serpapi.com/search.json', {
+      params: serpApiParams,
+      timeout: 15000
+    });
+    
+    console.log('SerpAPI Response status:', response.status);
+    
+    // Check for API errors
+    if (response.data.error) {
+      console.error('SerpAPI Error:', response.data.error);
+      return res.status(400).json({
+        error: 'Search API Error',
+        message: response.data.error,
+        success: false
+      });
+    }
+    
+    // Transform the data
+    const jobs = (response.data.jobs_results || []).map(job => ({
+      id: job.job_id || Math.random().toString(36).substr(2, 9),
+      title: job.title || 'No title available',
+      company: job.company_name || 'Company not specified',
+      location: job.location || location || 'Location not specified',
+      description: job.description || job.snippet || 'No description available',
+      apply_link: job.apply_options?.[0]?.link || job.share_link || null,
+      salary: job.salary_info ? `${job.salary_info.min || ''} - ${job.salary_info.max || ''}`.trim() : null,
+      posted_date: job.detected_extensions?.posted_at || null,
+      work_from_home: job.commute_time === null || job.title?.toLowerCase().includes('remote') || false,
+      source: 'Google Jobs via SerpAPI'
+    }));
+    
+    console.log(`Found ${jobs.length} jobs`);
+    
+    // Return response
+    res.json({
+      success: true,
+      jobs: jobs,
+      totalResults: response.data.search_information?.total_results || jobs.length,
+      nextPageToken: response.data.serpapi_pagination?.next_page_token || null,
+      hasNextPage: !!response.data.serpapi_pagination?.next_page_token,
+      searchQuery: searchQuery.trim(),
+      location: location
+    });
+    
+  } catch (error) {
+    console.error('Job search error:', error);
+    
+    // Handle different types of errors
+    if (error.response) {
+      console.error('API Error Response:', error.response.data);
+      console.error('API Error Status:', error.response.status);
+      
+      res.status(error.response.status || 500).json({
+        error: 'API Error',
+        message: error.response.data?.error || 'External API error occurred',
+        success: false,
+        details: error.response.data
+      });
+    } else if (error.code === 'ECONNABORTED') {
+      res.status(408).json({
+        error: 'Timeout',
+        message: 'Request timed out. Please try again.',
+        success: false
+      });
+    } else if (error.code === 'ENOTFOUND' || error.code === 'ECONNREFUSED') {
+      res.status(503).json({
+        error: 'Network Error',
+        message: 'Unable to connect to job search service.',
+        success: false
+      });
+    } else {
+      res.status(500).json({
+        error: 'Server Error',
+        message: 'Something went wrong while fetching jobs. Please try again.',
+        success: false,
+        details: error.message
+      });
+    }
+  }
+});
+
+// Alternative job search endpoints (for different job boards)
+app.post('/api/search-jobs-indeed', async (req, res) => {
+  try {
+    const { query, location } = req.body;
+
+    if (!process.env.SERPAPI_KEY) {
+      return res.status(500).json({ 
+        error: 'API key not configured' 
+      });
+    }
+
+    const params = {
+      engine: 'indeed_jobs',
+      q: query,
+      location: location,
+      api_key: process.env.SERPAPI_KEY
+    };
+
+    const response = await axios.get('https://serpapi.com/search.json', { params });
+    res.json(response.data);
+
+  } catch (error) {
+    console.error('Error fetching Indeed jobs:', error);
+    res.status(500).json({
+      error: 'Failed to fetch Indeed jobs',
+      message: error.message
+    });
+  }
+});
+
+app.use((err, req, res, next) => {
+  console.error('Unhandled error:', err);
+  res.status(500).json({
+    error: 'Internal Server Error',
+    message: 'Something went wrong!'
+  });
 });
 
 // ✅ Generate jobs based on profile - Now using a real jobs API

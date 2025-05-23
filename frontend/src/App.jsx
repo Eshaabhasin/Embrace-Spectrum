@@ -13,6 +13,7 @@ import LifeSkillsTracker from './Components/LifeSkillTracker/LifeSkillTracker';
 import LearnPath from './Components/LearningPath/AllLearnpath';
 import LifeSkillsQuiz from './Components/Quiz/LifeSkillsQuiz';
 import './App.css';
+import SpeechCoach from './Components/GeminiLive copy/GeminiLive';
 
 // Auth wrapper component to handle redirect to onboarding
 const AuthWrapper = () => {
@@ -117,6 +118,7 @@ function App() {
               <Route path="/tracker" element={<LifeSkillsTracker />} />
               <Route path="/learn" element={<LearnPath />} />
               <Route path="/quiz" element={<LifeSkillsQuiz/>} />
+              <Route path="/SpeechCoach" element={<SpeechCoach/>} />
             </Routes>
           </>
         } />
