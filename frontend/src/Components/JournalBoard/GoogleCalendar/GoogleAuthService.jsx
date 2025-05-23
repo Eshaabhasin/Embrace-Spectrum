@@ -2,8 +2,8 @@
 
 class GoogleAuthService {
   constructor() {
-    this.apiKey = import.meta.env.VITE_GOOGLE_API_KEY || 'AIzaSyAURsPWRVmAgPiMpCDpPhyk7zaZhD7n_sY'; // ✅ API Key
-    this.clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || '50702259389-js1lr9a87a5ng2p446ge353vpg63bqt2.apps.googleusercontent.com'; // ✅ OAuth 2.0 Client ID
+    this.apiKey = import.meta.env.VITE_GOOGLE_API_KEY; // ✅ API Key
+    this.clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
     this.scopes = 'https://www.googleapis.com/auth/calendar';
 
     this.tokenClient = null;

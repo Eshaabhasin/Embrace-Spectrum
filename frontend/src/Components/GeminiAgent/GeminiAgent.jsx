@@ -3,23 +3,9 @@ import { initializeApp } from 'firebase/app';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
 import { useUser } from '@clerk/clerk-react'; 
 import { MessageCircle, Sparkles, X, ChevronRight, RotateCcw } from 'lucide-react';
+import {db, auth} from '../../../firebase'
 
-// Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyDhTHAeIbIAT0bm3DOTHG1yTpAYCuIrsik",
-  authDomain: "embrace-spectrum-4e8c2.firebaseapp.com",
-  projectId: "embrace-spectrum-4e8c2",
-  storageBucket: "embrace-spectrum-4e8c2.firebasestorage.app",
-  messagingSenderId: "659544849252",
-  appId: "1:659544849252:web:986409723e1035ef9a5871",
-  measurementId: "G-E0VES4105M"
-};
-
-// Initialize Firebase (only Firestore, no Auth)
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-const GEMINI_API_KEY = 'AIzaSyBdEFLrPJ1pVPZzFJT5m-MOQQ9Y8vMKluU';
+const GEMINI_API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
 
 const GeminiAgent = () => {
   const { user, isLoaded } = useUser();

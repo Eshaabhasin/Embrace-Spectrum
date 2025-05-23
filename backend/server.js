@@ -10,15 +10,11 @@ const app = express();
 const port = 3000;
 
 // Gemini AI setup
-const genAI = new GoogleGenerativeAI("AIzaSyBdEFLrPJ1pVPZzFJT5m-MOQQ9Y8vMKluU");
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
-// Job search API setup (using RapidAPI's JobSearch API as an example)
-const JOBS_API_KEY = process.env.JOBS_API_KEY || "5c0cee33bbmsh8e649a10fa36eaep13e40fjsn74a7ea33dda7"; // Store this securely
-
-// ✅ CORS middleware with allowed origin (your Vercel frontend)
 app.use(cors({
-  origin: ["https://embrace-spectrum.vercel.app", "http://localhost:5173"], // ⬅️ Allow your Vercel frontend
+  origin: ["https://embrace-spectrum.vercel.app", "http://localhost:5173"], 
   origin: [
     "https://embrace-spectrum.vercel.app",
     "http://localhost:5173"
@@ -88,15 +84,13 @@ app.post('/api/search-jobs', async (req, res) => {
       searchQuery += 'remote OR "work from home" ';
     }
     
-    // Add inclusive terms
-    searchQuery += 'inclusive OR diversity OR "neurodiversity friendly" OR accommodations';
+     searchQuery += 'inclusive OR diversity OR "neurodiversity friendly" OR accommodations';
     
-    // SerpAPI parameters - REMOVED the deprecated 'start' parameter
     const serpApiParams = {
       engine: 'google_jobs',
       q: searchQuery.trim(),
       location: location || 'United States',
-      api_key: process.env.SERPAPI_KEY || '1615a613583f9917df741f179948e331838515f1d5078c9b415be8f017dc2fbf',
+      api_key: process.env.SERPAPI_KEY,
       num: 20
     };
     

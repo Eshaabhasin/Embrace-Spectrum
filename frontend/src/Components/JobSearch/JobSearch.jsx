@@ -5,19 +5,7 @@ import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 import { useUser } from '@clerk/clerk-react';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
-
-const firebaseConfig = {
-  apiKey: "AIzaSyDhTHAeIbIAT0bm3DOTHG1yTpAYCuIrsik",
-  authDomain: "embrace-spectrum-4e8c2.firebaseapp.com",
-  projectId: "embrace-spectrum-4e8c2",
-  storageBucket: "embrace-spectrum-4e8c2.firebasestorage.app",
-  messagingSenderId: "659544849252",
-  appId: "1:659544849252:web:986409723e1035ef9a5871",
-  measurementId: "G-E0VES4105M"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+import {db, auth} from '../../../firebase'
 
 const JobSearchComponent = () => {
   const { isLoaded, user } = useUser();

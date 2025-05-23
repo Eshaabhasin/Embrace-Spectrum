@@ -1,30 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '@clerk/clerk-react';
-import { initializeApp } from 'firebase/app';
 import { getFirestore, doc, setDoc, getDoc } from 'firebase/firestore';
-import { getAuth, signInWithCustomToken } from 'firebase/auth';
-
-const firebaseConfig = {
-  apiKey: "AIzaSyDhTHAeIbIAT0bm3DOTHG1yTpAYCuIrsik",
-  authDomain: "embrace-spectrum-4e8c2.firebaseapp.com",
-  projectId: "embrace-spectrum-4e8c2",
-  storageBucket: "embrace-spectrum-4e8c2.firebasestorage.app",
-  messagingSenderId: "659544849252",
-  appId: "1:659544849252:web:986409723e1035ef9a5871",
-  measurementId: "G-E0VES4105M"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const auth = getAuth(app);
+import { db, auth } from "../../../firebase";
 
 const OnboardingForm = () => {
   const navigate = useNavigate();
   const { isSignedIn, user } = useUser();
 
-  // Form states
   const [formData, setFormData] = useState({
     preferredName: '',
     ageGroup: '',

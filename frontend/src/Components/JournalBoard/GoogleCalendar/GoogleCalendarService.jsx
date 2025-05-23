@@ -1,5 +1,3 @@
-// GoogleCalendarService.js
-
 class GoogleCalendarService {
   constructor(authToken) {
     this.accessToken = authToken;

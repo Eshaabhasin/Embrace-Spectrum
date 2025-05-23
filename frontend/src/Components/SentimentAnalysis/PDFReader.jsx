@@ -9,8 +9,8 @@ const PDFEmotionReader = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const GOOGLE_API_KEY = 'AIzaSyBdEFLrPJ1pVPZzFJT5m-MOQQ9Y8vMKluU'; 
-  const PDFCO_API_KEY = 'prableensingh0401@gmail.com_k0TNlK1YpJ4vrfdUVgbYMQJqFyZiv0Kd7P7mwB7DLj5Jk3XP4NSxb1sulOZDqlYO';
+  const GOOGLE_API_KEY = import.meta.env.VITE_GOOGLE_API_KEY; 
+  const PDFCO_API_KEY = import.meta.env.VITE_PDFCO_API_KEY;
 
   const emotionMap = {
     'happy': { 

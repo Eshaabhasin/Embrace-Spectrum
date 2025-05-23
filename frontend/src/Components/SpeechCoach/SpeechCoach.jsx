@@ -5,7 +5,7 @@ import { LiveAPIProvider } from "./contexts/LiveAPIContext";
 import { Altair } from "./components/altair/Altair";
 import NavBar from "../NavBar/NavBar";
 
-const API_KEY = "AIzaSyCN7qtGsHboeYuMffK-eyBpvMLVP5XHemc";
+const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
 const host = "generativelanguage.googleapis.com";
 const uri = `wss://${host}/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent`;
 
