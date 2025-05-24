@@ -168,9 +168,8 @@ const LearnPath = () => {
     setErrorMessage("");
   };
 
-  const formatDataToString = () => {
-    return `Create a personalized and inclusive educational toolkit in ${formData.preferred_language}.
-
+const formatDataToString = () => {
+  return `Create a personalized educational toolkit in ${formData.preferred_language} language only.
 User Profile:
 - Preferred Language: ${formData.preferred_language}
 - Age: ${formData.age}
@@ -182,6 +181,15 @@ Design an educational path that is:
 - Free from overwhelming details, using plain language and short sentences
 - Encouraging and empowering
 - Accessible and inclusive for all learning styles
+
+Instructions:
+1. Respond ENTIRELY in ${formData.preferred_language} language
+2. Do NOT mention the user's age, language preference, or level in the response
+3. Do NOT use any acknowledgment phrases like "Based on your..." or "Here's your plan"
+4. Start DIRECTLY with the learning content
+5. Provide a structured 6-week learning plan
+6. Include practical resources and tasks
+7. Keep explanations simple and clear
 
 Please include:
 1. A 6-week simplified learning roadmap, with each week broken into small, manageable parts
