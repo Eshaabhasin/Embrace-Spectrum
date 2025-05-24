@@ -5,13 +5,54 @@ import SpotlightCard from "./FeatureCard/FeatureCardLogic";
 import { Sparkles } from "lucide-react";
 import CircularGallery from "./Gallery/GalleryLogic";
 import GeminiAgent from "../GeminiAgent/GeminiAgent";
+import IconsCards from './Icons/IconsLogic';
+import Img1 from '../../assets/ChatBot Icon.png'
+import Img2 from '../../assets/FeelReader Icon.png'
+import Img3 from '../../assets/Journal Icon.png'
+import Img4 from '../../assets/Sketch Tales Icon.png'
+import Img5 from '../../assets/TalkCoach Icon.png'
+import Img6 from '../../assets/Jobs Icon.png'
+import Img7 from '../../assets/Life Tracker Icon.png'
+
+const images = [Img1, Img2, Img3, Img4, Img5, Img6, Img7];
+
+const transformStyles = [
+  "translateX(-180px) translateY(0)",
+  "translateX(-120px) translateY(0)",
+  "translateX(-60px) translateY(0)",
+  "translateX(0) translateY(0)",
+  "translateX(60px) translateY(0)",
+  "translateX(120px) translateY(0)",
+  "translateX(180px) translateY(0)"
+];  
+
+const titles = [
+  "Solace Chatbot",
+  "Feel Reader",
+  "Journal",
+  "Sketch Tales",
+  "Talk Coach",
+  "Jobs",
+  "Life Tracker",
+];
+
+const links = [
+  "/chatbot",
+  "/FeelReader",
+  "/JournalBoard",
+  "/SketchTales",
+  "/GeminiLive",
+  "/Jobs",
+  "/tracker",
+  "/SpeechCoach",
+];
 
 const Home = () => {
     return (
         <>
             <NavBar />
             <div className="px-10">
-                <div className="flex justify-center text-center mt-55 ml-10">
+                <div className="flex justify-center text-center mt-40 ml-10">
                   <div className="">
                     <div className="flex">
                         
@@ -38,10 +79,27 @@ const Home = () => {
                             Celebrating Neurodiversity,Empowering Every Mind!
                         </h1>
 
-                        <p className="text-2xl text-white mt-7 leading-relaxed">
-                            Unlock potential, foster inclusion, and embrace the strengths<br></br> of every neurodiverse individual.
+                        <p className="text-2xl text-white leading-relaxed">
+                            Unlock potential, foster inclusion, and embrace the strengths.
                         </p>
-                    </div></div>
+                    </div>
+                    </div>
+                <div className="px-95 justify-center items-center">
+                <IconsCards
+                    className="custom-bounceCards mt-10"
+                    images={images}
+                    titles={titles}
+                    links={links}
+                    containerWidth={500}
+                    containerHeight={250}
+                    animationDelay={1}
+                    animationStagger={0.08}
+                    easeType="elastic.out(1, 0.5)"
+                    transformStyles={transformStyles}
+                    enableHover={true}
+                    />
+                </div>
+
                 <div className="mt-60">
                 <div style={{ height: '600px', position: 'relative' }}>
                 <CircularGallery bend={3} textColor="#ffffff" borderRadius={0.05} />

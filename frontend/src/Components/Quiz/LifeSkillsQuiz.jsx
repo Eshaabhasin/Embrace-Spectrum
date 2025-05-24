@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { CheckCircle, XCircle, ArrowRight, RotateCcw, Star, Mic, MicOff, Lightbulb, RefreshCw, Sparkles } from 'lucide-react';
+import {ArrowRight, RotateCcw, Star, Mic, MicOff, Lightbulb, RefreshCw, Sparkles } from 'lucide-react';
 import NavBar from '../NavBar/NavBar';
+
 const LifeSkillsQuiz = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState('');
@@ -245,7 +246,7 @@ const LifeSkillsQuiz = () => {
     setGameComplete(false);
     setShowAnimation(false);
     setAnimationType('');
-    generateQuestions(); // Generate new questions
+    generateQuestions();
   };
 
   const currentQ = questions[currentQuestion] || {};
@@ -254,9 +255,10 @@ const LifeSkillsQuiz = () => {
   // Loading Screen
   if (isLoading || (isGenerating && questions.length === 0)) {
     return (
-
-      <div className="h-screen bg-[#6488e9] p-4 flex items-center justify-center overflow-hidden">
-        <div className="bg-gradient-to-br from-green-50 to-emerald-100 rounded-3xl shadow-2xl p-8 w-[600px] h-[700px] border-4 border-white/20 text-center">
+     <>
+     <NavBar/>
+      <div className="h-screen p-4 flex items-center justify-center overflow-hidden">
+        <div className="bg-gradient-to-br from-green-50 to-emerald-100 rounded-3xl shadow-2xl p-8 w-[800px] h-[50vh] border-4 border-white/20 text-center">
           <div className="text-6xl mb-6 animate-bounce">🧠</div>
           <h2 className="text-2xl font-bold text-slate-800 mb-4">Life Skills Challenge</h2>
           <div className="flex items-center justify-center gap-3 mb-4">
@@ -269,19 +271,23 @@ const LifeSkillsQuiz = () => {
           <p className="text-sm text-slate-500">✨ Generating questions✨</p>
         </div>
       </div>
+      </>
     );
   }
 
   if (gameComplete) {
     return (
-      <div className="h-screen bg-[#6488e9] p-4 flex items-center justify-center overflow-hidden">
-        <div className="max-w-2xl w-full">
-          <div className="bg-gradient-to-br from-green-50 to-emerald-100 rounded-3xl shadow-2xl p-6 text-center border-4 border-white/20 max-h-[90vh] overflow-y-auto">
-            <div className="mb-4">
-              <div className="text-4xl mb-3 animate-bounce">🎉</div>
-              <Star className="w-12 h-12 text-yellow-500 mx-auto mb-3 animate-spin" />
-              <h2 className="text-2xl font-bold text-slate-800 mb-2">🌟 Fantastic Work! 🌟</h2>
-              <p className="text-slate-600">You completed the Life Skills Quiz! 🎊</p>
+      <>
+      <NavBar/>
+      <div className="h-screen bg-[#6488e9] p-4 flex items-center justify-center mt-13 overflow-hidden">
+        <div className="max-w-7xl w-full">
+          <div className="bg-gradient-to-br from-green-50 to-emerald-100 rounded-3xl shadow-2xl p-6 text-center border-4 border-white/20 max-h-[84vh] overflow-y-auto">
+            <div className="mb-4 flex justify-center">
+              <div className="text-4xl animate-bounce">🎉</div>
+              <div>
+                <h2 className="text-2xl font-bold text-slate-800 mb-2">Fantastic Work!</h2>
+                <p className="text-slate-600">You completed the Life Skills Quiz! 🎊</p>
+              </div>
             </div>
             
             <div className="bg-gradient-to-r from-green-100 to-emerald-200 rounded-2xl p-4 mb-4 border border-green-300">
@@ -329,15 +335,16 @@ const LifeSkillsQuiz = () => {
           </div>
         </div>
       </div>
+      </>
     );
   }
 
   return (
     <>
-    <NavBar></NavBar>
-    <div className="h-screen bg-[#6488e9] p-4 overflow-hidden">
-      <div className="max-w-4xl mx-auto h-full flex flex-col">
-        {/* Animated Success Overlay */}
+    <NavBar/>
+    <div className="bg-[#6488e9] p-4 overflow-hidden">
+      <div className="max-w-7xl mx-auto h-full mt-25 flex flex-col">
+
         {showAnimation && (
           <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
             <div className={`transform transition-all duration-1000 ${
@@ -363,19 +370,6 @@ const LifeSkillsQuiz = () => {
             </div>
           </div>
         )}
-
-        {/* Header */}
-        <div className="text-center mt-20">
-          <div className="text-4xl mb-2 animate-pulse">🧠</div>
-         <h1 className="text-4xl font-extrabold text-white mb-2 drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]">
-  Life Skills Challenge
-</h1>
-<p className="text-white text-xl font-medium tracking-wide drop-shadow-[0_0_6px_rgba(255,255,255,0.5)]">
-  🌟 Navigate real-world scenarios with confidence 🌟
-</p>
-
-
-        </div>
 
         {/* Progress Bar */}
         <div className="bg-white/20 backdrop-blur-sm rounded-full h-4 mb-4 shadow-inner border border-white/30">

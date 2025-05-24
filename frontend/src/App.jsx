@@ -6,9 +6,8 @@ import {
   Navigate,
   useLocation,
 } from 'react-router-dom';
-import { useUser, ClerkProvider } from '@clerk/clerk-react';
+import { useUser } from '@clerk/clerk-react';
 
-// Components
 import Home from './Components/Home/Home';
 import Chatbot from './Components/Chatbot/Chatbot';
 import SentimentAnalyser from './Components/SentimentAnalysis/SentimentAnalyser';
@@ -24,7 +23,6 @@ import SpeechCoach from './Components/SpeechCoach/SpeechCoach';
 
 import './App.css';
 
-// Auth wrapper component to handle redirect to onboarding
 const AuthWrapper = () => {
   const { isSignedIn, user, isLoaded } = useUser();
   const location = useLocation();
@@ -117,7 +115,7 @@ function App() {
         <Route path="/learn" element={<LearnPath />} />
         <Route path="/quiz" element={<LifeSkillsQuiz />} />
         <Route path="/SpeechCoach" element={<SpeechCoach />} />
-        
+    
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>

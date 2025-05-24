@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import NavBar from "../NavBar/NavBar";
 import { Mic, Send } from "lucide-react";
 import ReactMarkdown from "react-markdown";
@@ -7,6 +7,15 @@ function Chatbot() {
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState("");
     const [isListening, setIsListening] = useState(false);
+
+    // Welcome message on component mount
+    useEffect(() => {
+        const welcomeMessage = {
+            text: "Hi there! I'm **Solace**, your friendly and caring AI companion. I'm here to support you at your pace, in your way — whether you're navigating conversations, expressing yourself, or just need a safe space to talk. 💙",
+            sender: "bot"
+        };
+        setMessages([welcomeMessage]);
+    }, []);
 
     const sendMessage = async () => {
         if (!input.trim()) return;
