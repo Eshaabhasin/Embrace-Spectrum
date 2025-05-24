@@ -4,9 +4,7 @@ import NavBar from "../NavBar/NavBar";
 import parse from 'html-react-parser';
 import SubmitButtonInvestiMate from "./FormSubmitButton";
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
-import { Mic, MicOff, Download, Volume2, VolumeX } from 'lucide-react';
-import { PDFDownloadLink } from '@react-pdf/renderer';
-import LearningPathPDF from "./PDFGeneratorPaths";
+import { Mic, MicOff, Volume2, VolumeX, User, Calendar, BookOpen, MessageCircle } from 'lucide-react';
 
 const languageToCode = {
   'English': 'en-IN',
@@ -70,7 +68,7 @@ const ResponseDisplay = ({ text, language, isLoading }) => {
         .replace(/\*(.*?)\*/g, '<em>$1</em>')
         .replace(/₹(\d+(?:,\d+)*(?:\.\d+)?)/g, '<span class="whitespace-nowrap">₹$1</span>')
         .replace(/(\d+(?:,\d+)*(?:\.\d+)?)/g, '<span class="whitespace-nowrap">$1</span>')
-        .replace(/(!important|!note|note:|important:)/gi, '<strong class="text-blue-500">$1</strong>')
+        .replace(/(!important|!note|note:|important:)/gi, '<strong class="text-blue-600">$1</strong>')
         .replace(/^- /g, '• ')
         .replace(/^[0-9]+\. /g, match => `<strong>${match}</strong>`);
 
@@ -92,7 +90,6 @@ const ResponseDisplay = ({ text, language, isLoading }) => {
 const LearnPath = () => {
   const [formData, setFormData] = useState({
     preferred_language: "",
-    location: "",
     age: "",
     learning_path_type: "",
     learning_topic: "",
@@ -154,17 +151,6 @@ const LearnPath = () => {
     "Assamese", "Sanskrit", "Konkani", "Manipuri", "Nepali"
   ];
 
-  const indianStates = [
-    "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", 
-    "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka", 
-    "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya", 
-    "Mizoram", "Nagaland", "Odisha", "Punjab", "Rajasthan", "Sikkim", 
-    "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand", 
-    "West Bengal", "Andaman and Nicobar Islands", "Chandigarh", 
-    "Dadra and Nagar Haveli and Daman and Diu", "Delhi", "Jammu and Kashmir", 
-    "Ladakh", "Lakshadweep", "Puducherry"
-  ];
-
   const toggleListening = () => {
     if (isListening) {
       SpeechRecognition.stopListening();
@@ -182,28 +168,27 @@ const LearnPath = () => {
     setErrorMessage("");
   };
 
- const formatDataToString = () => {
-  return `Create a personalized and inclusive educational toolkit in ${formData.preferred_language}, tailored for a neurodivergent learner.
+  const formatDataToString = () => {
+    return `Create a personalized and inclusive educational toolkit in ${formData.preferred_language}.
 
 User Profile:
 - Preferred Language: ${formData.preferred_language}
-- Location: ${formData.location}
 - Age: ${formData.age}
 - Understanding Level: ${formData.learning_path_type}
 - Learning Topic: ${formData.learning_topic}
 
 Design an educational path that is:
-- Neurodivergent-friendly (suitable for users with autism, ADHD, dyslexia, etc.)
 - Simple, visual, structured, and calming
 - Free from overwhelming details, using plain language and short sentences
 - Encouraging and empowering
+- Accessible and inclusive for all learning styles
 
 Please include:
 1. A 6-week simplified learning roadmap, with each week broken into small, manageable parts
 2. Direct online resources with actual, accessible URLs
-3. Local community resources and support groups in ${formData.location}
+3. Local community resources and support groups
 4. Free or low-cost learning materials (audio, video, interactive)
-5. Sensory-friendly practice tasks with expected outcomes and time commitment
+5. Practice tasks with expected outcomes and time commitment
 6. Visual supports (if possible: diagrams, flowcharts, videos)
 
 Each Week Format:
@@ -212,18 +197,17 @@ Week X:
 • Simple Explanation  
 • Free Resources (with real links)  
 • Interactive/Visual Tools  
-• Practice Task (sensory-friendly)  
+• Practice Task  
 • Outcome to Expect  
 • Time Needed (in minutes)  
 
 Guidelines:
 - All content must be in ${formData.preferred_language}
-- Make it visually digestible and cognitively light
-- Prioritize clarity, routine, and scaffolded learning
-- Recommend breaks and sensory considerations if needed
+- Make it visually digestible and easy to follow
+- Prioritize clarity, routine, and step-by-step learning
+- Include regular breaks and pacing recommendations
 - Ensure suggestions are age-appropriate for ${formData.age}`;
-};
-
+  };
 
   const validateForm = () => {
     const fields = Object.entries(formData);
@@ -289,98 +273,116 @@ Guidelines:
     <div className="lg:flex gap-8 p-8 mt-8 flex-1">
       <div className="lg:w-[46%]">
         <form onSubmit={(e) => e.preventDefault()} className="space-y-6">
-          <h1 className="text-3xl font-bold mt-14 mb-1 text-white">
-            Financial Education Plan
-          </h1>
+      <h1 className="text-6xl font-extrabold mt-20 mb-9 text-transparent bg-clip-text bg-gradient-to-r from-white via-cyan-200 to-white drop-shadow-2xl tracking-normal animate-fade-in">
+  Growth Journey
+</h1>
 
-          <select
-            name="preferred_language"
-            value={formData.preferred_language}
-            onChange={handleInputChange}
-            required
-            className="mt-5 w-full p-3 bg-white text-black rounded-lg"
-          >
-            <option value="">Select Preferred Language</option>
-            {indianLanguages.map((language) => (
-              <option key={language} value={language}>{language}</option>
-            ))}
-          </select>
-
-          <select
-            name="location"
-            value={formData.location}
-            onChange={handleInputChange}
-            required
-            className="w-full p-3 bg-white text-black rounded-lg"
-          >
-            <option value="">Select Your State</option>
-            {indianStates.map((state) => (
-              <option key={state} value={state}>{state}</option>
-            ))}
-          </select>
-
-          <input
-            type="number"
-            name="age"
-            value={formData.age}
-            onChange={handleInputChange}
-            placeholder="Your Age"
-            required
-            className="w-full p-3 bg-white text-black rounded-lg"
-          />
-
-          <select
-            name="learning_path_type"
-            value={formData.learning_path_type}
-            onChange={handleInputChange}
-            required
-            className="w-full p-3 bg-white text-black rounded-lg"
-          >
-            <option value="">Select Learning Path Type</option>
-            <option value="Beginner">Beginner</option>
-            <option value="Intermediate">Intermediate</option>
-            <option value="Advanced">Advanced</option>
-            <option value="Professional">Professional Certification</option>
-          </select>
-
-          <div className="flex items-center gap-2">
-            <input
-              type="text"
-              name="learning_topic"
-              value={formData.learning_topic}
+          {/* Language Selection */}
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <User className="h-5 w-5 text-teal-500" />
+            </div>
+            <select
+              name="preferred_language"
+              value={formData.preferred_language}
               onChange={handleInputChange}
-              placeholder="What specific topic do you want to learn?"
-              className="w-full p-3 bg-white text-black rounded-lg"
-            />
-            <button
-              type="button"
-              onClick={toggleListening}
-              className={`p-2 rounded-full transition-colors ${
-                isListening 
-                  ? 'bg-red-500 hover:bg-red-600' 
-                  : 'bg-blue-500 hover:bg-blue-600'
-              }`}
-              title={isListening ? 'Stop listening' : 'Start listening'}
+              required
+              className="w-full pl-12 pr-4 py-4 bg-white border-2 border-teal-200 rounded-xl text-slate-700 focus:outline-none focus:ring-2 focus:ring-teal-300 focus:border-teal-300 transition-colors shadow-sm"
             >
-              {isListening ? (
-                <MicOff className="h-5 w-5 text-white" />
-              ) : (
-                <Mic className="h-5 w-5 text-white" />
-              )}
-            </button>
+              <option value="">Select Preferred Language</option>
+              {indianLanguages.map((language) => (
+                <option key={language} value={language}>{language}</option>
+              ))}
+            </select>
           </div>
 
+          {/* Age Input */}
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <Calendar className="h-5 w-5 text-blue-500" />
+            </div>
+            <input
+              type="number"
+              name="age"
+              value={formData.age}
+              onChange={handleInputChange}
+              placeholder="Your Age"
+              required
+              className="w-full pl-12 pr-4 py-4 bg-white border-2 border-blue-200 rounded-xl text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-300 transition-colors shadow-sm"
+            />
+          </div>
+
+          {/* Learning Path Type */}
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <BookOpen className="h-5 w-5 text-green-500" />
+            </div>
+            <select
+              name="learning_path_type"
+              value={formData.learning_path_type}
+              onChange={handleInputChange}
+              required
+              className="w-full pl-12 pr-4 py-4 bg-white border-2 border-green-200 rounded-xl text-slate-700 focus:outline-none focus:ring-2 focus:ring-green-300 focus:border-green-300 transition-colors shadow-sm"
+            >
+              <option value="">Select Learning Path Type</option>
+              <option value="Beginner">Beginner</option>
+              <option value="Intermediate">Intermediate</option>
+              <option value="Advanced">Advanced</option>
+              <option value="Professional">Professional Certification</option>
+            </select>
+          </div>
+
+          {/* Learning Topic with Voice Input */}
+          <div className="space-y-2">
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <MessageCircle className="h-5 w-5 text-purple-500" />
+              </div>
+              <div className="flex items-center gap-3">
+                <input
+                  type="text"
+                  name="learning_topic"
+                  value={formData.learning_topic}
+                  onChange={handleInputChange}
+                  placeholder="What specific topic do you want to learn?"
+                  className="flex-1 pl-12 pr-4 py-4 bg-white border-2 border-purple-200 rounded-xl text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-300 focus:border-purple-300 transition-colors shadow-sm"
+                />
+                <button
+                  type="button"
+                  onClick={toggleListening}
+                  className={`p-3 rounded-xl transition-colors ${
+                    isListening 
+                      ? 'bg-red-100 border-2 border-red-300 text-red-600' 
+                      : 'bg-blue-100 border-2 border-blue-300 text-blue-600 hover:bg-blue-200'
+                  }`}
+                  title={isListening ? 'Stop listening' : 'Start listening'}
+                >
+                  {isListening ? (
+                    <MicOff className="h-5 w-5" />
+                  ) : (
+                    <Mic className="h-5 w-5" />
+                  )}
+                </button>
+              </div>
+            </div>
+            {isListening && (
+              <div className="text-sm text-slate-600 flex items-center gap-2 pl-4">
+                <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse"></div>
+                Listening...
+              </div>
+            )}
+          </div>
+
+          {/* Submit Button */}
           <SubmitButtonInvestiMate
             onClick={sendDataToAPI}
             disabled={isLoading}
-          >
-          </SubmitButtonInvestiMate>
+          />
 
-       
-
+          {/* Error Message */}
           {errorMessage && (
-            <div className="mt-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
-              <p className="text-red-400 text-sm">{errorMessage}</p>
+            <div className="mt-4 p-4 bg-red-50 border-2 border-red-200 rounded-xl">
+              <p className="text-red-600 text-sm">{errorMessage}</p>
             </div>
           )}
         </form>
@@ -389,14 +391,14 @@ Guidelines:
       {/* Response Section */}
       {(response || isLoading) && (
           <div className="lg:w-[45%] lg:absolute right-8 top-[10%] mt-10 lg:mt-13 max-h-[75vh] overflow-y-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-            <div className="mt-5 w-full rounded-lg border border-gray-700 bg-[#FFFDD0] backdrop-blur-sm shadow-lg">
-              <div className="border-b border-gray-700 p-6 flex items-center justify-between">
-                <h3 className="text-xl font-bold text-black">Your Personalized Learning Path</h3>
+            <div className="mt-5 w-full rounded-lg border border-gray-300 bg-gradient-to-br from-blue-50 to-indigo-100 backdrop-blur-sm shadow-xl">
+              <div className="border-b border-indigo-200 p-6 flex items-center justify-between bg-gradient-to-r from-indigo-500 to-purple-600 rounded-t-lg">
+                <h3 className="text-xl font-bold text-white">Your Personalized Learning Path</h3>
                 <div className="flex items-center space-x-2">
                   <button 
                     onClick={isSpeaking ? stopSpeaking : speak}
                     className={`p-2 rounded-full transition-colors ${
-                      isSpeaking ? 'bg-red-500 hover:bg-red-600' : 'bg-blue-500 hover:bg-blue-600'
+                      isSpeaking ? 'bg-red-500 hover:bg-red-600' : 'bg-white/20 hover:bg-white/30'
                     }`}
                     title={isSpeaking ? 'Stop speaking' : 'Start speaking'}
                     disabled={isLoading || !response}
@@ -407,21 +409,6 @@ Guidelines:
                       <Volume2 className="h-5 w-5 text-white" />
                     )}
                   </button>
-                  <PDFDownloadLink
-                    document={<LearningPathPDF formData={formData} response={response} />}
-                    fileName={`LearnPath_${formData.learning_topic}_${new Date().toISOString().split('T')[0]}.pdf`}
-                    className="text-white hover:text-pink-500 transition-colors p-2"
-                  >
-                    {({ loading }) => 
-                      loading ? (
-                        <div className="animate-pulse">
-                          <Download className="h-5 w-5" />
-                        </div>
-                      ) : (
-                        <Download className="h-5 w-5" />
-                      )
-                    }
-                  </PDFDownloadLink>
                 </div>
               </div>
 
@@ -429,11 +416,11 @@ Guidelines:
                 {isLoading ? (
                   <div className="flex items-center space-x-3">
                     <div className="flex space-x-1">
-                      <div className="w-2 h-2 bg-pink-500 rounded-full animate-pulse"></div>
-                      <div className="w-2 h-2 bg-pink-500 rounded-full animate-pulse delay-150"></div>
-                      <div className="w-2 h-2 bg-pink-500 rounded-full animate-pulse delay-300"></div>
+                      <div className="w-2 h-2 bg-indigo-500 rounded-full animate-pulse"></div>
+                      <div className="w-2 h-2 bg-indigo-500 rounded-full animate-pulse delay-150"></div>
+                      <div className="w-2 h-2 bg-indigo-500 rounded-full animate-pulse delay-300"></div>
                     </div>
-                    <span className="text-gray-400">Crafting your personalized learning path...</span>
+                    <span className="text-gray-600">Crafting your personalized learning path...</span>
                   </div>
                 ) : (
                   <ResponseDisplay 

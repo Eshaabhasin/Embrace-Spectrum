@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { CheckCircle, XCircle, ArrowRight, RotateCcw, Star, Mic, MicOff } from 'lucide-react';
+import { CheckCircle, XCircle, ArrowRight, RotateCcw, Star, Mic, MicOff, Lightbulb, RefreshCw, Sparkles } from 'lucide-react';
 
 const LifeSkillsQuiz = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -13,113 +13,11 @@ const LifeSkillsQuiz = () => {
   const [speechSupported, setSpeechSupported] = useState(false);
   const [showAnimation, setShowAnimation] = useState(false);
   const [animationType, setAnimationType] = useState('');
+  const [questions, setQuestions] = useState([]);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [generationError, setGenerationError] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
   const recognitionRef = useRef(null);
-
-  const questions = [
-    {
-      id: 1,
-      type: 'mcq',
-      scenario: "You're at a grocery store and realize you forgot your shopping list at home. The store is crowded and noisy, which makes you feel overwhelmed.",
-      question: "What's the best strategy to handle this situation?",
-      options: [
-        "Leave immediately and come back another day",
-        "Take a few deep breaths, find a quiet corner, and try to remember what you need",
-        "Ask a store employee to help you remember your list",
-        "Buy everything you think you might need"
-      ],
-      correct: 1,
-      explanation: "Taking a moment to calm yourself and trying to remember in a quieter space is a practical approach that helps manage sensory overload while still accomplishing your goal."
-    },
-    {
-      id: 2,
-      type: 'text',
-      scenario: "Your friend invited you to a party, but you're feeling anxious about the social interaction and loud environment. You want to maintain the friendship but also take care of your needs.",
-      question: "What would you say to your friend to communicate your concerns while showing you care about the relationship?",
-      sampleAnswers: [
-        "I'd love to celebrate with you, but large parties can be overwhelming for me. Could we maybe hang out one-on-one before or after?",
-        "Thanks for inviting me! I might need to leave early if I get overwhelmed, but I'd like to try coming for a bit.",
-        "I really appreciate the invitation. Could I bring a friend for support, or is there a quieter space where we could chat?"
-      ]
-    },
-    {
-      id: 3,
-      type: 'mcq',
-      scenario: "You're in a job interview and the interviewer asks you about your 'weaknesses.' You want to be honest about your neurodivergent traits without jeopardizing your chances.",
-      question: "Which response would be most appropriate?",
-      options: [
-        "I don't really have any significant weaknesses",
-        "I sometimes need extra time to process information, but I always deliver quality work",
-        "I have ADHD which makes me terrible at focusing",
-        "I prefer not to discuss personal challenges"
-      ],
-      correct: 1,
-      explanation: "This response reframes a challenge as something manageable while highlighting a positive outcome (quality work). It's honest without being self-deprecating."
-    },
-    {
-      id: 4,
-      type: 'mcq',
-      scenario: "You're working on a group project and your teammates want to meet in a noisy café. You know you won't be able to concentrate or contribute effectively in that environment.",
-      question: "How should you handle this situation?",
-      options: [
-        "Go along with it and try your best to participate",
-        "Suggest an alternative location that works better for focused discussion",
-        "Skip the meeting and work on your part alone",
-        "Tell them you can't work in noisy environments because of your neurodivergence"
-      ],
-      correct: 1,
-      explanation: "Suggesting an alternative shows initiative and problem-solving while ensuring everyone can contribute effectively. You don't need to disclose personal information to advocate for a better working environment."
-    },
-    {
-      id: 5,
-      type: 'text',
-      scenario: "Your manager has given you feedback that you seem 'disengaged' in meetings because you don't make much eye contact and fidget with a stress ball. You want to explain your needs professionally.",
-      question: "How would you explain to your manager that these behaviors actually help you focus and engage better?",
-      sampleAnswers: [
-        "I appreciate the feedback. I actually focus better when I can use fidget tools and may not always make direct eye contact, but I am fully engaged and listening carefully.",
-        "Thank you for bringing this up. My fidgeting and reduced eye contact are actually strategies that help me concentrate better during meetings. I'm very engaged with the content.",
-        "I understand how it might appear. These are focusing strategies that work for me - I retain information better this way and am actively participating in the discussion."
-      ]
-    },
-    {
-      id: 6,
-      type: 'mcq',
-      scenario: "You're at a family gathering and a relative makes a comment about you being 'antisocial' because you've stepped outside for some quiet time after feeling overwhelmed by the noise and conversations.",
-      question: "What's the best way to respond?",
-      options: [
-        "Ignore the comment and stay outside longer",
-        "Get defensive and explain all your challenges",
-        "Calmly explain that you needed a short break and you're looking forward to rejoining everyone",
-        "Leave the gathering entirely"
-      ],
-      correct: 2,
-      explanation: "A calm, brief explanation normalizes taking breaks for self-care while showing you want to participate. It's educational without being defensive."
-    },
-    {
-      id: 7,
-      type: 'text',
-      scenario: "You're starting a new job and want to set yourself up for success. You know you work best with clear instructions, regular check-ins, and a organized workspace.",
-      question: "What would you say to your new supervisor to communicate your working style preferences?",
-      sampleAnswers: [
-        "I work best with clear, written instructions and regular check-ins to make sure I'm on track. Could we set up brief weekly meetings?",
-        "I'm very detail-oriented and produce my best work when I have clear expectations and a structured approach. What's the best way to get clarification when I need it?",
-        "I'd love to discuss what working style helps me be most productive. I do great work when I have clear guidelines and regular feedback."
-      ]
-    },
-    {
-      id: 8,
-      type: 'mcq',
-      scenario: "You're in a restaurant and the server brings you the wrong order. The food they brought contains ingredients you can't eat due to sensory sensitivities, but you don't want to cause a scene.",
-      question: "What's the most effective approach?",
-      options: [
-        "Eat what you can and leave the rest",
-        "Politely explain to the server that this isn't what you ordered and ask for the correct dish",
-        "Ask to speak to the manager immediately",
-        "Leave without saying anything"
-      ],
-      correct: 1,
-      explanation: "Politely addressing the mistake directly with the server is appropriate and gives them a chance to fix it. Most restaurant staff want to ensure you have a good experience."
-    }
-  ];
 
   // Initialize speech recognition
   useEffect(() => {
@@ -133,17 +31,12 @@ const LifeSkillsQuiz = () => {
 
       recognitionRef.current.onresult = (event) => {
         let finalTranscript = '';
-        let interimTranscript = '';
-
         for (let i = event.resultIndex; i < event.results.length; i++) {
           const transcript = event.results[i][0].transcript;
           if (event.results[i].isFinal) {
             finalTranscript += transcript;
-          } else {
-            interimTranscript += transcript;
           }
         }
-
         if (finalTranscript) {
           setTextAnswer(prev => prev + finalTranscript + ' ');
         }
@@ -159,6 +52,120 @@ const LifeSkillsQuiz = () => {
       };
     }
   }, []);
+
+  // Auto-generate questions on component mount
+  useEffect(() => {
+    generateQuestions();
+  }, []);
+
+  // Backend API question generation
+  const generateQuestions = async () => {
+    setIsGenerating(true);
+    setGenerationError('');
+    setIsLoading(true);
+    
+   try {
+  const response = await fetch('http://localhost:3000/api/generate-questions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      topic: 'life-skills-neurodivergent',
+      count: 5
+    })
+  });
+
+
+      if (!response.ok) {
+        throw new Error(`API request failed: ${response.status}`);
+      }
+
+      const data = await response.json();
+      
+      if (data.questions && Array.isArray(data.questions)) {
+        setQuestions(data.questions);
+      } else {
+        throw new Error('Invalid question format');
+      }
+
+    } catch (error) {
+      console.error('Backend API Error:', error);
+      setGenerationError(`Failed to generate questions: ${error.message}`);
+      
+      // Fallback questions for neurodivergent users
+      const fallbackQuestions = [
+        {
+          id: 1,
+          type: 'mcq',
+          scenario: "🏢 You're in an open office and the constant noise is making it hard to focus on an important deadline. Your productivity is suffering.",
+          question: "What's the most effective way to handle this sensory challenge? 🎯",
+          options: [
+            "🎧 Request noise-canceling headphones or ask to work in a quieter space",
+            "😤 Tell everyone around you to be quieter",
+            "😓 Try to push through and hope it gets better",
+            "🏠 Call in sick to work from home"
+          ],
+          correct: 0,
+          explanation: "Proactively requesting accommodations shows self-advocacy skills and creates a win-win solution. Most employers are willing to provide reasonable adjustments that help you perform your best! 🌟"
+        },
+        {
+          id: 2,
+          type: 'text',
+          scenario: "🛍️ You're at the grocery store and the fluorescent lights are triggering a headache. The checkout lines are long and you're feeling overwhelmed by the sensory input.",
+          question: "How would you manage this situation while still completing your shopping? 💭",
+          sampleAnswers: [
+            "I'd take a brief break outside to reset my nervous system, then return with a focused shopping list to minimize time inside 🌿",
+            "I might ask store staff if there's a quieter checkout lane or use self-checkout to reduce social interaction 🏪",
+            "I'd practice grounding techniques like deep breathing while focusing only on essential items 🧘‍♀️"
+          ]
+        },
+        {
+          id: 3,
+          type: 'mcq',
+          scenario: "🤝 During a team meeting, your colleague keeps interrupting you when you're trying to explain your project ideas. You feel frustrated and unheard.",
+          question: "What's the best way to address this situation professionally? 💼",
+          options: [
+            "🗣️ Wait for a pause and say 'I'd like to finish my thought before we move on'",
+            "😠 Interrupt them back to show how it feels",
+            "😶 Stay quiet and bring it up with your manager later",
+            "📱 Send them a text during the meeting asking them to stop"
+          ],
+          correct: 0,
+          explanation: "Clear, direct communication in the moment is most effective. This approach is assertive but respectful, and helps establish healthy communication boundaries! 💪"
+        },
+        {
+          id: 4,
+          type: 'text',
+          scenario: "🎉 You've been invited to a birthday party, but you know it will be very loud with lots of people you don't know. You want to celebrate your friend but also need to manage your social energy.",
+          question: "How would you approach this social situation to balance friendship and self-care? 🤗",
+          sampleAnswers: [
+            "I'd tell my friend I'm excited to celebrate but might need to step outside for breaks, and ask if there's a quieter space available 🌱",
+            "I could offer to help with setup early when it's less crowded, then leave before peak party time 🕐",
+            "I might suggest meeting my friend for a quieter celebration separately, while still making a brief appearance at the main party 🎈"
+          ]
+        },
+        {
+          id: 5,
+          type: 'mcq',
+          scenario: "💼 Your new manager has a very different communication style - they prefer quick verbal updates while you work better with written instructions and time to process information.",
+          question: "How can you bridge this communication gap effectively? 🌉",
+          options: [
+            "📝 Explain your communication preferences and suggest a hybrid approach that works for both of you",
+            "😬 Try to adapt completely to their style even if it's challenging",
+            "🤐 Don't say anything and hope you can figure it out",
+            "📧 Only communicate through email regardless of their preferences"
+          ],
+          correct: 0,
+          explanation: "Open communication about work style differences often leads to better solutions for everyone! Most managers appreciate when team members are proactive about optimizing their work relationship. 🤝"
+        }
+      ];
+      setQuestions(fallbackQuestions);
+    } finally {
+      setIsGenerating(false);
+      setIsLoading(false);
+    }
+  };
 
   const startListening = () => {
     if (recognitionRef.current && speechSupported) {
@@ -176,7 +183,6 @@ const LifeSkillsQuiz = () => {
 
   const handleAnswerSelect = (answer) => {
     setSelectedAnswer(answer);
-    // Animate the selection
     setShowAnimation(true);
     setAnimationType('selection');
     setTimeout(() => setShowAnimation(false), 600);
@@ -195,7 +201,6 @@ const LifeSkillsQuiz = () => {
       isCorrect = selectedAnswer === currentQ.correct;
       userAnswer = currentQ.options[selectedAnswer];
     } else {
-      // For text questions, we'll consider any non-empty answer as valid
       isCorrect = textAnswer.trim().length > 0;
       userAnswer = textAnswer;
     }
@@ -210,7 +215,6 @@ const LifeSkillsQuiz = () => {
       correct: isCorrect 
     }]);
 
-    // Trigger success animation
     setShowAnimation(true);
     setAnimationType(isCorrect ? 'success' : 'try-again');
     
@@ -241,50 +245,86 @@ const LifeSkillsQuiz = () => {
     setGameComplete(false);
     setShowAnimation(false);
     setAnimationType('');
+    generateQuestions(); // Generate new questions
   };
 
-  const currentQ = questions[currentQuestion];
-  const progress = ((currentQuestion + 1) / questions.length) * 100;
+  const currentQ = questions[currentQuestion] || {};
+  const progress = questions.length > 0 ? ((currentQuestion + 1) / questions.length) * 100 : 0;
+
+  // Loading Screen
+  if (isLoading || (isGenerating && questions.length === 0)) {
+    return (
+      <div className="h-screen bg-[#6488e9] p-4 flex items-center justify-center overflow-hidden">
+        <div className="bg-gradient-to-br from-green-50 to-emerald-100 rounded-3xl shadow-2xl p-8 w-[600px] h-[400px] border-4 border-white/20 text-center">
+          <div className="text-6xl mb-6 animate-bounce">🧠</div>
+          <h2 className="text-2xl font-bold text-slate-800 mb-4">Life Skills Challenge</h2>
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <RefreshCw className="w-6 h-6 animate-spin text-blue-600" />
+            <p className="text-slate-600">Creating personalized scenarios...</p>
+          </div>
+          <div className="bg-gradient-to-r from-blue-200 to-purple-200 rounded-full p-4 mb-4">
+            <Sparkles className="w-8 h-8 text-purple-600 mx-auto animate-pulse" />
+          </div>
+          <p className="text-sm text-slate-500">✨ Generating questions✨</p>
+        </div>
+      </div>
+    );
+  }
 
   if (gameComplete) {
     return (
-      <div className="min-h-screen p-4" style={{ backgroundColor: '#6488e9' }}>
-        <div className="max-w-2xl mx-auto">
-          <div className="bg-slate-100 rounded-2xl shadow-xl p-8 text-center transform transition-all duration-1000 animate-pulse">
-            <div className="mb-6">
-              <Star className="w-16 h-16 text-amber-500 mx-auto mb-4 animate-spin" />
-              <h2 className="text-3xl font-bold text-slate-800 mb-2">Fantastic Work!</h2>
-              <p className="text-lg text-slate-600">You completed the Life Skills Quiz!</p>
+      <div className="h-screen bg-[#6488e9] p-4 flex items-center justify-center overflow-hidden">
+        <div className="max-w-2xl w-full">
+          <div className="bg-gradient-to-br from-green-50 to-emerald-100 rounded-3xl shadow-2xl p-6 text-center border-4 border-white/20 max-h-[90vh] overflow-y-auto">
+            <div className="mb-4">
+              <div className="text-4xl mb-3 animate-bounce">🎉</div>
+              <Star className="w-12 h-12 text-yellow-500 mx-auto mb-3 animate-spin" />
+              <h2 className="text-2xl font-bold text-slate-800 mb-2">🌟 Fantastic Work! 🌟</h2>
+              <p className="text-slate-600">You completed the Life Skills Quiz! 🎊</p>
             </div>
             
-            <div className="bg-emerald-50 rounded-xl p-6 mb-6 border-2 border-emerald-200">
-              <p className="text-2xl font-bold text-emerald-800 mb-2">
-                Your Score: {score}/{questions.length}
+            <div className="bg-gradient-to-r from-green-100 to-emerald-200 rounded-2xl p-4 mb-4 border border-green-300">
+              <p className="text-xl font-bold text-green-800 mb-2">
+                🏆 Your Score: {score}/{questions.length} 🏆
               </p>
-              <p className="text-emerald-700">
-                {score === questions.length ? "Perfect! You handled all scenarios excellently!" :
-                 score >= questions.length * 0.7 ? "Well done! You showed great problem-solving skills!" :
-                 "Good effort! Every scenario teaches us something valuable."}
+              <p className="text-green-700">
+                {score === questions.length ? "🎯 Perfect! You handled all scenarios excellently! 🎯" :
+                 score >= questions.length * 0.7 ? "👏 Well done! You showed great problem-solving skills! 👏" :
+                 "💪 Good effort! Every scenario teaches us something valuable! 💪"}
               </p>
             </div>
 
-            <div className="text-left bg-slate-50 rounded-xl p-6 mb-6 border-2 border-slate-200">
-              <h3 className="font-bold text-slate-800 mb-3">Key Takeaways:</h3>
-              <ul className="space-y-2 text-slate-700">
-                <li>• Self-advocacy is a valuable skill</li>
-                <li>• It's okay to ask for accommodations</li>
-                <li>• Clear communication helps everyone</li>
-                <li>• Taking care of your needs benefits your relationships and work</li>
+            <div className="text-left bg-gradient-to-r from-blue-100 to-cyan-200 rounded-2xl p-4 mb-4 border border-blue-300">
+              <h3 className="font-bold text-slate-800 mb-3 text-center">🎓 Key Takeaways 🎓</h3>
+              <ul className="space-y-2 text-slate-700 text-sm">
+                <li className="flex items-center gap-2">
+                  <span className="text-lg">🗣️</span>
+                  <span>Self-advocacy is a valuable skill</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="text-lg">🤝</span>
+                  <span>It's okay to ask for accommodations</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="text-lg">💬</span>
+                  <span>Clear communication helps everyone</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="text-lg">❤️</span>
+                  <span>Taking care of your needs benefits relationships</span>
+                </li>
               </ul>
             </div>
 
-            <button
-              onClick={resetQuiz}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 flex items-center gap-2 mx-auto shadow-lg"
-            >
-              <RotateCcw className="w-5 h-5" />
-              Play Again
-            </button>
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={resetQuiz}
+                className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold py-3 px-6 rounded-2xl transition-all duration-300 transform hover:scale-105 flex items-center gap-2 justify-center shadow-lg"
+              >
+                <RotateCcw className="w-5 h-5" />
+                🔄 Generate New Questions
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -292,8 +332,8 @@ const LifeSkillsQuiz = () => {
   }
 
   return (
-    <div className="min-h-screen p-4" style={{ backgroundColor: '#6488e9' }}>
-      <div className="max-w-3xl mx-auto">
+    <div className="h-screen bg-[#6488e9] p-4 overflow-hidden">
+      <div className="max-w-4xl mx-auto h-full flex flex-col">
         {/* Animated Success Overlay */}
         {showAnimation && (
           <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
@@ -303,18 +343,18 @@ const LifeSkillsQuiz = () => {
               'animate-ping'
             }`}>
               {animationType === 'success' && (
-                <div className="bg-emerald-500 text-white p-8 rounded-full shadow-2xl">
-                  <CheckCircle className="w-16 h-16" />
+                <div className="bg-green-500 text-white p-6 rounded-full shadow-2xl border-4 border-white">
+                  <div className="text-3xl">🎉</div>
                 </div>
               )}
               {animationType === 'try-again' && (
-                <div className="bg-amber-500 text-white p-8 rounded-full shadow-2xl">
-                  <span className="text-2xl font-bold">Good Try!</span>
+                <div className="bg-orange-500 text-white p-6 rounded-full shadow-2xl border-4 border-white">
+                  <div className="text-lg font-bold">💪 Good Try! 💪</div>
                 </div>
               )}
               {animationType === 'selection' && (
-                <div className="bg-indigo-500 text-white p-6 rounded-full shadow-2xl">
-                  <CheckCircle className="w-12 h-12" />
+                <div className="bg-purple-500 text-white p-4 rounded-full shadow-2xl border-4 border-white">
+                  <div className="text-2xl">✨</div>
                 </div>
               )}
             </div>
@@ -322,113 +362,130 @@ const LifeSkillsQuiz = () => {
         )}
 
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2 drop-shadow-lg mt-7">Life Skills Challenge</h1>
-          <p className="text-blue-100 text-lg">Navigate real-world scenarios with confidence</p>
+        <div className="text-center">
+          <div className="text-4xl mb-2 animate-pulse">🧠</div>
+         <h1 className="text-4xl font-extrabold text-white mb-2 drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]">
+  Life Skills Challenge
+</h1>
+<p className="text-white text-xl font-medium tracking-wide animate-pulse drop-shadow-[0_0_6px_rgba(255,255,255,0.5)]">
+  🌟 Navigate real-world scenarios with confidence 🌟
+</p>
+
+
         </div>
 
         {/* Progress Bar */}
-        <div className="bg-blue-200 rounded-full h-4 mb-8 shadow-inner">
+        <div className="bg-white/20 backdrop-blur-sm rounded-full h-4 mb-4 shadow-inner border border-white/30">
           <div 
-            className="bg-gradient-to-r from-emerald-400 to-emerald-500 h-4 rounded-full transition-all duration-500 ease-out shadow-sm"
+            className="bg-gradient-to-r from-green-400 to-green-500 h-full rounded-full transition-all duration-500 ease-out shadow-sm flex items-center justify-end pr-2"
             style={{ width: `${progress}%` }}
-          ></div>
+          >
+            <span className="text-white font-bold text-xs">🚀</span>
+          </div>
         </div>
 
-        {/* Question Card */}
-        <div className="bg-slate-100 rounded-2xl shadow-xl p-8 mb-6 border-2 border-slate-200 transform transition-all duration-300 hover:shadow-2xl">
-          <div className="flex justify-between items-center mb-6">
-            <span className="bg-indigo-200 text-indigo-800 px-4 py-2 rounded-full font-semibold border border-indigo-300">
-              Question {currentQuestion + 1} of {questions.length}
+        {/* Question Card - Flexible height */}
+        <div className="bg-gradient-to-br from-green-50 to-emerald-100 rounded-3xl shadow-2xl p-4 border-4 border-white/20 flex-1 overflow-y-auto">
+          <div className="flex justify-between items-center mb-4">
+            <span className="bg-gradient-to-r from-purple-200 to-pink-200 text-purple-800 px-3 py-1 rounded-full font-semibold border border-purple-300 shadow-lg text-sm">
+              📝 Question {currentQuestion + 1} of {questions.length}
             </span>
-            <span className="bg-emerald-200 text-emerald-800 px-4 py-2 rounded-full font-semibold border border-emerald-300">
-              Score: {score}
+            <span className="bg-gradient-to-r from-green-200 to-emerald-200 text-green-800 px-3 py-1 rounded-full font-semibold border border-green-300 shadow-lg text-sm">
+              🏆 Score: {score}
             </span>
           </div>
 
           {/* Scenario */}
-          <div className="bg-blue-50 rounded-xl p-6 mb-6 border-2 border-blue-200">
-            <h3 className="font-bold text-blue-800 mb-3">Scenario:</h3>
-            <p className="text-blue-700 leading-relaxed">{currentQ.scenario}</p>
+          <div className="bg-gradient-to-r from-blue-100 to-cyan-200 rounded-2xl p-4 mb-4 border border-blue-300 shadow-inner">
+            <h3 className="font-bold text-blue-800 mb-2 flex items-center gap-2 text-sm">
+              <span className="text-lg">🎭</span>
+              Scenario:
+            </h3>
+            <p className="text-blue-700 leading-relaxed text-sm">{currentQ.scenario}</p>
           </div>
 
           {/* Question */}
-          <h3 className="text-xl font-bold text-slate-800 mb-6">{currentQ.question}</h3>
+          <div className="bg-gradient-to-r from-yellow-100 to-orange-200 rounded-2xl p-4 mb-4 border border-yellow-300">
+            <h3 className="text-base font-bold text-slate-800 flex items-center gap-2">
+              <Lightbulb className="w-5 h-5 text-yellow-600" />
+              {currentQ.question}
+            </h3>
+          </div>
 
           {/* Answer Options */}
           {currentQ.type === 'mcq' ? (
-            <div className="space-y-3 mb-6">
-              {currentQ.options.map((option, index) => (
+            <div className="space-y-3 mb-4">
+              {currentQ.options?.map((option, index) => (
                 <button
                   key={index}
                   onClick={() => handleAnswerSelect(index)}
-                  className={`w-full text-left p-4 rounded-xl border-2 transition-all duration-300 transform hover:scale-102 ${
+                  className={`w-full text-left p-3 rounded-2xl border-2 transition-all duration-300 transform hover:scale-102 text-sm ${
                     selectedAnswer === index
-                      ? 'border-indigo-500 bg-indigo-50 text-indigo-800 shadow-lg scale-102'
-                      : 'border-slate-300 hover:border-indigo-400 hover:bg-indigo-25 bg-slate-50 hover:shadow-md'
+                      ? 'border-indigo-500 bg-gradient-to-r from-indigo-100 to-purple-200 text-indigo-800 shadow-xl scale-102'
+                      : 'border-slate-300 hover:border-indigo-400 bg-gradient-to-r from-slate-50 to-gray-100 hover:shadow-lg'
                   }`}
                   disabled={showResult}
                 >
-                  <span className="font-semibold mr-3 text-indigo-600">{String.fromCharCode(65 + index)}.</span>
-                  {option}
+                  <span className="font-bold mr-2 text-indigo-600">{String.fromCharCode(65 + index)}.</span>
+                  <span>{option}</span>
                 </button>
               ))}
             </div>
           ) : (
-            <div className="mb-6">
+            <div className="mb-4">
               <div className="relative">
                 <textarea
                   value={textAnswer}
                   onChange={handleTextChange}
-                  placeholder="Type your response here... Think about how you would communicate clearly and respectfully."
-                  className="w-full p-4 border-2 border-slate-300 rounded-xl focus:border-indigo-500 focus:outline-none resize-none h-32 pr-16 bg-slate-50 focus:bg-white transition-all duration-300 shadow-inner"
+                  placeholder="✨ Type your response here... Think about how you would communicate clearly and respectfully. 💭"
+                  className="w-full p-3 border-2 border-slate-300 rounded-2xl focus:border-indigo-500 focus:outline-none resize-none h-24 pr-12 bg-white focus:bg-indigo-50 transition-all duration-300 shadow-inner text-sm"
                   disabled={showResult}
                 />
                 {speechSupported && (
-                  <div className="absolute top-4 right-4">
+                  <div className="absolute top-2 right-2">
                     <button
                       onClick={isListening ? stopListening : startListening}
                       disabled={showResult}
-                      className={`p-2 rounded-full transition-all duration-300 transform hover:scale-110 shadow-lg ${
+                      className={`p-2 rounded-full transition-all duration-300 transform hover:scale-110 shadow-lg border-2 ${
                         isListening 
-                          ? 'bg-red-500 hover:bg-red-600 text-white animate-pulse' 
-                          : 'bg-indigo-500 hover:bg-indigo-600 text-white disabled:bg-slate-400'
+                          ? 'bg-red-500 hover:bg-red-600 text-white animate-pulse border-red-300' 
+                          : 'bg-indigo-500 hover:bg-indigo-600 text-white disabled:bg-gray-400 border-indigo-300'
                       }`}
                       title={isListening ? 'Stop recording' : 'Start voice input'}
                     >
-                      {isListening ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+                      {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
                     </button>
                   </div>
                 )}
               </div>
               
               {speechSupported && (
-                <div className="mt-2 text-sm text-slate-600 flex items-center gap-2">
-                  <Mic className="w-4 h-4" />
+                <div className="mt-2 text-xs text-slate-600 flex items-center gap-2 bg-gradient-to-r from-blue-50 to-cyan-100 p-2 rounded-xl border border-blue-200">
+                  <span className="text-base">🎤</span>
                   <span>
                     {isListening 
-                      ? 'Listening... Speak your answer and click the mic button when done.' 
-                      : 'Click the mic button to speak your answer instead of typing.'
-                    }
+                      ? '🔴 Listening... Speak your answer!' 
+                      : '💡 Click the mic to speak your answer!'}
                   </span>
                 </div>
               )}
               
-              {!speechSupported && (
-                <div className="mt-2 text-sm text-slate-500">
-                  Voice input is not supported in this browser. You can type your response above.
-                </div>
-              )}
-              
               {currentQ.sampleAnswers && (
-                <details className="mt-4">
-                  <summary className="cursor-pointer text-indigo-600 hover:text-indigo-800 font-semibold">
-                    💡 Need inspiration? Click for sample approaches
+                <details className="mt-3">
+                  <summary className="cursor-pointer text-indigo-600 hover:text-indigo-800 font-semibold text-sm flex items-center gap-2">
+                    <span className="text-base">💡</span>
+                    Need inspiration? Click for sample approaches ✨
                   </summary>
-                  <div className="mt-3 p-4 bg-amber-50 rounded-lg border-2 border-amber-200">
-                    <p className="text-sm text-amber-800 mb-2 font-semibold">Sample responses:</p>
+                  <div className="mt-2 p-3 bg-gradient-to-r from-yellow-50 to-orange-100 rounded-2xl border border-yellow-300">
+                    <p className="text-xs text-yellow-800 mb-2 font-semibold flex items-center gap-2">
+                      <span className="text-sm">📝</span>
+                      Sample responses:
+                    </p>
                     {currentQ.sampleAnswers.map((sample, index) => (
-                      <p key={index} className="text-amber-700 text-sm mb-2">• {sample}</p>
+                      <p key={index} className="text-yellow-700 text-xs mb-1 flex items-start gap-2">
+                        <span className="text-yellow-600 font-bold">•</span>
+                        <span>{sample}</span>
+                      </p>
                     ))}
                   </div>
                 </details>
@@ -441,60 +498,67 @@ const LifeSkillsQuiz = () => {
             <button
               onClick={submitAnswer}
               disabled={currentQ.type === 'mcq' ? selectedAnswer === '' : textAnswer.trim() === ''}
-              className="bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-400 disabled:cursor-not-allowed text-white font-bold py-3 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 disabled:hover:scale-100 shadow-lg"
+              className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-400 disabled:cursor-not-allowed text-white font-bold py-3 px-6 rounded-2xl transition-all duration-300 transform hover:scale-105 disabled:hover:scale-100 shadow-lg text-sm flex items-center gap-2"
             >
+              <span className="text-base">🚀</span>
               Submit Answer
             </button>
           )}
 
           {/* Result Display */}
           {showResult && (
-            <div className={`mt-6 p-6 rounded-xl border-2 transition-all duration-500 transform ${
+            <div className={`mt-4 p-4 rounded-2xl border-2 transition-all duration-500 transform ${
               currentQ.type === 'mcq' && selectedAnswer === currentQ.correct 
-                ? 'border-emerald-300 bg-emerald-50' 
+                ? 'border-green-400 bg-gradient-to-r from-green-100 to-emerald-200' 
                 : currentQ.type === 'text' 
-                ? 'border-emerald-300 bg-emerald-50'
-                : 'border-amber-300 bg-amber-50'
+                ? 'border-green-400 bg-gradient-to-r from-green-100 to-emerald-200'
+                : 'border-orange-400 bg-gradient-to-r from-orange-100 to-yellow-200'
             }`}>
-              <div className="flex items-center gap-3 mb-4">
+              <div className="flex items-center gap-2 mb-3">
                 {currentQ.type === 'mcq' ? (
                   selectedAnswer === currentQ.correct ? (
                     <>
-                      <CheckCircle className="w-6 h-6 text-emerald-600 animate-bounce" />
-                      <span className="font-bold text-emerald-800">Excellent choice!</span>
+                      <div className="text-2xl animate-bounce">🎉</div>
+                      <span className="font-bold text-green-800 text-base">🌟 Excellent choice! 🌟</span>
                     </>
                   ) : (
                     <>
-                      <XCircle className="w-6 h-6 text-amber-600 animate-pulse" />
-                      <span className="font-bold text-amber-800">Good effort!</span>
+                      <div className="text-2xl animate-pulse">💪</div>
+                      <span className="font-bold text-orange-800 text-base">✨ Good effort! ✨</span>
                     </>
                   )
                 ) : (
                   <>
-                    <CheckCircle className="w-6 h-6 text-emerald-600 animate-bounce" />
-                    <span className="font-bold text-emerald-800">Thoughtful response!</span>
+                    <div className="text-2xl animate-bounce">🎊</div>
+                    <span className="font-bold text-green-800 text-base">🌈 Thoughtful response! 🌈</span>
                   </>
                 )}
               </div>
               
               {currentQ.explanation && (
-                <p className={`mb-4 ${
+                <div className={`mb-3 p-3 rounded-xl border-2 ${
                   currentQ.type === 'mcq' && selectedAnswer === currentQ.correct 
-                    ? 'text-emerald-700' 
+                    ? 'text-green-700 bg-green-50 border-green-200' 
                     : currentQ.type === 'text' 
-                    ? 'text-emerald-700'
-                    : 'text-amber-700'
+                    ? 'text-green-700 bg-green-50 border-green-200'
+                    : 'text-orange-700 bg-orange-50 border-orange-200'
                 }`}>
-                  {currentQ.explanation}
-                </p>
+                  <div className="flex items-start gap-2">
+                    <span className="text-base">🧠</span>
+                    <p className="text-sm leading-relaxed">{currentQ.explanation}</p>
+                  </div>
+                </div>
               )}
 
               <button
                 onClick={nextQuestion}
-                className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 flex items-center gap-2 shadow-lg"
+                className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold py-3 px-4 rounded-2xl transition-all duration-300 transform hover:scale-105 flex items-center gap-2 shadow-lg text-sm"
               >
+                <span className="text-base">
+                  {currentQuestion < questions.length - 1 ? '➡️' : '🏁'}
+                </span>
                 {currentQuestion < questions.length - 1 ? 'Next Challenge' : 'See Results'}
-                <ArrowRight className="w-5 h-5" />
+                <ArrowRight className="w-4 h-4" />
               </button>
             </div>
           )}

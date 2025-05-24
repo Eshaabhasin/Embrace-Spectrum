@@ -498,6 +498,170 @@ app.post('/api/learn',async(req,res)=>{
     });
   }
 });
+app.post('/api/generate-questions', async (req, res) => {
+  try {
+    const { topic, count = 5 } = req.body;
+
+    console.log(`🤖 Generating ${count} questions for topic: ${topic}`);
+
+    const prompt = `Generate ${count} life skills scenarios for neurodivergent individuals focusing on practical social situations, workplace challenges, and self-advocacy. 
+
+Create a JSON response with this exact structure:
+{
+  "questions": [
+    {
+      "id": 1,
+      "type": "mcq",
+      "scenario": "Real-world scenario with emojis describing a sensory or social challenge",
+      "question": "What's the best approach to handle this situation?",
+      "options": [
+        "Option A with emoji",
+        "Option B with emoji", 
+        "Option C with emoji",
+        "Option D with emoji"
+      ],
+      "correct": 1,
+      "explanation": "Explanation of why this approach works best, with encouraging tone and emoji"
+    },
+    {
+      "id": 2,
+      "type": "text",
+      "scenario": "Scenario requiring open-ended communication skills",
+      "question": "How would you communicate your needs in this situation?",
+      "sampleAnswers": [
+        "Sample response 1 with emoji",
+        "Sample response 2 with emoji",
+        "Sample response 3 with emoji"
+      ]
+    }
+  ]
+}
+
+Focus on:
+- Sensory processing challenges
+- Social communication
+- Workplace accommodations
+- Self-advocacy
+- Managing overwhelm
+- Building relationships
+- Setting boundaries
+
+Make scenarios realistic and relatable. Use encouraging, supportive language.`;
+
+    const apiKey = process.env.GEMINI_API_KEY;
+
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        contents: [{
+          parts: [{
+            text: prompt
+          }]
+        }],
+        generationConfig: {
+          temperature: 0.7,
+          topK: 40,
+          topP: 0.95,
+          maxOutputTokens: 2048,
+        }
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`Gemini API request failed: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const generatedText = data.candidates[0]?.content?.parts[0]?.text;
+
+    if (!generatedText) {
+      throw new Error('No content generated from Gemini API');
+    }
+
+    const jsonMatch = generatedText.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      throw new Error('Invalid JSON response format from Gemini API');
+    }
+
+    const parsedData = JSON.parse(jsonMatch[0]);
+
+    if (!parsedData.questions || !Array.isArray(parsedData.questions)) {
+      throw new Error('Invalid question format from Gemini API');
+    }
+
+    console.log(`✅ Successfully generated ${parsedData.questions.length} questions`);
+    res.json(parsedData);
+
+  } catch (error) {
+    console.error('❌ Error generating questions:', error.message);
+
+    const fallbackQuestions = {
+      "questions": [
+        {
+          "id": 1,
+          "type": "mcq",
+          "scenario": "🏢 You're in an open office and the constant noise is making it hard to focus on an important deadline. Your productivity is suffering and you're feeling overwhelmed.",
+          "question": "What's the most effective way to handle this sensory challenge? 🎯",
+          "options": [
+            "🎧 Request noise-canceling headphones or ask to work in a quieter space",
+            "😤 Tell everyone around you to be quieter",
+            "😓 Try to push through and hope it gets better",
+            "🏠 Call in sick to work from home"
+          ],
+          "correct": 0,
+          "explanation": "Proactively requesting accommodations shows self-advocacy skills and creates a win-win solution. Most employers are willing to provide reasonable adjustments that help you perform your best! 🌟"
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "scenario": "🛍️ You're at the grocery store and the fluorescent lights are triggering a headache. The checkout lines are long and you're feeling overwhelmed by the sensory input.",
+          "question": "How would you manage this situation while still completing your shopping? 💭",
+          "sampleAnswers": [
+            "I'd take a brief break outside to reset my nervous system, then return with a focused shopping list to minimize time inside 🌿",
+            "I might ask store staff if there's a quieter checkout lane or use self-checkout to reduce social interaction 🏪",
+            "I'd practice grounding techniques like deep breathing while focusing only on essential items 🧘‍♀️"
+          ]
+        }
+      ]
+    };
+
+    console.log('📋 Using fallback questions due to API error');
+    res.json(fallbackQuestions);
+  }
+});
+
+
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+  res.json({ 
+    status: 'ok', 
+    message: 'Life Skills Quiz API is running!',
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Root endpoint
+app.get('/', (req, res) => {
+  res.json({
+    message: '🧠 Life Skills Quiz API',
+    endpoints: {
+      health: '/api/health',
+      generateQuestions: 'POST /api/generate-questions'
+    }
+  });
+});
+
+// Error handling middleware
+app.use((error, req, res, next) => {
+  console.error('❌ Server Error:', error);
+  res.status(500).json({
+    error: 'Internal server error',
+    message: error.message
+  });
+});
 
 app.listen(port, () => {
   console.log(`✅ Server is running on port ${port}`);
