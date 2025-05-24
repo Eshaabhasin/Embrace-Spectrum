@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { CheckCircle, XCircle, ArrowRight, RotateCcw, Star, Mic, MicOff, Lightbulb, RefreshCw, Sparkles } from 'lucide-react';
-
 const LifeSkillsQuiz = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState('');
@@ -255,7 +254,7 @@ const LifeSkillsQuiz = () => {
   if (isLoading || (isGenerating && questions.length === 0)) {
     return (
       <div className="h-screen bg-[#6488e9] p-4 flex items-center justify-center overflow-hidden">
-        <div className="bg-gradient-to-br from-green-50 to-emerald-100 rounded-3xl shadow-2xl p-8 w-[600px] h-[400px] border-4 border-white/20 text-center">
+        <div className="bg-gradient-to-br from-green-50 to-emerald-100 rounded-3xl shadow-2xl p-8 w-[600px] h-[700px] border-4 border-white/20 text-center">
           <div className="text-6xl mb-6 animate-bounce">🧠</div>
           <h2 className="text-2xl font-bold text-slate-800 mb-4">Life Skills Challenge</h2>
           <div className="flex items-center justify-center gap-3 mb-4">
@@ -385,7 +384,7 @@ const LifeSkillsQuiz = () => {
         </div>
 
         {/* Question Card - Flexible height */}
-        <div className="bg-gradient-to-br from-green-50 to-emerald-100 rounded-3xl shadow-2xl p-4 border-4 border-white/20 flex-1 overflow-y-auto">
+        <div className="bg-gradient-to-br from-green-50 to-emerald-100 rounded-3xl shadow-2xl p-4 border-4 border-white/20 flex-1 overflow-y-auto scrollbar-hide">
           <div className="flex justify-between items-center mb-4">
             <span className="bg-gradient-to-r from-purple-200 to-pink-200 text-purple-800 px-3 py-1 rounded-full font-semibold border border-purple-300 shadow-lg text-sm">
               📝 Question {currentQuestion + 1} of {questions.length}
