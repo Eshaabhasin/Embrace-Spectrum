@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { CheckCircle, XCircle, ArrowRight, RotateCcw, Star, Mic, MicOff, Lightbulb, RefreshCw, Sparkles } from 'lucide-react';
+import NavBar from '../NavBar/NavBar';
 const LifeSkillsQuiz = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState('');
@@ -253,6 +254,7 @@ const LifeSkillsQuiz = () => {
   // Loading Screen
   if (isLoading || (isGenerating && questions.length === 0)) {
     return (
+
       <div className="h-screen bg-[#6488e9] p-4 flex items-center justify-center overflow-hidden">
         <div className="bg-gradient-to-br from-green-50 to-emerald-100 rounded-3xl shadow-2xl p-8 w-[600px] h-[700px] border-4 border-white/20 text-center">
           <div className="text-6xl mb-6 animate-bounce">🧠</div>
@@ -331,6 +333,8 @@ const LifeSkillsQuiz = () => {
   }
 
   return (
+    <>
+    <NavBar></NavBar>
     <div className="h-screen bg-[#6488e9] p-4 overflow-hidden">
       <div className="max-w-4xl mx-auto h-full flex flex-col">
         {/* Animated Success Overlay */}
@@ -361,12 +365,12 @@ const LifeSkillsQuiz = () => {
         )}
 
         {/* Header */}
-        <div className="text-center">
+        <div className="text-center mt-20">
           <div className="text-4xl mb-2 animate-pulse">🧠</div>
          <h1 className="text-4xl font-extrabold text-white mb-2 drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]">
   Life Skills Challenge
 </h1>
-<p className="text-white text-xl font-medium tracking-wide animate-pulse drop-shadow-[0_0_6px_rgba(255,255,255,0.5)]">
+<p className="text-white text-xl font-medium tracking-wide drop-shadow-[0_0_6px_rgba(255,255,255,0.5)]">
   🌟 Navigate real-world scenarios with confidence 🌟
 </p>
 
@@ -384,7 +388,7 @@ const LifeSkillsQuiz = () => {
         </div>
 
         {/* Question Card - Flexible height */}
-        <div className="bg-gradient-to-br from-green-50 to-emerald-100 rounded-3xl shadow-2xl p-4 border-4 border-white/20 flex-1 overflow-y-auto scrollbar-hide">
+        <div className="bg-gradient-to-br from-green-50 to-emerald-100 rounded-3xl shadow-2xl p-4 border-4 border-white/20 flex-1 overflow-y-auto scrollbar-hide w-full">
           <div className="flex justify-between items-center mb-4">
             <span className="bg-gradient-to-r from-purple-200 to-pink-200 text-purple-800 px-3 py-1 rounded-full font-semibold border border-purple-300 shadow-lg text-sm">
               📝 Question {currentQuestion + 1} of {questions.length}
@@ -564,6 +568,7 @@ const LifeSkillsQuiz = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 
