@@ -1,17 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/Embrace_Spectrum_Logo__Tab.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Embrace Spectrum</title>
-    <!-- Add React directly from CDN as a fallback -->
-    <script crossorigin src="https://unpkg.com/react@18.2.0/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
-    <!-- Ensure React.Children is defined -->
-    <script>
-      if (window.React && !window.React.Children) {
-        window.React.Children = {
+// This file provides a shim for React.Children when it's undefined
+// It must be imported before any other React imports
+
+// Check if we're in a browser environment
+if (typeof window !== 'undefined') {
+  // Store the original React module
+  const originalReact = window.React;
+
+  // Define a getter for React that ensures Children is defined
+  Object.defineProperty(window, 'React', {
+    get: function() {
+      // If React exists but Children is undefined, add it
+      if (originalReact && !originalReact.Children) {
+        originalReact.Children = {
           map: function(children, fn) {
             return Array.isArray(children) ? children.map(fn) : (children ? [fn(children)] : []);
           },
@@ -31,10 +31,10 @@
           }
         };
       }
-    </script>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
-</html>
+      return originalReact;
+    },
+    configurable: true
+  });
+}
+
+export default {};
