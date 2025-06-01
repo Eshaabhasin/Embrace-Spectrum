@@ -1,7 +1,7 @@
 {
   "name": "frontend",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -15,8 +15,6 @@
     "@emotion/styled": "^11.14.0",
     "@google/generative-ai": "^0.24.0",
     "@react-pdf/renderer": "^4.3.0",
-    "@react-three/drei": "^10.0.8",
-    "@react-three/fiber": "^9.1.2",
     "@tailwindcss/vite": "^4.0.15",
     "axios": "^1.8.4",
     "classnames": "^2.5.1",
@@ -38,10 +36,11 @@
     "react-router-dom": "^6.14.0",
     "react-speech-recognition": "^4.0.1",
     "tailwindcss": "^4.0.15",
-    "vega-embed": "^6.29.0"
+    "vega": "^5.29.0",
+    "vega-lite": "^5.13.0",
+    "vega-embed": "^6.24.0"    
   },
   "devDependencies": {
-    "@babel/plugin-transform-react-jsx": "^7.27.1",
     "@eslint/js": "^9.21.0",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",

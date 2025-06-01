@@ -1,4 +1,5 @@
-  import { StrictMode } from 'react';
+import './reactShim.js'; // Import this first to ensure React.Children is defined
+import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
 import App from './App.jsx';

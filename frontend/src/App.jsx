@@ -75,7 +75,7 @@ const AuthWrapper = () => {
     '/chatbot',
     '/sketchTales',
     '/feelReader',
-    '/geminiLive',
+    '/GeminiLive',
     '/journalboard',
     '/jobs',
     '/quiz',

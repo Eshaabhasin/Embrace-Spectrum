@@ -36,7 +36,7 @@ const NavBar = () => {
         <div className="hidden md:flex md:items-center md:space-x-6">
           <ul className="flex space-x-6 font-bold lg:text-lg text-base text-white items-center">
             <li><Link to="/" className="hover:text-[#fffccf]">Home</Link></li>
-            <li><Link to="/chatbot" className="hover:text-[#fffccf]">Solace</Link></li>
+            <li><Link to="/ChatBot" className="hover:text-[#fffccf]">Solace</Link></li>
             <li><Link to="/Geminilive" className="hover:text-[#fffccf]">Talk Coach</Link></li>
             <li><Link to="/FeelReader" className="hover:text-[#fffccf]">Feel Reader</Link></li>
             <li><Link to="/SketchTales" className="hover:text-[#fffccf]">Sketch Tales</Link></li>
@@ -60,7 +60,7 @@ const NavBar = () => {
         <div className="md:hidden px-4 pb-4">
           <ul className="flex flex-col space-y-4 font-bold text-white text-lg">
             <li><Link to="/" onClick={() => setIsMenuOpen(false)}>Home</Link></li>
-            <li><Link to="/chatbot" onClick={() => setIsMenuOpen(false)}>Solace</Link></li>
+            <li><Link to="/ChatBot" onClick={() => setIsMenuOpen(false)}>Solace</Link></li>
             <li><Link to="/Geminilive" onClick={() => setIsMenuOpen(false)}>Talk Coach</Link></li>
             <li><Link to="/FeelReader" onClick={() => setIsMenuOpen(false)}>Feel Reader</Link></li>
             <li><Link to="/SketchTales" onClick={() => setIsMenuOpen(false)}>Sketch Tales</Link></li>

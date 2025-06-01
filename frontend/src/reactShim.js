@@ -3,7 +3,6 @@ if (typeof window !== 'undefined') {
 
   Object.defineProperty(window, 'React', {
     get: function() {
-      // If React exists but Children is undefined, add it
       if (originalReact && !originalReact.Children) {
         originalReact.Children = {
           map: function(children, fn) {
