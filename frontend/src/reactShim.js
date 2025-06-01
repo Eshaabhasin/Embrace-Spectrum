@@ -1,12 +1,6 @@
-// This file provides a shim for React.Children when it's undefined
-// It must be imported before any other React imports
-
-// Check if we're in a browser environment
 if (typeof window !== 'undefined') {
-  // Store the original React module
   const originalReact = window.React;
 
-  // Define a getter for React that ensures Children is defined
   Object.defineProperty(window, 'React', {
     get: function() {
       // If React exists but Children is undefined, add it

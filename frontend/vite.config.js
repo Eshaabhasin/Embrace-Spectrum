@@ -5,14 +5,10 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [
     react({
-      // Use classic JSX transform for better compatibility
       jsxRuntime: 'classic',
-      // Ensure React is properly injected
       inject: true,
-      // Add babel options for better compatibility
       babel: {
         plugins: [
-          // This helps with React.Children issues
           ['@babel/plugin-transform-react-jsx', { runtime: 'classic' }]
         ]
       }
