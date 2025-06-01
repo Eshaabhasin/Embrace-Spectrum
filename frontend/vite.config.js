@@ -7,11 +7,6 @@ export default defineConfig({
     react({
       jsxRuntime: 'classic',
       inject: true,
-      babel: {
-        plugins: [
-          ['@babel/plugin-transform-react-jsx', { runtime: 'classic' }]
-        ]
-      }
     }),
     tailwindcss(),
   ],
