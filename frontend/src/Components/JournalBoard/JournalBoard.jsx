@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { 
   Book, Target, Sparkles, AlertCircle
 } from 'lucide-react';
@@ -49,19 +49,16 @@ const JournalBoard = () => {
     socialInteraction: false
   });
 
-  // Refs
   const entryTitleRef = useRef(null);
   const entryContentRef = useRef(null);
   const fileInputRef = useRef(null);
   const emojiPickerRef = useRef(null);
 
-  // Check Google Auth status on mount
   useEffect(() => {
     const checkGoogleAuth = async () => {
       try {
         setGoogleAuthStatus(prev => ({ ...prev, isLoading: true }));
-        
-        // Try to silently authenticate with Google
+
         const authResult = await GoogleAuthService.silentSignIn();
         
         setGoogleAuthStatus({
@@ -360,7 +357,7 @@ const JournalBoard = () => {
 
   return (
     <div className={`
-      flex h-screen bg-gradient-to-br from-indigo-50 to-sky-100
+      absolute flex h-[83vh] top-27 left-4 w-[97vw] rounded-xl bg-gradient-to-br from-indigo-50 to-sky-100
       ${assistiveTools.textSize === 'small' ? 'text-sm' : 
         assistiveTools.textSize === 'large' ? 'text-lg' : 'text-base'}
     `}>

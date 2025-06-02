@@ -7,6 +7,8 @@ import {
   useLocation,
 } from 'react-router-dom';
 import { useUser } from '@clerk/clerk-react';
+import { useCalmMode } from './Components/Providers/CalmModeContext';
+import withCalmMode from './Components/CalmMode/withCalmMode';
 
 import Home from './Components/Home/Home';
 import Chatbot from './Components/Chatbot/Chatbot';
@@ -20,11 +22,22 @@ import LifeSkillsTracker from './Components/LifeSkillTracker/LifeSkillTracker';
 import LearnPath from './Components/LearningPath/AllLearnpath';
 import LifeSkillsQuiz from './Components/Quiz/LifeSkillsQuiz';
 import SpeechCoach from './Components/SpeechCoach/SpeechCoach';
-import { ReactProvider } from './Components/Providers';
 
 import './App.css';
 
-// Ensure React.Children exists
+// Create wrapped components
+const CalmOnboarding = withCalmMode(OnboardingForm);
+const CalmChatbot = withCalmMode(Chatbot);
+const CalmPaintAndStory = withCalmMode(PaintAndStory);
+const CalmSentimentAnalyser = withCalmMode(SentimentAnalyser);
+const CalmGeminiLive = withCalmMode(GeminiLive);
+const CalmJournalBoard = withCalmMode(JournalBoard);
+const CalmJobSearchComponent = withCalmMode(JobSearchComponent);
+const CalmLifeSkillsTracker = withCalmMode(LifeSkillsTracker);
+const CalmLearnPath = withCalmMode(LearnPath);
+const CalmLifeSkillsQuiz = withCalmMode(LifeSkillsQuiz);
+const CalmSpeechCoach = withCalmMode(SpeechCoach);
+
 if (!React.Children) {
   console.warn('React.Children is undefined in App.jsx. Applying fix.');
   React.Children = {
@@ -44,6 +57,7 @@ const AuthWrapper = () => {
   const location = useLocation();
   const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState(false);
   const [isChecking, setIsChecking] = useState(true);
+  const { isCalmMode } = useCalmMode();
 
   useEffect(() => {
     if (isLoaded) {
@@ -81,8 +95,8 @@ const AuthWrapper = () => {
 
   if (isChecking) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      <div className="min-h-screen flex items-center justify-center content-area">
+        <div className={`${isCalmMode ? 'animate-none' : 'animate-spin'} rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500`}></div>
       </div>
     );
   }
@@ -115,28 +129,30 @@ const AuthWrapper = () => {
 };
 
 function App() {
+  const { isCalmMode } = useCalmMode();
+  
   return (
-    <ReactProvider>
+    <div className={isCalmMode ? 'calm-mode' : ''}>
       <Router>
         <AuthWrapper />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/onboarding" element={<OnboardingForm />} />
-          <Route path="/chatbot" element={<Chatbot />} />
-          <Route path="/sketchTales" element={<PaintAndStory />} />
-          <Route path="/feelReader" element={<SentimentAnalyser />} />
-          <Route path="/geminiLive" element={<GeminiLive />} />
-          <Route path="/journalboard" element={<JournalBoard />} />
-          <Route path="/jobs" element={<JobSearchComponent />} />
-          <Route path="/tracker" element={<LifeSkillsTracker />} />
-          <Route path="/learn" element={<LearnPath />} />
-          <Route path="/quiz" element={<LifeSkillsQuiz />} />
-          <Route path="/SpeechCoach" element={<SpeechCoach />} />
+          <Route path="/onboarding" element={<CalmOnboarding />} />
+          <Route path="/chatbot" element={<CalmChatbot />} />
+          <Route path="/sketchTales" element={<CalmPaintAndStory />} />
+          <Route path="/feelReader" element={<CalmSentimentAnalyser />} />
+          <Route path="/geminiLive" element={<CalmGeminiLive />} />
+          <Route path="/journalboard" element={<CalmJournalBoard />} />
+          <Route path="/jobs" element={<CalmJobSearchComponent />} />
+          <Route path="/tracker" element={<CalmLifeSkillsTracker />} />
+          <Route path="/learn" element={<CalmLearnPath />} />
+          <Route path="/quiz" element={<CalmLifeSkillsQuiz />} />
+          <Route path="/SpeechCoach" element={<CalmSpeechCoach />} />
       
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </Router>
-    </ReactProvider>
+    </div>
   );
 }
 

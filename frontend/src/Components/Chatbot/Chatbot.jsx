@@ -8,7 +8,6 @@ function Chatbot() {
     const [input, setInput] = useState("");
     const [isListening, setIsListening] = useState(false);
 
-    // Welcome message on component mount
     useEffect(() => {
         const welcomeMessage = {
             text: "Hi there! I'm **Solace**, your friendly and caring AI companion. I'm here to support you at your pace, in your way — whether you're navigating conversations, expressing yourself, or just need a safe space to talk. 💙",

@@ -1,10 +1,7 @@
-// Import React first to ensure we can modify it
 import React from 'react';
-// Import our fixes before anything else
 import './reactShim.js';
 import { ensureReactChildren } from './reactFix.js';
 
-// Apply the fix immediately
 ensureReactChildren();
 
 import { StrictMode } from 'react';
@@ -12,10 +9,10 @@ import { createRoot } from 'react-dom/client';
 import './index.css';
 import App from './App.jsx';
 import { ClerkProvider } from '@clerk/clerk-react';
+import { CalmModeProvider } from './Components/Providers/CalmModeContext';
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
-// Double-check React.Children is defined before rendering
 if (!React.Children) {
   console.warn('React.Children is still undefined after fixes. Applying emergency fix.');
   React.Children = {
@@ -33,7 +30,9 @@ if (!React.Children) {
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
-      <App />
+      <CalmModeProvider>
+        <App />
+      </CalmModeProvider>
     </ClerkProvider>
   </StrictMode>
 );

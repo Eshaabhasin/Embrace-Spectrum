@@ -30,3 +30,38 @@
   animation: flow 10s ease-in-out infinite;
   background-size: 600% 600%;
 }
+
+.calm-mode {
+  transition: all 0.5s ease;
+}
+
+.calm-mode body {
+  background-color: #4a6ac0; /* Slightly darker background */
+}
+
+.calm-mode .content-area {
+  filter: brightness(0.85) contrast(0.9);
+}
+
+.calm-mode .animate-flow {
+  animation: none;
+  background-size: 100% 100%;
+  background-position: center;
+}
+
+.calm-mode .custom-bounceCards {
+  transform: none !important;
+  transition: none !important;
+  animation: none !important;
+}
+
+.calm-mode .custom-spotlight-card::before {
+  opacity: 0.1 !important;
+  animation: none !important;
+}
+
+.calm-mode h1, 
+.calm-mode h2, 
+.calm-mode h3 {
+  text-shadow: none;
+}

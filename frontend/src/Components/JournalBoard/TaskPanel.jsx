@@ -272,7 +272,7 @@ const TasksPanel = ({
   };
 
   return (
-    <div className="w-[40vw] border-l border-blue-200 p-4 bg-blue-50 overflow-y-auto">
+    <div className="w-[40vw] border-l border-blue-200 p-4 rounded-xl bg-blue-50 overflow-y-auto scrollbar-hide">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-blue-900">Tasks</h2>
         <div className="flex gap-2">

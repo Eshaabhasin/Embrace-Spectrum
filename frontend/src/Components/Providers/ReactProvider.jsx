@@ -1,14 +1,8 @@
 import React from 'react';
+import { CalmModeProvider } from './CalmModeContext';
 
-/**
- * This component wraps React's Children functionality to prevent the 
- * "Cannot set properties of undefined (setting 'Children')" error
- * that occurs in production builds on Vercel
- */
 const ReactProvider = ({ children }) => {
-  // Ensure React.Children is available
   if (!React.Children) {
-    // Create a minimal implementation if missing
     React.Children = {
       map: (children, fn) => {
         return Array.isArray(children) 
@@ -43,13 +37,12 @@ const ReactProvider = ({ children }) => {
     };
   }
   
-  // Safely handle children using our implementation
   const safeChildren = React.Children.toArray(children);
   
   return (
-    <>
+    <CalmModeProvider>
       {safeChildren}
-    </>
+    </CalmModeProvider>
   );
 };
 

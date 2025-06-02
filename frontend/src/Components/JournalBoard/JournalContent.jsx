@@ -33,7 +33,7 @@ const JournalContent = ({
     return (
       <div className="w-full p-6 bg-white overflow-y-auto">
         {selectedView === 'journal' ? (
-          // Journal Entry Section
+
           <div className="w-full">
             {/* Mood and Emoji Section */}
             <div className="mb-4 flex items-center space-x-2">
@@ -95,11 +95,11 @@ const JournalContent = ({
               {/* Emoji Picker */}
               <div 
                 ref={emojiPickerRef}
-                className="absolute top-2 right-5 width-[0px]" 
+                className="absolute top-2 right-5 w-[500px]" 
               >
                 <button 
                   onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                  className="text-blue-600 hover:text-blue-800"
+                  className="text-blue-600 hover:text-blue-800 absolute right-0 top-1"
                   aria-label="Add Emoji"
                 >
                   <Smile className="w-5 h-5" />
@@ -107,7 +107,7 @@ const JournalContent = ({
                 
                 {showEmojiPicker && (
                   <div className="
-                    absolute top-full right-0 
+                    absolute top-10 right-0 
                     bg-white border border-blue-200 
                     rounded-md shadow-lg p-2 z-10 
                     max-w-[300px] grid grid-cols-5 gap-1

@@ -23,7 +23,7 @@ const JournalSidebar = ({
   };
 
   return (
-    <div className="w-64 bg-[#65729c] backdrop-blur-md border-r border-indigo-100 p-4 flex flex-col shadow-md">
+    <div className="w-64 rounded-xl bg-[#65729c] backdrop-blur-md border-r border-indigo-100 p-4 flex flex-col shadow-md">
       <div className="flex items-center mb-6">
         <a href="/" className="flex items-center justify-center w-10 h-10 border-2 border-white rounded-full text-white hover:bg-white hover:text-black transition">
           ←

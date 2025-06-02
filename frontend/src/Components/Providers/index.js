@@ -1,2 +1,6 @@
 // Export all providers from this directory
-export { default as ReactProvider } from './ReactProvider';
+import { CalmModeProvider } from './CalmModeContext';
+import ReactProvider from './ReactProvider';
+
+// Export the providers
+export { ReactProvider, CalmModeProvider };
