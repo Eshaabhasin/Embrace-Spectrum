@@ -444,7 +444,7 @@ app.post("/generate-story", async (req, res) => {
              The story should be easy to read and visualize.`
     });
 
-    // Add drawing if provided
+      // Add drawing if provided
     if (includeDrawing && imageBase64) {
       generationParts.push({
         inlineData: {

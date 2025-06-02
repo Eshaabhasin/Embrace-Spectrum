@@ -3,7 +3,7 @@ import { initializeApp } from 'firebase/app';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
 import { useUser } from '@clerk/clerk-react'; 
 import { MessageCircle, Sparkles, X, ChevronRight, RotateCcw } from 'lucide-react';
-import {db, auth} from '../../../firebase'
+import {db} from '../../../firebase'
 
 const GEMINI_API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
 

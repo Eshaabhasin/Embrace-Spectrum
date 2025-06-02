@@ -115,7 +115,7 @@ function StoryGenerator({ getCanvasImage }) {
         {!storyGenerated ? (
           <>            
             <button 
-              className="w-full bg-blue-500 text-white p-3 rounded-md hover:bg-blue-600 transition text-lg font-medium disabled:bg-blue-300 backdrop-blur-lg" 
+              className="w-full bg-blue-500 text-white p-3 rounded-2xl  hover:bg-blue-600 transition text-lg font-medium disabled:bg-blue-300 backdrop-blur-lg" 
               onClick={generateStory}
               disabled={loading}
             >
