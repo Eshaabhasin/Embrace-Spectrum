@@ -7,8 +7,8 @@ export default function IconsCards({
   images = [],
   titles = [],
   links = [],
-  containerWidth = 400,
-  containerHeight = 400,
+  containerWidth = 300,
+  containerHeight = 300,
   animationDelay = 0.5,
   animationStagger = 0.06,
   easeType = "elastic.out(1, 0.8)",
@@ -123,7 +123,7 @@ export default function IconsCards({
         <Link
           to={links[idx] || "#"}
           key={idx}
-          className={`card card-${idx} absolute w-[200px] aspect-square rounded-[30px] overflow-hidden group`}
+          className={`card card-${idx} absolute w-[170px] aspect-square rounded-[30px] overflow-hidden group`}
           style={{
             transform: transformStyles[idx] || "none",
           }}

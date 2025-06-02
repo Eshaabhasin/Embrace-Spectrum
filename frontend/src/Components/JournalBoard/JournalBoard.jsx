@@ -356,6 +356,7 @@ const JournalBoard = () => {
   };
 
   return (
+    <>
     <div className={`
       absolute flex h-[83vh] top-27 left-4 w-[97vw] rounded-xl bg-gradient-to-br from-indigo-50 to-sky-100
       ${assistiveTools.textSize === 'small' ? 'text-sm' : 
@@ -413,6 +414,7 @@ const JournalBoard = () => {
       {/* Google Auth Status Notification */}
       {showGoogleAuthNotification()}
     </div>
+    </>
   );
 };
 

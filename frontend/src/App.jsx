@@ -9,6 +9,7 @@ import {
 import { useUser } from '@clerk/clerk-react';
 import { useCalmMode } from './Components/Providers/CalmModeContext';
 import withCalmMode from './Components/CalmMode/withCalmMode';
+import NavBar from './Components/NavBar/NavBar';
 
 import Home from './Components/Home/Home';
 import Chatbot from './Components/Chatbot/Chatbot';
@@ -38,6 +39,7 @@ const CalmLearnPath = withCalmMode(LearnPath);
 const CalmLifeSkillsQuiz = withCalmMode(LifeSkillsQuiz);
 const CalmSpeechCoach = withCalmMode(SpeechCoach);
 
+// Ensure React.Children exists
 if (!React.Children) {
   console.warn('React.Children is undefined in App.jsx. Applying fix.');
   React.Children = {
@@ -134,23 +136,26 @@ function App() {
   return (
     <div className={isCalmMode ? 'calm-mode' : ''}>
       <Router>
+        <NavBar />
         <AuthWrapper />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/onboarding" element={<CalmOnboarding />} />
-          <Route path="/chatbot" element={<CalmChatbot />} />
-          <Route path="/sketchTales" element={<CalmPaintAndStory />} />
-          <Route path="/feelReader" element={<CalmSentimentAnalyser />} />
-          <Route path="/geminiLive" element={<CalmGeminiLive />} />
-          <Route path="/journalboard" element={<CalmJournalBoard />} />
-          <Route path="/jobs" element={<CalmJobSearchComponent />} />
-          <Route path="/tracker" element={<CalmLifeSkillsTracker />} />
-          <Route path="/learn" element={<CalmLearnPath />} />
-          <Route path="/quiz" element={<CalmLifeSkillsQuiz />} />
-          <Route path="/SpeechCoach" element={<CalmSpeechCoach />} />
-      
-          <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
+        <div className="content-area">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/onboarding" element={<CalmOnboarding />} />
+            <Route path="/chatbot" element={<CalmChatbot />} />
+            <Route path="/sketchTales" element={<CalmPaintAndStory />} />
+            <Route path="/feelReader" element={<CalmSentimentAnalyser />} />
+            <Route path="/geminiLive" element={<CalmGeminiLive />} />
+            <Route path="/journalboard" element={<CalmJournalBoard />} />
+            <Route path="/jobs" element={<CalmJobSearchComponent />} />
+            <Route path="/tracker" element={<CalmLifeSkillsTracker />} />
+            <Route path="/learn" element={<CalmLearnPath />} />
+            <Route path="/quiz" element={<CalmLifeSkillsQuiz />} />
+            <Route path="/SpeechCoach" element={<CalmSpeechCoach />} />
+        
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
+        </div>
       </Router>
     </div>
   );

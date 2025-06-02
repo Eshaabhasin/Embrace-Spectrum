@@ -8,7 +8,6 @@ const PDFEmotionReader = () => {
   const [textWithEmotions, setTextWithEmotions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-
   const GOOGLE_API_KEY = import.meta.env.VITE_GOOGLE_API_KEY; 
   const PDFCO_API_KEY = import.meta.env.VITE_PDFCO_API_KEY;
 
@@ -194,7 +193,7 @@ const PDFEmotionReader = () => {
     <div className="container mx-auto p-6 max-w-3xl">
       <div 
         {...getRootProps()} 
-        className={`border-2 border-dashed p-10 text-center cursor-pointer transition-colors duration-200 
+        className={`border-2 border-dashed p-10 text-center rounded-3xl cursor-pointer transition-colors duration-200 
         ${isDragActive ? 'bg-blue-100 border-blue-500' : 'bg-gray-50 border-gray-300 hover:bg-gray-100'}`}
       >
         <input {...getInputProps()} />

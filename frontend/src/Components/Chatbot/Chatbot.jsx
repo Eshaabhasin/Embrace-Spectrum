@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import NavBar from "../NavBar/NavBar";
 import { Mic, Send } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 
@@ -61,8 +60,7 @@ function Chatbot() {
 
     return (
         <>
-            <NavBar />
-            <div className="bg-[#6488EA] min-h-screen px-10 flex flex-col">
+           <div className="bg-[#6488EA] min-h-screen px-10 flex flex-col">
                 <div className="mt-20 flex justify-between items-start">
                     <div>
                         <h1 className="bg-gradient-to-r from-yellow-100 via-orange-300 to-red-300 bg-clip-text text-transparent text-7xl mt-10 font-extrabold tracking-wide">

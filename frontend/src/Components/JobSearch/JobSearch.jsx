@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, MapPin, Briefcase, Heart, Settings, Search, Loader2, BookOpen, Award, Users, Clock, Home, Wifi, Plus, X } from 'lucide-react';
-import NavBar from '../NavBar/NavBar';
-import { initializeApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
 import { useUser } from '@clerk/clerk-react';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import {db, auth} from '../../../firebase'
@@ -283,7 +280,6 @@ const JobSearchComponent = () => {
   if (showJobs) {
     return (
       <>
-      <NavBar></NavBar>
       <div className="min-h-screen p-6">
         <div className="max-w-8xl mt-25 mx-auto">
           <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
@@ -404,7 +400,6 @@ const JobSearchComponent = () => {
 
   return (
     <>
-    <NavBar></NavBar>
     <div className="min-h-screen">
       <div className="max-w-7xl mx-auto">
         <div className="bg-white mt-30 mb-20 rounded-2xl shadow-lg overflow-hidden">

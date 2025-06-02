@@ -5,7 +5,7 @@ import { Sparkles } from "lucide-react";
 import CircularGallery from "./Gallery/GalleryLogic";
 import GeminiAgent from "../GeminiAgent/GeminiAgent";
 import IconsCards from './Icons/IconsLogic';
-import withCalmMode from '../CalmMode/withCalmMode';
+import { useCalmMode } from '../Providers/CalmModeContext';
 import Img1 from '../../assets/ChatBot Icon.png'
 import Img2 from '../../assets/FeelReader Icon.png'
 import Img3 from '../../assets/Journal Icon.png'
@@ -17,13 +17,13 @@ import Img7 from '../../assets/Life Tracker Icon.png'
 const images = [Img1, Img2, Img3, Img4, Img5, Img6, Img7];
 
 const transformStyles = [
-  "translateX(-180px) translateY(0)",
-  "translateX(-120px) translateY(0)",
-  "translateX(-60px) translateY(0)",
+  "translateX(-480px) translateY(0)",
+  "translateX(-320px) translateY(0)",
+  "translateX(-160px) translateY(0)", 
   "translateX(0) translateY(0)",
-  "translateX(60px) translateY(0)",
-  "translateX(120px) translateY(0)",
-  "translateX(180px) translateY(0)"
+  "translateX(160px) translateY(0)",
+  "translateX(320px) translateY(0)",
+  "translateX(480px) translateY(0)"
 ];  
 
 const titles = [
@@ -47,9 +47,11 @@ const links = [
   "/SpeechCoach",
 ];
 
-const Home = ({ isCalmMode }) => {
+const Home = () => {
+    const { isCalmMode } = useCalmMode();
+    
     return (
-        <div className="px-10">
+        <div className="px-10 content-area">
             <div className="flex justify-center text-center mt-40 ml-10">
               <div className="">
                 <div className="flex">
@@ -174,4 +176,4 @@ const Home = ({ isCalmMode }) => {
     );
 };
 
-export default withCalmMode(Home);
+export default Home;

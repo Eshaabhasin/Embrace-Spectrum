@@ -1,8 +1,6 @@
 import React from "react";
 import StoryGenerator from "./StoryComponent";
 import PaintApp from "./PaintComponent";
-import NavBar from '../NavBar/NavBar'
-
 
 function PaintAndStory() {
     const getCanvasImage = () => {
@@ -12,7 +10,6 @@ function PaintAndStory() {
 
     return (
       <>
-      <NavBar/>
       <div className="bg-[#6488EA]">
         <div className="flex py-8 mt-20">
           <h1 className="bg-gradient-to-r from-blue-100 via-white to-blue-200 bg-clip-text text-transparent ml-7 text-5xl font-extrabold">
