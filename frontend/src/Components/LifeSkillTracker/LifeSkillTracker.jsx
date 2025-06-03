@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useUser } from '@clerk/clerk-react';
+import { Link } from 'react-router-dom';
 import { 
   doc, 
   getDoc, 
@@ -15,6 +16,7 @@ const GEMINI_API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
 const LifeSkillsTracker = () => {
   const { user, isLoaded } = useUser();
   const [onboardingData, setOnboardingData] = useState(null);
+  const [showNotification, setShowNotification] = useState(false);
   const [tasks, setTasks] = useState([]);
   const [userProgress, setUserProgress] = useState({
     xp: 0,
@@ -266,6 +268,27 @@ const LifeSkillsTracker = () => {
     ];
   };
 
+    useEffect(() => {
+  const hasShownNotification = sessionStorage.getItem('journal_tasks_notification');
+  if (!hasShownNotification) {
+    const timer = setTimeout(() => {
+      setShowNotification(true);
+    }, 10000);
+    
+    return () => clearTimeout(timer);
+  }
+}, []);
+
+// Save tasks to localStorage when they change
+useEffect(() => {
+  localStorage.setItem('journal-tasks', JSON.stringify(tasks));
+}, [tasks]);
+
+const closeNotification = () => {
+  // Mark notification as shown for this session
+  sessionStorage.setItem('journal_tasks_notification', 'true');
+  setShowNotification(false);
+};
   // Enhanced completeTask with better error handling
   const completeTask = async (taskId) => {
     try {
@@ -394,6 +417,45 @@ const LifeSkillsTracker = () => {
   return (
     <div className="min-h-screen p-4 lg:p-8">
       <div className="max-w-8xl mx-auto space-y-6">
+
+        {showNotification && (
+                <div className="fixed bottom-5 right-5 max-w-sm bg-white rounded-lg shadow-lg p-4 border-l-4 border-[#6488e9] animate-fadeIn z-50">
+                  <div className="flex items-start">
+                    <div className="ml-3 w-70 flex-1 pt-0.5">
+                      <p className="text-sm font-medium text-gray-900">Start Your Journal Journey</p>
+                      <p className="mt-1 text-sm text-gray-500">
+                        Track your thoughts, feelings and daily experiences to support your personal growth.
+                      </p>
+                      <div className="mt-3 flex space-x-3">
+                        <Link
+                          to="/journalboard"
+                          className="bg-[#6488e9] text-white px-3 py-1.5 rounded-md text-sm font-medium hover:bg-[#5070d0]"
+                        >
+                          Open Journal
+                        </Link>
+                        <button
+                          type="button"
+                          onClick={closeNotification}
+                          className="bg-white text-gray-700 px-3 py-1.5 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-50"
+                        >
+                          Dismiss
+                        </button>
+                      </div>
+                    </div>
+                    <div className="ml-4 flex-shrink-0 flex">
+                      <button
+                        onClick={closeNotification}
+                        className="bg-white rounded-md inline-flex text-gray-400 hover:text-gray-500 focus:outline-none"
+                      >
+                        <span className="sr-only">Close</span>
+                        <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                          <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
 
         {/* Header */}
         <div className="bg-white rounded-3xl mt-20 shadow-lg p-6 lg:p-8 space-y-6 border border-blue-100">

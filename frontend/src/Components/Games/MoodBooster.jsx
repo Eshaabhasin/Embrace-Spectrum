@@ -72,7 +72,6 @@ const sounds = [
   }
 ];
 
-// Mini games
 const miniGames = [
   {
     id: "gratitude",
@@ -365,9 +364,9 @@ const MoodBooster = () => {
     switch (activeFeature.id) {
       case "creative":
         return (
-          <div className="text-center ">
-            <h3 className="text-xl font-semibold mb-4">Creative Expression</h3>
-            <div className="bg-white/20 backdrop-blur-md rounded-lg p-6">
+          <div className="text-center w-4xl">
+            <h3 className="text-3xl font-semibold mb-4">Creative Expression</h3>
+            <div className="rounded-lg p-6">
               <h4 className="font-semibold mb-2">Sticker Collection</h4>
               <p className="mb-4">Click on any emoji to add it to your collection below</p>
               
@@ -383,7 +382,7 @@ const MoodBooster = () => {
                 ))}
               </div>
               
-              <div className="relative bg-white/10 h-64 rounded-lg overflow-hidden">
+              <div className="relative bg-white/10 h-64 ml-10 rounded-lg overflow-hidden">
                 {stickers.map(sticker => (
                   <div
                     key={sticker.id}
@@ -693,13 +692,11 @@ const MoodBooster = () => {
   
   return (
     <>
-      <div className={`min-h-screen bg-gradient-to-b from-blue-600 to-blue-800 px-4 py-12 flex flex-col mt-20
+      <div className={`min-h-screen px-4 py-12 flex flex-col mt-20
         ${settings.reducedMotion ? 'motion-reduce' : ''}
         ${settings.highContrast ? 'contrast-150' : ''}
         ${settings.dyslexiaFont ? 'font-mono' : ''}`}>
-        
-        <h1 className="text-white text-3xl font-bold mb-8 text-center">MoodBooster</h1>
-        
+              
         {/* Accessibility button for smaller screens */}
         <button 
           onClick={() => setShowSettings(!showSettings)}
@@ -749,12 +746,12 @@ const MoodBooster = () => {
           {/* Right side - Content area */}
           <div className="w-3/4 relative">
             {activeFeature ? (
-              <div className="bg-white/10 backdrop-blur-md rounded-xl p-5 text-white max-w-2xl mx-auto">
+              <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 text-white max-w-5xl">
                 {renderFeatureContent()}
               </div>
             ) : (
-              <div className="bg-white/10 backdrop-blur-md rounded-xl p-5 text-white text-center max-w-2xl mx-auto">
-                <h2 className="text-2xl font-semibold mb-4">Welcome to MoodBooster!</h2>
+              <div className="bg-white/10 backdrop-blur-md rounded-xl p-5 h-[77vh] text-white text-center max-w-5xl">
+                <h2 className="text-3xl font-semibold spacing-0">Welcome to MoodBooster!</h2>
                 <p className="mb-6">Select an activity from the menu to get started.</p>
                 <div className="grid grid-cols-2 gap-4">
                   {features.map(feature => (
@@ -764,7 +761,7 @@ const MoodBooster = () => {
                       className="bg-white/10 p-4 rounded-xl cursor-pointer hover:bg-white/20 transition-colors"
                     >
                       <div className="text-3xl mb-2">{feature.icon}</div>
-                      <div className="font-semibold">{feature.name}</div>
+                      <div className="font-semibold  text-xl">{feature.name}</div>
                     </div>
                   ))}
                 </div>

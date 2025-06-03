@@ -57,7 +57,7 @@ const activities = [
   {
     id: "feather",
     name: "Feather Trails",
-    icon: "🪶",
+    icon: "🐥",
     description: "Swipe to see calming animations"
   },
   {
@@ -407,7 +407,7 @@ const SenseScape = () => {
   
   return (
     <>
-      <div className={`${activeEnvironment.bgColor} transition-colors duration-1000 flex flex-col mt-29 w-[1500px] ml-5 h-[615px] rounded-2xl
+      <div className={`${activeEnvironment.bgColor} transition-colors duration-1000 flex flex-col mt-29 w-7xl ml-10 h-[80vh] rounded-2xl
         ${accessibilitySettings.lowSensory ? 'opacity-75' : ''}
         ${accessibilitySettings.highContrast ? 'contrast-150' : ''}
         ${accessibilitySettings.dyslexiaFont ? 'font-mono' : ''}`}>
@@ -418,7 +418,7 @@ const SenseScape = () => {
             <button
               key={env.id}
               onClick={() => selectEnvironment(env)}
-              className={`px-4 py-2 rounded-full transition-all ${
+              className={`px-4 py-1 rounded-full transition-all ${
                 activeEnvironment.id === env.id 
                   ? "bg-white text-blue-800 shadow-lg scale-110" 
                   : "bg-white/30 text-white hover:bg-white/50"
@@ -433,9 +433,9 @@ const SenseScape = () => {
         {/* Main content area with left instructions and right activities */}
         <div className="flex flex-1 p-4">
           {/* Left side - Instructions */}
-          <div className="w-1/4 pr-4">
-            <div className="bg-white/10 backdrop-blur-md rounded-lg p-4 h-[515px]">
-              <div className="bg-white/10 backdrop-blur-md rounded-lg p-4">
+          <div className="w-2/4">
+            <div className="bg-white/10 backdrop-blur-md rounded-lg p-2">
+              <div className="p-4">
                 <h2 className="text-xl font-semibold mb-4 text-white">How to use SenseScape</h2>
                 
                 <div className="space-y-4 text-white">
@@ -455,7 +455,7 @@ const SenseScape = () => {
                   
                   <div>
                     <h3 className="font-semibold flex items-center">
-                      <span className="mr-2">🪶</span> Feather Trails
+                      <span className="mr-2">🐥</span> Feather Trails
                     </h3>
                     <p className="text-sm opacity-80">Move your cursor to create flowing, gentle animations.</p>
                   </div>
@@ -493,12 +493,12 @@ const SenseScape = () => {
           {/* Right side - Activities */}
           <div className="w-3/4 pl-4 relative">
             {/* Activity selector */}
-            <div className="flex mb-4 gap-2">
+            <div className="flex mb-4 gap-6">
               {activities.map(activity => (
                 <button
                   key={activity.id}
                   onClick={() => selectActivity(activity)}
-                  className={`px-4 py-2 rounded-lg transition-all flex-1 ${
+                  className={`px-1 py-2 rounded-lg transition-all flex items-center justify-center ${
                     activeActivity?.id === activity.id 
                       ? "bg-purple-600 text-white shadow-lg" 
                       : "bg-white/30 text-white hover:bg-white/50"
@@ -511,7 +511,7 @@ const SenseScape = () => {
             </div>
             
             {/* Interactive canvas */}
-            <div className="relative h-[60vh] rounded-2xl overflow-hidden shadow-2xl backdrop-blur-sm bg-white/10">
+            <div className="relative h-[57vh] rounded-2xl overflow-hidden shadow-2xl backdrop-blur-sm bg-white/10">
               <canvas 
                 ref={canvasRef}
                 onClick={handleCanvasClick}

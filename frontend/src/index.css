@@ -3,6 +3,7 @@
 :root{
   font-family: Lato;
   background-color: #6488e9;
+  letter-spacing: 2px;
 }
 
 .scrollbar-hide::-webkit-scrollbar {
@@ -54,4 +55,20 @@
 /* Transition for all elements when switching modes */
 *, *::before, *::after {
   transition: all 0.3s ease;
+}
+
+/* Dropdown and tooltip animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.2s ease-out forwards;
 }

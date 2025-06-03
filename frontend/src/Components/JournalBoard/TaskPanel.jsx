@@ -409,25 +409,23 @@ const TasksPanel = ({
         <div className="flex gap-2 mb-2">
           <div className="flex-1 relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Calendar className="h-4 w-4 text-gray-400" />
             </div>
             <input
               type="date"
               value={taskDueDate}
               onChange={(e) => setTaskDueDate(e.target.value)}
-              className="pl-10 w-full p-2 border border-blue-200 rounded-md focus:ring-2 focus:ring-blue-300 text-sm"
+              className="pl-2 w-full p-2 border border-blue-200 rounded-md focus:ring-2 focus:ring-blue-300 text-sm"
             />
           </div>
           
           <div className="flex-1 relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Clock className="h-4 w-4 text-gray-400" />
             </div>
             <input
               type="time"
               value={taskDueTime}
               onChange={(e) => setTaskDueTime(e.target.value)}
-              className="pl-10 w-full p-2 border border-blue-200 rounded-md focus:ring-2 focus:ring-blue-300 text-sm"
+              className="pl-2 w-full p-2 border border-blue-200 rounded-md focus:ring-2 focus:ring-blue-300 text-sm"
             />
           </div>
         </div>

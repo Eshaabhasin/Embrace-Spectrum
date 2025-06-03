@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import RotatingText from "./HeroText/HerotextLogic";
 import SpotlightCard from "./FeatureCard/FeatureCardLogic";
 import { Sparkles } from "lucide-react";
@@ -6,29 +6,24 @@ import CircularGallery from "./Gallery/GalleryLogic";
 import GeminiAgent from "../GeminiAgent/GeminiAgent";
 import IconsCards from './Icons/IconsLogic';
 import { useCalmMode } from '../Providers/CalmModeContext';
-import Img1 from '../../assets/ChatBot Icon.png'
-import Img2 from '../../assets/FeelReader Icon.png'
 import Img3 from '../../assets/Journal Icon.png'
 import Img4 from '../../assets/Sketch Tales Icon.png'
 import Img5 from '../../assets/TalkCoach Icon.png'
 import Img6 from '../../assets/Jobs Icon.png'
 import Img7 from '../../assets/Life Tracker Icon.png'
+import { Link } from "react-router-dom";
 
-const images = [Img1, Img2, Img3, Img4, Img5, Img6, Img7];
+const images = [Img3, Img4, Img5, Img6, Img7];
 
 const transformStyles = [
-  "translateX(-480px) translateY(0)",
   "translateX(-320px) translateY(0)",
   "translateX(-160px) translateY(0)", 
   "translateX(0) translateY(0)",
   "translateX(160px) translateY(0)",
   "translateX(320px) translateY(0)",
-  "translateX(480px) translateY(0)"
 ];  
 
 const titles = [
-  "Solace Chatbot",
-  "Feel Reader",
   "Journal",
   "Sketch Tales",
   "Talk Coach",
@@ -37,8 +32,6 @@ const titles = [
 ];
 
 const links = [
-  "/chatbot",
-  "/FeelReader",
   "/JournalBoard",
   "/SketchTales",
   "/GeminiLive",
@@ -49,9 +42,70 @@ const links = [
 
 const Home = () => {
     const { isCalmMode } = useCalmMode();
+    const [showNotification, setShowNotification] = useState(false);
+    
+    useEffect(() => {
+        // Check if notification has been shown before
+        const hasShownNotification = sessionStorage.getItem('wellnessNotificationShown');
+        
+        if (!hasShownNotification) {
+            // Show notification after a short delay
+            const timer = setTimeout(() => {
+                setShowNotification(true);
+                // Mark notification as shown for this session
+                sessionStorage.setItem('wellnessNotificationShown', 'true');
+            }, 1500);
+            
+            return () => clearTimeout(timer);
+        }
+    }, []);
+
+    const closeNotification = () => {
+        setShowNotification(false);
+    };
     
     return (
         <div className="px-10 content-area">
+            {/* Wellness Notification */}
+            {showNotification && (
+                <div className="fixed bottom-5 right-5 max-w-2xl bg-white rounded-lg shadow-lg p-4 border-l-4 border-[#6488e9] animate-fadeIn z-50">
+                    <div className="flex items-start">
+                        <div className="ml-3 w-70 flex-1 pt-0.5">
+                            <p className="text-sm font-medium text-gray-900">Wellness Recommendations</p>
+                            <p className="mt-1 text-sm text-gray-500">
+                                Check out personalized wellness agent recommendations to improve your day!
+                            </p>
+                            <div className="mt-3 flex space-x-3">
+                                <Link
+                                    to="/wellness"
+                                    className="bg-[#6488e9] text-white px-3 py-1.5 rounded-md text-sm font-medium hover:bg-[#5070d0]"
+                                >
+                                    View Recommendations
+                                </Link>
+                                <button
+                                    type="button"
+                                    onClick={closeNotification}
+                                    className="bg-white text-gray-700 px-3 py-1.5 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-50"
+                                >
+                                    Dismiss
+                                </button>
+                            </div>
+                        </div>
+                        <div className="ml-4 flex-shrink-0 flex">
+                            <button
+                                onClick={closeNotification}
+                                className="bg-white rounded-md inline-flex text-gray-400 hover:text-gray-500 focus:outline-none"
+                            >
+                                <span className="sr-only">Close</span>
+                                <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+            
             <div className="flex justify-center text-center mt-40 ml-10">
               <div className="">
                 <div className="flex">
@@ -160,10 +214,10 @@ const Home = () => {
                     <Sparkles className="w-10 h-10 mb-1" />
                 </div>
 
-                <h2 className="text-xl font-semibold mt-3">Creative Expression Zone</h2>
+                <h2 className="text-xl font-semibold mt-3">Creative Expression</h2>
 
                 <p className="text-sm font-normal mt-2">
-                    Unlock SketchTales & Journal Board to express, draw, and reflect freely.
+                    Unlock SketchTales & Journal Board to express, and reflect freely.
                 </p>
 
                 <button className={`mt-4 w-fit px-4 py-1.5 bg-[#6488e9] text-white rounded-lg text-sm font-medium ${isCalmMode ? '' : 'hover:opacity-90'} transition`}>

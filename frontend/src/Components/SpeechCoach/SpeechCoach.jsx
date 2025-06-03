@@ -527,7 +527,7 @@ function SpeechCoach() {
         <div className="container mx-auto px-6 py-12">
           <div className="text-center mb-12">
             <h1 className="text-5xl font-bold text-white mb-4">
-              Talk Coach
+              Speech Coach
             </h1>
             <p className="text-xl text-white max-w-2xl mx-auto">
               Choose your practice focus and improve your communication skills with AI-powered feedback

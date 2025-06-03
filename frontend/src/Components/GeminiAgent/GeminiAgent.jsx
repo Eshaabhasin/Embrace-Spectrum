@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { initializeApp } from 'firebase/app';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
 import { useUser } from '@clerk/clerk-react'; 
 import { MessageCircle, Sparkles, X, ChevronRight, RotateCcw } from 'lucide-react';
@@ -212,7 +211,7 @@ const GeminiAgent = () => {
     <div className="fixed bottom-6 left-6 z-50">
       {/* Chat Box */}
       {isOpen && (
-        <div className="mb-4 w-80 bg-white rounded-2xl shadow-2xl border border-purple-100 overflow-hidden transform transition-all duration-300 ease-out animate-in slide-in-from-bottom-2">
+        <div className="mb-4 w-90 bg-white rounded-2xl shadow-2xl border border-purple-100 overflow-hidden transform transition-all duration-300 ease-out animate-in slide-in-from-bottom-2">
           {/* Header */}
           <div className="bg-gradient-to-r from-purple-500 to-pink-500 px-4 py-3 flex items-center justify-between">
             <div className="flex items-center space-x-2">
