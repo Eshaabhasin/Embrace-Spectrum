@@ -23,7 +23,9 @@ import LifeSkillsTracker from './Components/LifeSkillTracker/LifeSkillTracker';
 import LearnPath from './Components/LearningPath/AllLearnpath';
 import LifeSkillsQuiz from './Components/Quiz/LifeSkillsQuiz';
 import SpeechCoach from './Components/SpeechCoach/SpeechCoach';
-
+import Game from './Components/Games/Games';
+import SenseScape from './Components/Games/SenseScape';
+import MoodBooster from './Components/Games/MoodBooster';
 import './App.css';
 
 // Create wrapped components
@@ -38,6 +40,7 @@ const CalmLifeSkillsTracker = withCalmMode(LifeSkillsTracker);
 const CalmLearnPath = withCalmMode(LearnPath);
 const CalmLifeSkillsQuiz = withCalmMode(LifeSkillsQuiz);
 const CalmSpeechCoach = withCalmMode(SpeechCoach);
+const CalmSenseScape = withCalmMode(SenseScape);
 
 // Ensure React.Children exists
 if (!React.Children) {
@@ -152,7 +155,9 @@ function App() {
             <Route path="/learn" element={<CalmLearnPath />} />
             <Route path="/quiz" element={<CalmLifeSkillsQuiz />} />
             <Route path="/SpeechCoach" element={<CalmSpeechCoach />} />
-        
+            <Route path="/games" element={<Game />} />
+            <Route path="/sensescape" element={<CalmSenseScape />} />
+            <Route path="/moodbooster" element={<MoodBooster />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </div>
