@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import NavBar from '../NavBar/NavBar';
 
 const environments = [
   {
@@ -408,7 +407,6 @@ const SenseScape = () => {
   
   return (
     <>
-      <NavBar />
       <div className={`${activeEnvironment.bgColor} transition-colors duration-1000 flex flex-col mt-29 w-[1500px] ml-5 h-[615px] rounded-2xl
         ${accessibilitySettings.lowSensory ? 'opacity-75' : ''}
         ${accessibilitySettings.highContrast ? 'contrast-150' : ''}

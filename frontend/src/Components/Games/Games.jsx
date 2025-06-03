@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import NavBar from '../NavBar/NavBar';
 
 const cards = [
   { 
@@ -32,7 +31,6 @@ const cards = [
 const Game = () => {
   return (
     <>
-      <NavBar />
       <div className="min-h-screen bg-[#6488e9] px-6 py-12 flex flex-col items-center mt-30">
         <h1 className="text-white text-3xl font-bold mb-10 text-center">Game Zone ✨</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl w-full">

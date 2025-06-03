@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from "react";
-import NavBar from '../NavBar/NavBar';
 
 // Feature sections
 const features = [
@@ -694,7 +693,6 @@ const MoodBooster = () => {
   
   return (
     <>
-      <NavBar />
       <div className={`min-h-screen bg-gradient-to-b from-blue-600 to-blue-800 px-4 py-12 flex flex-col mt-20
         ${settings.reducedMotion ? 'motion-reduce' : ''}
         ${settings.highContrast ? 'contrast-150' : ''}

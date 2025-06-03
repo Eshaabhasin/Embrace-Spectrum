@@ -369,11 +369,11 @@ const LifeSkillsTracker = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center space-y-4">
           <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="text-lg text-gray-700 font-medium">Loading your personalized experience...</p>
-          <p className="text-sm text-gray-500">Setting up your wellness journey</p>
+          <p className="text-lg text-white font-medium">Loading your personalized experience...</p>
+          <p className="text-sm text-white">Setting up your wellness journey</p>
         </div>
       </div>
     );
