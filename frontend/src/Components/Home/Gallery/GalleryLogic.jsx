@@ -8,6 +8,7 @@ import {
   Program,
   Texture,
 } from 'ogl'
+import React from "react"
 
 function debounce(func, wait) {
   let timeout

@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import React from "react"
 
 const SpotlightCard = ({
   children,
