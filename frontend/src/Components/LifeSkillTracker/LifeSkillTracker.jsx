@@ -346,10 +346,14 @@ const closeNotification = () => {
 
   const showBadgeNotification = (badge) => {
     const notification = document.createElement('div');
-    notification.className = 'fixed top-4 right-4 bg-yellow-400 text-black p-4 rounded-lg shadow-lg z-50 animate-bounce';
+    notification.className = 'fixed top-40 right-4 bg-yellow-400 text-black p-4 rounded-lg shadow-lg z-50 animate-bounce';
+    // Add ARIA role and live region for screen readers
+    notification.setAttribute('role', 'alert');
+    notification.setAttribute('aria-live', 'assertive');
+    notification.setAttribute('aria-atomic', 'true');
     notification.innerHTML = `
       <div class="flex items-center space-x-2">
-        <span class="text-2xl">${badge.icon}</span>
+        <span class="text-2xl" aria-hidden="true">${badge.icon}</span>
         <div>
           <p class="font-bold">New Badge Earned!</p>
           <p class="text-sm">${badge.name}</p>
@@ -393,8 +397,12 @@ const closeNotification = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center space-y-4">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto"></div>
+        <div className="text-center space-y-4" role="status" aria-live="polite">
+          <div 
+            className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto"
+            role="progressbar"
+            aria-label="Loading content"
+          ></div>
           <p className="text-lg text-white font-medium">Loading your personalized experience...</p>
           <p className="text-sm text-white">Setting up your wellness journey</p>
         </div>
@@ -419,7 +427,12 @@ const closeNotification = () => {
       <div className="max-w-8xl mx-auto space-y-6">
 
         {showNotification && (
-                <div className="fixed bottom-5 right-5 max-w-sm bg-white rounded-lg shadow-lg p-4 border-l-4 border-[#6488e9] animate-fadeIn z-50">
+                <div 
+                  className="fixed bottom-5 right-5 max-w-sm bg-white rounded-lg shadow-lg p-4 border-l-4 border-[#6488e9] animate-fadeIn z-50"
+                  role="alert"
+                  aria-live="polite"
+                  aria-atomic="true"
+                >
                   <div className="flex items-start">
                     <div className="ml-3 w-70 flex-1 pt-0.5">
                       <p className="text-sm font-medium text-gray-900">Start Your Journal Journey</p>
@@ -430,6 +443,8 @@ const closeNotification = () => {
                         <Link
                           to="/journalboard"
                           className="bg-[#6488e9] text-white px-3 py-1.5 rounded-md text-sm font-medium hover:bg-[#5070d0]"
+                          role="button"
+                          aria-label="Open Journal"
                         >
                           Open Journal
                         </Link>
@@ -437,6 +452,7 @@ const closeNotification = () => {
                           type="button"
                           onClick={closeNotification}
                           className="bg-white text-gray-700 px-3 py-1.5 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-50"
+                          aria-label="Dismiss notification"
                         >
                           Dismiss
                         </button>
@@ -446,9 +462,10 @@ const closeNotification = () => {
                       <button
                         onClick={closeNotification}
                         className="bg-white rounded-md inline-flex text-gray-400 hover:text-gray-500 focus:outline-none"
+                        aria-label="Close notification"
                       >
                         <span className="sr-only">Close</span>
-                        <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                           <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
                         </svg>
                       </button>
@@ -500,7 +517,14 @@ const closeNotification = () => {
               <span className="font-medium">Level {userProgress.level} Progress</span>
               <span className="font-medium">{100 - (userProgress.xp % 100)} XP to next level</span>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-4 border border-gray-300">
+            <div 
+              className="w-full bg-gray-200 rounded-full h-4 border border-gray-300"
+              role="progressbar"
+              aria-valuenow={userProgress.xp % 100}
+              aria-valuemin="0"
+              aria-valuemax="100"
+              aria-label="Level progress"
+            >
               <div
                 className="bg-gradient-to-r from-blue-500 to-purple-500 h-4 rounded-full transition-all duration-500 ease-out"
                 style={{ width: `${(userProgress.xp % 100)}%` }}
@@ -515,15 +539,21 @@ const closeNotification = () => {
                 onClick={generatePersonalizedTasks}
                 disabled={generatingTasks}
                 className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold py-4 px-8 rounded-2xl shadow-lg transform hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center space-x-3 mx-auto"
+                aria-label="Generate personalized tasks with AI"
+                aria-busy={generatingTasks}
               >
                 {generatingTasks ? (
                   <>
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                    <div 
+                      className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"
+                      role="progressbar"
+                      aria-label="Creating tasks"
+                    ></div>
                     <span>Creating Your Personal Tasks...</span>
                   </>
                 ) : (
                   <>
-                    <Brain className="w-5 h-5" />
+                    <Brain className="w-5 h-5" aria-hidden="true" />
                     <span>Generate My Personal Tasks with AI</span>
                   </>
                 )}
@@ -536,15 +566,20 @@ const closeNotification = () => {
         </div>
 
         {userProgress.badges.length > 0 && (
-                  <div className="bg-white rounded-3xl shadow-lg p-6 lg:p-8 border border-yellow-100">
-                    <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-                      <Trophy className="w-7 h-7 mr-3 text-yellow-500" />
+                  <div className="bg-white rounded-3xl shadow-lg p-6 lg:p-8 border border-yellow-100" role="region" aria-labelledby="badges-heading">
+                    <h2 id="badges-heading" className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                      <Trophy className="w-7 h-7 mr-3 text-yellow-500" aria-hidden="true" />
                       Your Achievement Badges
                     </h2>
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                       {userProgress.badges.map((badge) => (
-                        <div key={badge.id} className="text-center p-4 bg-gradient-to-br from-yellow-50 to-orange-50 rounded-2xl border-2 border-yellow-200 hover:border-yellow-300 transition-colors">
-                          <div className="text-4xl mb-2">{badge.icon}</div>
+                        <div 
+                          key={badge.id} 
+                          className="text-center p-4 bg-gradient-to-br from-yellow-50 to-orange-50 rounded-2xl border-2 border-yellow-200 hover:border-yellow-300 transition-colors"
+                          role="listitem"
+                          aria-label={`${badge.name} badge: ${badge.description}`}
+                        >
+                          <div className="text-4xl mb-2" aria-hidden="true">{badge.icon}</div>
                           <p className="font-bold text-sm text-gray-800 mb-1">{badge.name}</p>
                           <p className="text-xs text-gray-600 leading-relaxed">{badge.description}</p>
                         </div>
@@ -555,9 +590,9 @@ const closeNotification = () => {
         
                 {/* Tasks Grid */}
                 {tasks.length > 0 && (
-                  <div className="bg-white p-5 rounded-2xl"> 
+                  <div className="bg-white p-5 rounded-2xl" role="region" aria-labelledby="tasks-heading"> 
                     <div className="flex justify-between items-center mb-5">
-                      <h2 className="text-2xl font-bold text-gray-800">Your Personal Tasks</h2>
+                      <h2 id="tasks-heading" className="text-2xl font-bold text-gray-800">Your Personal Tasks</h2>
                       {tasksGenerated && (
                         <button
                           onClick={() => {
@@ -566,14 +601,15 @@ const closeNotification = () => {
                             generatePersonalizedTasks();
                           }}
                           className="flex items-center space-x-2 text-purple-600 hover:text-purple-800 font-medium transition-colors"
+                          aria-label="Generate new set of tasks"
                         >
-                          <RefreshCw className="w-4 h-4" />
+                          <RefreshCw className="w-4 h-4" aria-hidden="true" />
                           <span>Generate New Tasks</span>
                         </button>
                       )}
                     </div>
         
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" role="list" aria-label="Personal tasks">
                       {tasks.map((task) => {
                         const isCompleted = userProgress.completedTasks.includes(task.id);
                         return (
@@ -584,6 +620,8 @@ const closeNotification = () => {
                                 ? 'bg-gradient-to-br from-green-50 to-emerald-50 border-green-200 shadow-green-100' 
                                 : 'hover:bg-blue-50 border-gray-200 hover:border-blue-200 hover:shadow-xl hover:scale-102'
                             }`}
+                            role="region"
+                            aria-labelledby={`task-title-${task.id}`}
                           >
                             <div className="flex flex-wrap justify-between items-start gap-2">
                               <div className="flex flex-wrap gap-2">
@@ -601,7 +639,7 @@ const closeNotification = () => {
                             </div>
         
                             <div>
-                              <h3 className="font-bold text-gray-800 text-lg mb-2 leading-tight">{task.title}</h3>
+                              <h3 id={`task-title-${task.id}`} className="font-bold text-gray-800 text-lg mb-2 leading-tight">{task.title}</h3>
                               {task.description && (
                                 <p className="text-sm text-gray-600 leading-relaxed">{task.description}</p>
                               )}
@@ -615,15 +653,17 @@ const closeNotification = () => {
                                   ? 'bg-green-100 text-green-800 cursor-not-allowed border-2 border-green-200'
                                   : 'bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg hover:shadow-xl transform hover:scale-105'
                               }`}
+                              aria-label={isCompleted ? `Task ${task.title} already completed` : `Mark task ${task.title} as complete`}
+                              aria-pressed={isCompleted}
                             >
                               {isCompleted ? (
                                 <>
-                                  <CheckCircle className="w-5 h-5 mr-2" />
+                                  <CheckCircle className="w-5 h-5 mr-2" aria-hidden="true" />
                                   Task Completed! 🎉
                                 </>
                               ) : (
                                 <>
-                                  <Circle className="w-5 h-5 mr-2" />
+                                  <Circle className="w-5 h-5 mr-2" aria-hidden="true" />
                                   Mark as Complete
                                 </>
                               )}
@@ -637,14 +677,17 @@ const closeNotification = () => {
         
                 {/* No onboarding data message */}
                 {!onboardingData && (
-                  <div className="bg-white rounded-3xl shadow-lg p-8 text-center border border-blue-100">
-                    <div className="text-6xl mb-4">📝</div>
+                  <div className="bg-white rounded-3xl shadow-lg p-8 text-center border border-blue-100" role="alert">
+                    <div className="text-6xl mb-4" aria-hidden="true">📝</div>
                     <h2 className="text-2xl font-bold text-gray-800 mb-4">Complete Your Profile First</h2>
                     <p className="text-gray-600 leading-relaxed">
                       To get personalized life skills tasks, please complete your onboarding profile. 
                       This helps us create tasks that are perfect for your unique needs and goals.
                     </p>
-                    <button className="mt-6 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-3 px-6 rounded-2xl transition-all transform hover:scale-105">
+                    <button 
+                      className="mt-6 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-3 px-6 rounded-2xl transition-all transform hover:scale-105"
+                      aria-label="Complete your profile"
+                    >
                       Complete Profile
                     </button>
                   </div>
@@ -652,9 +695,9 @@ const closeNotification = () => {
         
                 {/* Stats Footer */}
                 {tasks.length > 0 && (
-                  <div className="bg-white rounded-3xl shadow-lg p-6 lg:p-8 border border-gray-100">
-                    <h3 className="text-xl font-bold text-gray-800 mb-6 text-center">Your Progress Summary</h3>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+                  <div className="bg-white rounded-3xl shadow-lg p-6 lg:p-8 border border-gray-100" role="region" aria-labelledby="progress-summary-heading">
+                    <h3 id="progress-summary-heading" className="text-xl font-bold text-gray-800 mb-6 text-center">Your Progress Summary</h3>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center" role="list" aria-label="Progress statistics">
                       <div className="bg-blue-50 rounded-2xl p-4 border border-blue-200">
                         <p className="text-3xl font-bold text-blue-600 mb-2">{userProgress.completedTasks.length}</p>
                         <p className="text-blue-700 text-sm font-medium">Tasks Completed</p>

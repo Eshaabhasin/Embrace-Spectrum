@@ -221,6 +221,13 @@ class App {
     this.gl = this.renderer.gl
     this.gl.clearColor(0, 0, 0, 0)
     this.container.appendChild(this.gl.canvas)
+    
+    // Add accessibility attributes
+    if (this.gl.canvas) {
+      this.gl.canvas.setAttribute('aria-label', 'Interactive image gallery - use arrow keys to navigate');
+      this.gl.canvas.setAttribute('tabIndex', '0');
+      this.gl.canvas.setAttribute('role', 'img');
+    }
   }
   createCamera() {
     this.camera = new Camera(this.gl)
@@ -259,6 +266,14 @@ class App {
     }))
     
     this.mediasImages = imageOnlyItems.concat(imageOnlyItems)
+    
+    // Add aria-label to canvas for screen readers
+    if (this.gl && this.gl.canvas) {
+      this.gl.canvas.setAttribute('aria-label', 'Interactive image gallery - use arrow keys to navigate');
+      this.gl.canvas.setAttribute('tabIndex', '0');
+      this.gl.canvas.setAttribute('role', 'img');
+    }
+    
     this.medias = this.mediasImages.map((data, index) => {
       return new Media({
         geometry: this.planeGeometry,
@@ -349,7 +364,24 @@ class App {
     window.addEventListener('touchstart', this.boundOnTouchDown)
     window.addEventListener('touchmove', this.boundOnTouchMove)
     window.addEventListener('touchend', this.boundOnTouchUp)
+    
+    // Add keyboard navigation for accessibility
+    this.boundOnKeyDown = this.onKeyDown.bind(this)
+    window.addEventListener('keydown', this.boundOnKeyDown)
   }
+  onKeyDown(e) {
+    // Left arrow key
+    if (e.key === 'ArrowLeft') {
+      this.scroll.target -= 2
+      this.onCheckDebounce()
+    }
+    // Right arrow key
+    else if (e.key === 'ArrowRight') {
+      this.scroll.target += 2
+      this.onCheckDebounce()
+    }
+  }
+  
   destroy() {
     window.cancelAnimationFrame(this.raf)
     window.removeEventListener('resize', this.boundOnResize)
@@ -361,6 +393,7 @@ class App {
     window.removeEventListener('touchstart', this.boundOnTouchDown)
     window.removeEventListener('touchmove', this.boundOnTouchMove)
     window.removeEventListener('touchend', this.boundOnTouchUp)
+    window.removeEventListener('keydown', this.boundOnKeyDown)
     if (this.renderer && this.renderer.gl && this.renderer.gl.canvas.parentNode) {
       this.renderer.gl.canvas.parentNode.removeChild(this.renderer.gl.canvas)
     }
@@ -380,6 +413,12 @@ export default function CircularGallery({
     }
   }, [items, bend, borderRadius])
   return (
-    <div className='w-full h-full overflow-hidden cursor-grab active:cursor-grabbing' ref={containerRef} />
+    <div 
+      className='w-full h-full overflow-hidden cursor-grab active:cursor-grabbing' 
+      ref={containerRef} 
+      role="region" 
+      aria-label="Interactive image gallery"
+      tabIndex="0"
+    />
   )
 }

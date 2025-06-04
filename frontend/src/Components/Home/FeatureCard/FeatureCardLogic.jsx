@@ -13,6 +13,23 @@ const SpotlightCard = ({
   const [isFocused, setIsFocused] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [opacity, setOpacity] = useState(0);
+  
+  // Extract title from children for accessibility
+  const extractTitle = () => {
+    if (!children) return '';
+    
+    // Try to find h2 or h3 element in children
+    let title = '';
+    React.Children.forEach(children, child => {
+      if (React.isValidElement(child) && 
+          (child.type === 'h2' || child.type === 'h3' || 
+           (typeof child.type === 'string' && (child.type.includes('h2') || child.type.includes('h3'))))) {
+        title = child.props.children;
+      }
+    });
+    
+    return title || description || '';
+  };
 
   const handleMouseMove = (e) => {
     if (!divRef.current || isFocused) return;
@@ -23,6 +40,11 @@ const SpotlightCard = ({
   const handleFocus = () => {
     setIsFocused(true);
     setOpacity(0.4);
+    
+    // Speak the description when focused
+    if (isAudioDescriptionEnabled && description) {
+      speakText(description);
+    }
   };
 
   const handleBlur = () => {
@@ -42,6 +64,8 @@ const SpotlightCard = ({
     setOpacity(0);
   };
 
+  const cardTitle = extractTitle();
+  
   return (
     <div
       ref={divRef}
@@ -63,6 +87,9 @@ const SpotlightCard = ({
         duration-300 
         ${className}
       `}
+      tabIndex="0"
+      role="article"
+      aria-label={cardTitle}
     >
       <div
         className="pointer-events-none absolute inset-0 transition-opacity duration-500 ease-in-out"
@@ -70,6 +97,7 @@ const SpotlightCard = ({
           opacity,
           background: `radial-gradient(circle at ${position.x}px ${position.y}px, ${spotlightColor}, transparent 80%)`,
         }}
+        aria-hidden="true"
       />
       {children}
     </div>

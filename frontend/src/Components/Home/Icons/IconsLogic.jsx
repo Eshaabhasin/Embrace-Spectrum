@@ -121,6 +121,8 @@ export default function IconsCards({
         width: containerWidth,
         height: containerHeight,
       }}
+      role="navigation"
+      aria-label="Feature navigation"
     >
       {images.map((src, idx) => (
         <Link
@@ -137,11 +139,13 @@ export default function IconsCards({
             }
           }}
           onMouseLeave={resetSiblings}
+          aria-label={`${titles[idx] || `Feature ${idx+1}`} - Navigate to ${links[idx] || "#"}`}
+          role="button"
         >
           <img
             className="w-full h-full object-cover"
             src={src}
-            alt={`card-${idx}`}
+            alt={titles[idx] || `Feature ${idx+1}`}
           />
           {titles[idx] && (
             <div className="absolute bottom-0 w-full bg-black/70 text-white text-center py-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">

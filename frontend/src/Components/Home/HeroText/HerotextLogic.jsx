@@ -168,7 +168,7 @@ const RotatingText = forwardRef((props, ref) => {
       transition={transition}
     >
       {/* Screen-reader only text */}
-      <span className="sr-only">{texts[currentTextIndex]}</span>
+      <span className="sr-only" role="status" aria-live="polite">{texts[currentTextIndex]}</span>
       <AnimatePresence mode={animatePresenceMode} initial={animatePresenceInitial}>
         <motion.div
           key={currentTextIndex}
