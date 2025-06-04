@@ -14,26 +14,16 @@ const cards = [
     path: "/moodbooster",
     emoji: "😊"
   },
-  { 
-    title: "Focus Booster", 
-    desc: "Helps maintain attention with gentle prompts.", 
-    path: "/games/focus",
-    emoji: "🎯"
-  },
-  { 
-    title: "Routine Tracker", 
-    desc: "Visual timers and routines to stay on track.", 
-    path: "/games/routine",
-    emoji: "⏱️"
-  }
 ];
 
 const Game = () => {
   return (
     <>
       <div className="min-h-screen bg-[#6488e9] px-6 py-12 flex flex-col items-center mt-30">
-        <h1 className="text-white text-3xl font-bold mb-10 text-center">Game Zone ✨</h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl w-full">
+          <h1 className="text-5xl font-bold text-white mb-15">
+              Game Zone✨
+            </h1>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-6xl h-72">
           {cards.map((card, index) => (
             <Link
               to={card.path}
@@ -42,9 +32,9 @@ const Game = () => {
             >
               <div className="flex items-center gap-3 mb-3">
                 <span className="text-3xl">{card.emoji}</span>
-                <h2 className="text-2xl font-semibold">{card.title}</h2>
+                <h2 className="text-3xl font-semibold">{card.title}</h2>
               </div>
-              <p className="text-base opacity-90">{card.desc}</p>
+              <p className="text-2xl opacity-90 py-5">{card.desc}</p>
             </Link>
           ))}
         </div>
