@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
 import { useUser } from '@clerk/clerk-react'; 
 import { MessageCircle, Sparkles, X, ChevronRight, RotateCcw } from 'lucide-react';
-import {db} from '../../../firebase'
+import {db} from '../../../firebase';
+import { useAudioDescription } from '../AudioDescription/AudioDescriptionContext';
 
 const GEMINI_API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
 
@@ -16,6 +17,7 @@ const GeminiAgent = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [typingText, setTypingText] = useState('');
   const chatRef = useRef(null);
+  const { isAudioDescriptionEnabled, speakText } = useAudioDescription();
 
   // Monitor Clerk authentication state and fetch data
   useEffect(() => {
@@ -225,6 +227,8 @@ const GeminiAgent = () => {
             </div>
             <button 
               onClick={() => setIsOpen(false)}
+              onMouseEnter={() => isAudioDescriptionEnabled && speakText("Close wellness guide")}
+              aria-label="Close wellness guide"
               className="text-white hover:text-purple-200 transition-colors"
             >
               <X className="w-5 h-5" />
@@ -269,7 +273,9 @@ const GeminiAgent = () => {
                 <div className="flex items-center justify-between">
                   <button
                     onClick={handlePrevCard}
+                    onMouseEnter={() => isAudioDescriptionEnabled && speakText("Previous recommendation")}
                     disabled={currentCardIndex === 0}
+                    aria-label="Previous recommendation"
                     className={`px-3 py-1 rounded-lg text-sm font-medium transition-all ${
                       currentCardIndex === 0
                         ? 'text-gray-400 cursor-not-allowed'
@@ -292,7 +298,9 @@ const GeminiAgent = () => {
 
                   <button
                     onClick={handleNextCard}
+                    onMouseEnter={() => isAudioDescriptionEnabled && speakText("Next recommendation")}
                     disabled={currentCardIndex === recommendationCards.length - 1}
+                    aria-label="Next recommendation"
                     className={`px-3 py-1 rounded-lg text-sm font-medium transition-all flex items-center space-x-1 ${
                       currentCardIndex === recommendationCards.length - 1
                         ? 'text-gray-400 cursor-not-allowed'
@@ -323,6 +331,8 @@ const GeminiAgent = () => {
                     setCurrentCardIndex(0);
                     generateRecommendation();
                   }}
+                  onMouseEnter={() => isAudioDescriptionEnabled && speakText("Get new wellness suggestions")}
+                  aria-label="Get new wellness suggestions"
                   className="text-xs text-purple-600 hover:text-purple-800 font-medium transition-colors flex items-center space-x-1"
                 >
                   <RotateCcw className="w-3 h-3" />
@@ -337,6 +347,8 @@ const GeminiAgent = () => {
       {/* Floating Button */}
       <button
         onClick={handleChatToggle}
+        onMouseEnter={() => isAudioDescriptionEnabled && speakText("Open Wellness Guide for personalized recommendations")}
+        aria-label="Open Wellness Guide for personalized recommendations"
         className="w-14 h-14 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center justify-center group relative overflow-hidden"
       >
         {/* Animated background */}

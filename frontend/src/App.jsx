@@ -8,7 +8,9 @@ import {
 } from 'react-router-dom';
 import { useUser } from '@clerk/clerk-react';
 import { useCalmMode } from './Components/Providers/CalmModeContext';
+import { useAudioDescription } from './Components/AudioDescription/AudioDescriptionContext';
 import withCalmMode from './Components/CalmMode/withCalmMode';
+import withAudioDescription from './Components/AudioDescription/withAudioDescription';
 import NavBar from './Components/NavBar/NavBar';
 
 import Home from './Components/Home/Home';
@@ -50,6 +52,7 @@ const AuthWrapper = () => {
   const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState(false);
   const [isChecking, setIsChecking] = useState(true);
   const { isCalmMode } = useCalmMode();
+  const { isAudioDescriptionEnabled, speakText } = useAudioDescription();
 
   useEffect(() => {
     if (isLoaded) {
@@ -122,9 +125,10 @@ const AuthWrapper = () => {
 
 function App() {
   const { isCalmMode } = useCalmMode();
+  const { isAudioDescriptionEnabled } = useAudioDescription();
   
   return (
-    <div className={isCalmMode ? 'calm-mode' : ''}>
+    <div className={`${isCalmMode ? 'calm-mode' : ''} ${isAudioDescriptionEnabled ? 'audio-description-enabled' : ''}`}>
       <Router>
         <NavBar />
         <AuthWrapper />

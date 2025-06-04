@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import NavBar from "../NavBar/NavBar";
 import parse from 'html-react-parser';
 import SubmitButtonInvestiMate from "./FormSubmitButton";
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
@@ -277,7 +276,6 @@ Guidelines:
 
   return (
     <>
-    <NavBar/>
     <div className="lg:flex gap-8 p-8 mt-8 flex-1">
       <div className="lg:w-[46%]">
         <form onSubmit={(e) => e.preventDefault()} className="space-y-6">

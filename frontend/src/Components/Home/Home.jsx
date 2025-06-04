@@ -165,7 +165,11 @@ const Home = () => {
             </div>
             <h1 className="mt-30 mb-4 text-3xl text-white font-extrabold">What Embrace Specturm Beholds</h1>
             <div className="grid grid-cols-4 mb-10">
-                <SpotlightCard className="custom-spotlight-card" spotlightColor={isCalmMode ? "rgba(218, 165, 32, 0.3)" : "rgba(218, 165, 32, 0.9)"}>
+                <SpotlightCard 
+                  className="custom-spotlight-card" 
+                  spotlightColor={isCalmMode ? "rgba(218, 165, 32, 0.3)" : "rgba(218, 165, 32, 0.9)"}
+                  description="Empower Your Spectrum: Unlock full access to emotional tools and safe spaces crafted for every journey."
+                >
                 <div className="mt-2">
                     <Sparkles className="w-10 h-10 mb-1" />
                 </div>
@@ -181,7 +185,11 @@ const Home = () => {
                 </button>
                 </SpotlightCard>
 
-                <SpotlightCard className="custom-spotlight-card" spotlightColor={isCalmMode ? "rgba(218, 165, 32, 0.3)" : "rgba(218, 165, 32, 0.9)"}>
+                <SpotlightCard 
+                  className="custom-spotlight-card" 
+                  spotlightColor={isCalmMode ? "rgba(218, 165, 32, 0.3)" : "rgba(218, 165, 32, 0.9)"}
+                  description="Personalized Journey: Enjoy AI-powered support tools tailored to your mood, preferences, and goals."
+                >
                 <div className="mt-2">
                     <Sparkles className="w-10 h-10 mb-1" />
                 </div>
@@ -197,7 +205,11 @@ const Home = () => {
                 </button>
                 </SpotlightCard>
 
-                <SpotlightCard className="custom-spotlight-card" spotlightColor={isCalmMode ? "rgba(218, 165, 32, 0.3)" : "rgba(218, 165, 32, 0.9)"}>
+                <SpotlightCard 
+                  className="custom-spotlight-card" 
+                  spotlightColor={isCalmMode ? "rgba(218, 165, 32, 0.3)" : "rgba(218, 165, 32, 0.9)"}
+                  description="Community Hub Access: Connect with like-minded individuals, mentors, and supportive communities."
+                >
                 <div className="mt-2">
                     <Sparkles className="w-10 h-10 mb-1" />
                 </div>
@@ -213,7 +225,11 @@ const Home = () => {
                 </button>
                 </SpotlightCard>
 
-                <SpotlightCard className="custom-spotlight-card" spotlightColor={isCalmMode ? "rgba(218, 165, 32, 0.3)" : "rgba(218, 165, 32, 0.9)"}>
+                <SpotlightCard 
+                  className="custom-spotlight-card" 
+                  spotlightColor={isCalmMode ? "rgba(218, 165, 32, 0.3)" : "rgba(218, 165, 32, 0.9)"}
+                  description="Creative Expression: Unlock SketchTales and Journal Board to express and reflect freely."
+                >
                 <div className="mt-2">
                     <Sparkles className="w-10 h-10 mb-1" />
                 </div>

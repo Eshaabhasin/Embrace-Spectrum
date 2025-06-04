@@ -2,7 +2,9 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { SignInButton, UserButton, useUser } from '@clerk/clerk-react';
 import CalmModeToggle from '../CalmMode/CalmModeToggle';
+import AudioDescriptionToggle from '../AudioDescription/AudioDescriptionToggle';
 import { useCalmMode } from '../Providers/CalmModeContext';
+import { useAudioDescription } from '../AudioDescription/AudioDescriptionContext';
 
 const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -10,6 +12,7 @@ const NavBar = () => {
   const [activeTooltip, setActiveTooltip] = useState(null);
   const { isSignedIn } = useUser();
   const { isCalmMode } = useCalmMode();
+  const { isAudioDescriptionEnabled, speakText } = useAudioDescription();
   const dropdownRef = useRef(null);
 
   const toggleMenu = () => {
@@ -76,7 +79,11 @@ const NavBar = () => {
                 onMouseEnter={() => showTooltip('home')}
                 onMouseLeave={hideTooltip}
               >
-                <Link to="/" className={`${isCalmMode ? '' : 'hover:text-[#fffccf]'}`}>Home</Link>
+                <Link 
+                  to="/" 
+                  className={`${isCalmMode ? '' : 'hover:text-[#fffccf]'}`}
+                  onMouseEnter={() => isAudioDescriptionEnabled && speakText("Home page")}
+                >Home</Link>
                 {activeTooltip === 'home' && (
                   <div className="absolute left-1/2 transform -translate-x-1/2 top-full mt-2 w-48 bg-white text-gray-800 text-sm rounded-md shadow-lg p-2 animate-fadeIn z-50">
                     <div className="relative">
@@ -96,7 +103,9 @@ const NavBar = () => {
               >
                 <button 
                   onClick={() => toggleDropdown('mindspace')} 
+                  onMouseEnter={() => isAudioDescriptionEnabled && speakText("MindSpace menu for mental wellness tools")}
                   className={`flex items-center ${isCalmMode ? '' : 'hover:text-[#fffccf]'}`}
+                  aria-label="MindSpace menu for mental wellness tools"
                 >
                   MindSpace
                   <svg className={`w-4 h-4 ml-1 transition-transform ${activeDropdown === 'mindspace' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -116,7 +125,11 @@ const NavBar = () => {
                 <div className="absolute top-full left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 transition-all duration-300 ease-in-out origin-top-left">
                   <div className="py-1 animate-fadeIn">
                     <div className="relative" onMouseEnter={() => showTooltip('solace')} onMouseLeave={hideTooltip}>
-                      <Link to="/ChatBot" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Solace</Link>
+                      <Link 
+                        to="/ChatBot" 
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        onMouseEnter={() => isAudioDescriptionEnabled && speakText("Solace AI chatbot for emotional support")}
+                      >Solace</Link>
                       {activeTooltip === 'solace' && (
                         <div className="absolute left-full ml-2 top-0 w-48 bg-white text-gray-800 text-sm rounded-md shadow-lg p-2 animate-fadeIn z-50">
                           <p>AI chatbot for emotional support</p>
@@ -124,7 +137,11 @@ const NavBar = () => {
                       )}
                     </div>
                     <div className="relative" onMouseEnter={() => showTooltip('talkcoach')} onMouseLeave={hideTooltip}>
-                      <Link to="/Geminilive" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Talk Coach</Link>
+                      <Link 
+                        to="/Geminilive" 
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        onMouseEnter={() => isAudioDescriptionEnabled && speakText("Talk Coach for practicing conversations")}
+                      >Talk Coach</Link>
                       {activeTooltip === 'talkcoach' && (
                         <div className="absolute left-full ml-2 top-0 w-48 bg-white text-gray-800 text-sm rounded-md shadow-lg p-2 animate-fadeIn z-50">
                           <p>Practice conversations and social skills</p>
@@ -132,7 +149,11 @@ const NavBar = () => {
                       )}
                     </div>
                     <div className="relative" onMouseEnter={() => showTooltip('speechcoach')} onMouseLeave={hideTooltip}>
-                      <Link to="/SpeechCoach" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Speech Coach</Link>
+                      <Link 
+                        to="/SpeechCoach" 
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        onMouseEnter={() => isAudioDescriptionEnabled && speakText("Speech Coach for improving speech clarity")}
+                      >Speech Coach</Link>
                       {activeTooltip === 'speechcoach' && (
                         <div className="absolute left-full ml-2 top-0 w-48 bg-white text-gray-800 text-sm rounded-md shadow-lg p-2 animate-fadeIn z-50">
                           <p>Improve speech clarity and expression</p>
@@ -152,7 +173,9 @@ const NavBar = () => {
               >
                 <button 
                   onClick={() => toggleDropdown('insighthub')} 
+                  onMouseEnter={() => isAudioDescriptionEnabled && speakText("InsightHub menu for emotional tracking tools")}
                   className={`flex items-center ${isCalmMode ? '' : 'hover:text-[#fffccf]'}`}
+                  aria-label="InsightHub menu for emotional tracking tools"
                 >
                   InsightHub
                   <svg className={`w-4 h-4 ml-1 transition-transform ${activeDropdown === 'insighthub' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -172,7 +195,11 @@ const NavBar = () => {
                 <div className="absolute top-full left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 transition-all duration-300 ease-in-out origin-top-left">
                   <div className="py-1 animate-fadeIn">
                     <div className="relative" onMouseEnter={() => showTooltip('journal')} onMouseLeave={hideTooltip}>
-                      <Link to="/Journalboard" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Journal</Link>
+                      <Link 
+                        to="/Journalboard" 
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        onMouseEnter={() => isAudioDescriptionEnabled && speakText("Journal for documenting thoughts and feelings")}
+                      >Journal</Link>
                       {activeTooltip === 'journal' && (
                         <div className="absolute left-full ml-2 top-0 w-48 bg-white text-gray-800 text-sm rounded-md shadow-lg p-2 animate-fadeIn z-50">
                           <p>Document your thoughts and feelings</p>
@@ -180,15 +207,35 @@ const NavBar = () => {
                       )}
                     </div>
                     <div className="relative" onMouseEnter={() => showTooltip('tracker')} onMouseLeave={hideTooltip}>
-                      <Link to="/Tracker" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Tracker</Link>
+                      <Link 
+                        to="/Tracker" 
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        onMouseEnter={() => isAudioDescriptionEnabled && speakText("Tracker for monitoring emotional patterns")}
+                      >Tracker</Link>
                       {activeTooltip === 'tracker' && (
                         <div className="absolute left-full ml-2 top-0 w-48 bg-white text-gray-800 text-sm rounded-md shadow-lg p-2 animate-fadeIn z-50">
                           <p>Monitor your emotional patterns over time</p>
                         </div>
                       )}
                     </div>
+                    <div className="relative" onMouseEnter={() => showTooltip('learningpaths')} onMouseLeave={hideTooltip}>
+                      <Link 
+                        to="/learn" 
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        onMouseEnter={() => isAudioDescriptionEnabled && speakText("Learning Paths for personalized skill development")}
+                      >Growth Journey</Link>
+                      {activeTooltip === 'learningpaths' && (
+                        <div className="absolute left-full ml-2 top-0 w-48 bg-white text-gray-800 text-sm rounded-md shadow-lg p-2 animate-fadeIn z-50">
+                          <p>Personalized paths for skill development</p>
+                        </div>
+                      )}
+                    </div>                    
                     <div className="relative" onMouseEnter={() => showTooltip('feelreader')} onMouseLeave={hideTooltip}>
-                      <Link to="/FeelReader" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Feel Reader</Link>
+                      <Link 
+                        to="/FeelReader" 
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        onMouseEnter={() => isAudioDescriptionEnabled && speakText("Feel Reader for analyzing emotions in text")}
+                      >Feel Reader</Link>
                       {activeTooltip === 'feelreader' && (
                         <div className="absolute left-full ml-2 top-0 w-48 bg-white text-gray-800 text-sm rounded-md shadow-lg p-2 animate-fadeIn z-50">
                           <p>Analyze and understand your emotions</p>
@@ -208,7 +255,9 @@ const NavBar = () => {
               >
                 <button 
                   onClick={() => toggleDropdown('playground')} 
+                  onMouseEnter={() => isAudioDescriptionEnabled && speakText("Playground menu for creative activities")}
                   className={`flex items-center ${isCalmMode ? '' : 'hover:text-[#fffccf]'}`}
+                  aria-label="Playground menu for creative activities"
                 >
                   Playground
                   <svg className={`w-4 h-4 ml-1 transition-transform ${activeDropdown === 'playground' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -228,7 +277,11 @@ const NavBar = () => {
                 <div className="absolute top-full left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 transition-all duration-300 ease-in-out origin-top-left">
                   <div className="py-1 animate-fadeIn">
                     <div className="relative" onMouseEnter={() => showTooltip('sketchtales')} onMouseLeave={hideTooltip}>
-                      <Link to="/SketchTales" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sketch Tales</Link>
+                      <Link 
+                        to="/SketchTales" 
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        onMouseEnter={() => isAudioDescriptionEnabled && speakText("Sketch Tales for creating stories through drawing")}
+                      >Sketch Tales</Link>
                       {activeTooltip === 'sketchtales' && (
                         <div className="absolute left-full ml-2 top-0 w-48 bg-white text-gray-800 text-sm rounded-md shadow-lg p-2 animate-fadeIn z-50">
                           <p>Create stories through drawing</p>
@@ -236,7 +289,11 @@ const NavBar = () => {
                       )}
                     </div>
                     <div className="relative" onMouseEnter={() => showTooltip('games')} onMouseLeave={hideTooltip}>
-                      <Link to="/Games" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Games</Link>
+                      <Link 
+                        to="/Games" 
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        onMouseEnter={() => isAudioDescriptionEnabled && speakText("Interactive games for all abilities")}
+                      >Games</Link>
                       {activeTooltip === 'games' && (
                         <div className="absolute left-full ml-2 top-0 w-48 bg-white text-gray-800 text-sm rounded-md shadow-lg p-2 animate-fadeIn z-50">
                           <p>Fun interactive games for all abilities</p>
@@ -244,7 +301,11 @@ const NavBar = () => {
                       )}
                     </div>
                     <div className="relative" onMouseEnter={() => showTooltip('quiz')} onMouseLeave={hideTooltip}>
-                      <Link to="/Quiz" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Quiz</Link>
+                      <Link 
+                        to="/Quiz" 
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        onMouseEnter={() => isAudioDescriptionEnabled && speakText("Quiz to test your knowledge")}
+                      >Quiz</Link>
                       {activeTooltip === 'quiz' && (
                         <div className="absolute left-full ml-2 top-0 w-48 bg-white text-gray-800 text-sm rounded-md shadow-lg p-2 animate-fadeIn z-50">
                           <p>Test your knowledge in a fun way</p>
@@ -262,7 +323,11 @@ const NavBar = () => {
                 onMouseEnter={() => showTooltip('lifeforge')}
                 onMouseLeave={hideTooltip}
               >
-                <Link to="/jobs" className={`${isCalmMode ? '' : 'hover:text-[#fffccf]'}`}>Jobs</Link>
+                <Link 
+                  to="/jobs" 
+                  className={`${isCalmMode ? '' : 'hover:text-[#fffccf]'}`}
+                  onMouseEnter={() => isAudioDescriptionEnabled && speakText("Jobs and employment opportunities")}
+                >Jobs</Link>
                 {activeTooltip === 'lifeforge' && (
                   <div className="absolute left-1/2 transform -translate-x-1/2 top-full mt-2 w-48 bg-white text-gray-800 text-sm rounded-md shadow-lg p-2 animate-fadeIn z-50">
                     <div className="relative">
@@ -276,14 +341,20 @@ const NavBar = () => {
           </ul>
           <div className="flex items-center space-x-3">
             <CalmModeToggle />
+            <AudioDescriptionToggle />
             {!isSignedIn ? (
               <SignInButton mode="modal">
-                <button className={`ml-4 bg-blue-600 ${isCalmMode ? '' : 'hover:bg-blue-700'} text-white font-medium py-2 px-4 rounded-lg transition`}>
+                <button 
+                  className={`ml-4 bg-blue-600 ${isCalmMode ? '' : 'hover:bg-blue-700'} text-white font-medium py-2 px-4 rounded-lg transition`}
+                  onMouseEnter={() => isAudioDescriptionEnabled && speakText("Sign in to your account")}
+                >
                   Sign In
                 </button>
               </SignInButton>
             ) : (
-              <UserButton afterSignOutUrl="/" />
+              <div onMouseEnter={() => isAudioDescriptionEnabled && speakText("Access your user profile")}>
+                <UserButton afterSignOutUrl="/" />
+              </div>
             )}
           </div>
         </div>

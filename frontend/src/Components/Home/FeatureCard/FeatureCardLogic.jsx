@@ -1,11 +1,14 @@
 import { useRef, useState } from "react";
-import React from "react"
+import React from "react";
+import { useAudioDescription } from "../../AudioDescription/AudioDescriptionContext";
 
 const SpotlightCard = ({
   children,
   className = "",
-  spotlightColor = "rgba(0, 0, 0, 1)", 
+  spotlightColor = "rgba(0, 0, 0, 1)",
+  description,
 }) => {
+  const { isAudioDescriptionEnabled, speakText } = useAudioDescription();
   const divRef = useRef(null);
   const [isFocused, setIsFocused] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -29,6 +32,10 @@ const SpotlightCard = ({
 
   const handleMouseEnter = () => {
     setOpacity(0.4);
+    // Speak the description or the first heading when hovered
+    if (isAudioDescriptionEnabled && description) {
+      speakText(description);
+    }
   };
 
   const handleMouseLeave = () => {

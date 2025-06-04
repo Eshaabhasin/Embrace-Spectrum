@@ -52,6 +52,23 @@
   text-shadow: none;
 }
 
+/* Audio Description Styles */
+.audio-description-enabled [aria-label]:hover::after {
+  content: attr(aria-label);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  z-index: 1000;
+  pointer-events: none;
+}
+
 /* Transition for all elements when switching modes */
 *, *::before, *::after {
   transition: all 0.3s ease;

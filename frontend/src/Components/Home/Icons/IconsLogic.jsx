@@ -1,7 +1,8 @@
 import { useEffect } from "react";
 import { gsap } from "gsap";
 import { Link } from "react-router-dom"; // ✅ Import Link
-import React  from "react";
+import React from "react";
+import { useAudioDescription } from "../../AudioDescription/AudioDescriptionContext";
 
 export default function IconsCards({
   className = "",
@@ -22,6 +23,7 @@ export default function IconsCards({
   ],
   enableHover = false,
 }) {
+  const { isAudioDescriptionEnabled, speakText } = useAudioDescription();
   useEffect(() => {
     gsap.fromTo(
       ".card",
@@ -128,7 +130,12 @@ export default function IconsCards({
           style={{
             transform: transformStyles[idx] || "none",
           }}
-          onMouseEnter={() => pushSiblings(idx)}
+          onMouseEnter={() => {
+            pushSiblings(idx);
+            if (isAudioDescriptionEnabled && titles[idx]) {
+              speakText(`${titles[idx]} feature`);
+            }
+          }}
           onMouseLeave={resetSiblings}
         >
           <img
