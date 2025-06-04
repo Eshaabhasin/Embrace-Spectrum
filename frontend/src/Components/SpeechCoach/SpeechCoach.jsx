@@ -3,7 +3,6 @@ import React, { useRef, useState, useEffect } from "react";
 import { Mic, Video, Users, Briefcase, MessageSquare, Eye, Target, TrendingUp, CheckCircle, XCircle, Clock, Volume2, Camera, MicOff, VideoOff } from "lucide-react";
 import { LiveAPIProvider } from "./contexts/LiveAPIContext";
 import { Altair } from "./components/altair/Altair";
-import NavBar from "../NavBar/NavBar";
 
 const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
 const host = "generativelanguage.googleapis.com";
@@ -522,7 +521,6 @@ function SpeechCoach() {
   if (!selectedPracticeType) {
     return (
       <>
-      <NavBar></NavBar>
       <div className="min-h-screen mt-25">
         <div className="container mx-auto px-6 py-12">
           <div className="text-center mb-12">
@@ -572,7 +570,6 @@ function SpeechCoach() {
   if (sessionEnded && feedback) {
     return (
       <>
-      <NavBar/>
       <div className="min-h-screen mt-25">
         <div className="container mx-auto px-6 py-8">
           <div className="max-w-8xl mx-auto">
@@ -728,7 +725,6 @@ function SpeechCoach() {
   // Active session screen
   return (
     <div className="min-h-screen mt-25">
-      <NavBar />
       <LiveAPIProvider url={uri} apiKey={API_KEY}>
         <div className="container mx-auto px-6 py-8">
           {/* Session Header */}

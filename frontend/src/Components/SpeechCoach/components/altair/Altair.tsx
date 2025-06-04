@@ -3,6 +3,7 @@ import { useEffect, useRef, useState, memo } from "react";
 import vegaEmbed from "vega-embed";
 import { useLiveAPIContext } from "../../contexts/LiveAPIContext";
 import { ToolCall } from "../../multimodal-live-types";
+import React from "react"
 
 const declaration: FunctionDeclaration = {
   name: "render_altair",

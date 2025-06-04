@@ -1,4 +1,5 @@
 import { useCalmMode } from '../Providers/CalmModeContext';
+import React from "react"
 
 const withCalmMode = (WrappedComponent) => {
   const WithCalmMode = (props) => {

@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {ArrowRight, RotateCcw, Star, Mic, MicOff, Lightbulb, RefreshCw, Sparkles } from 'lucide-react';
-import NavBar from '../NavBar/NavBar';
 
 const LifeSkillsQuiz = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -20,7 +19,6 @@ const LifeSkillsQuiz = () => {
   const [isLoading, setIsLoading] = useState(true);
   const recognitionRef = useRef(null);
 
-  // Initialize speech recognition
   useEffect(() => {
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
       setSpeechSupported(true);
@@ -256,7 +254,6 @@ const LifeSkillsQuiz = () => {
   if (isLoading || (isGenerating && questions.length === 0)) {
     return (
      <>
-     <NavBar/>
       <div className="h-screen p-4 flex items-center justify-center overflow-hidden">
         <div className="bg-gradient-to-br from-green-50 to-emerald-100 rounded-3xl shadow-2xl p-8 w-[800px] h-[50vh] border-4 border-white/20 text-center">
           <div className="text-6xl mb-6 animate-bounce">🧠</div>
@@ -278,7 +275,6 @@ const LifeSkillsQuiz = () => {
   if (gameComplete) {
     return (
       <>
-      <NavBar/>
       <div className="h-screen bg-[#6488e9] p-4 flex items-center justify-center mt-13 overflow-hidden">
         <div className="max-w-7xl w-full">
           <div className="bg-gradient-to-br from-green-50 to-emerald-100 rounded-3xl shadow-2xl p-6 text-center border-4 border-white/20 max-h-[84vh] overflow-y-auto">
@@ -341,7 +337,6 @@ const LifeSkillsQuiz = () => {
 
   return (
     <>
-    <NavBar/>
     <div className="bg-[#6488e9] p-4 overflow-hidden">
       <div className="max-w-7xl mx-auto h-full mt-25 flex flex-col">
 

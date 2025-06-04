@@ -2,6 +2,8 @@ import {
   Book, Clock, UserCheck, Lightbulb
 } from 'lucide-react';
 
+import React from "react"
+
 const JournalSidebar = ({ 
   selectedView, 
   setSelectedView, 

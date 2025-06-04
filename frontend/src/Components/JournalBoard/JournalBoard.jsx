@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { 
   Book, Target, Sparkles, AlertCircle
 } from 'lucide-react';

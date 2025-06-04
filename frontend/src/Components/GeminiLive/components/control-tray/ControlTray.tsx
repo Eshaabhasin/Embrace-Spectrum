@@ -7,6 +7,7 @@ import { useWebcam } from "../../hooks/use-webcam";
 import { AudioRecorder } from "../../lib/audio-recorder";
 import AudioPulse from "../audio-pulse/AudioPulse";
 import "./control-tray.scss";
+import React from "react"
 
 // Add link to load Material Symbols font
 const MaterialSymbolsLink = () => (
