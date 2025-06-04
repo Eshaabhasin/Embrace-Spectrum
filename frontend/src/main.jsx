@@ -1,8 +1,5 @@
 import React from 'react';
 import './reactShim.js';
-import { ensureReactChildren } from './reactFix.js';
-
-ensureReactChildren();
 
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
