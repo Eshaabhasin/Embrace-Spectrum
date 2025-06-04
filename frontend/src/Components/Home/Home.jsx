@@ -70,18 +70,22 @@ const Home = () => {
             {showNotification && (
                 <div className="fixed bottom-5 right-5 max-w-2xl bg-white rounded-lg shadow-lg p-4 border-l-4 border-[#6488e9] animate-fadeIn z-50">
                     <div className="flex items-start">
-                        <div className="ml-3 w-70 flex-1 pt-0.5">
+                        <div className="ml-3 w-80 flex-1 pt-0.5">
                             <p className="text-sm font-medium text-gray-900">Wellness Recommendations</p>
                             <p className="mt-1 text-sm text-gray-500">
                                 Check out personalized wellness agent recommendations to improve your day!
                             </p>
                             <div className="mt-3 flex space-x-3">
-                                <Link
-                                    to="/wellness"
+                                <button
+                                    onClick={() => {
+                                        closeNotification();
+                                        const geminiButton = document.querySelector('.fixed.bottom-6.left-6.z-50 button');
+                                        if (geminiButton) geminiButton.click();
+                                    }}
                                     className="bg-[#6488e9] text-white px-3 py-1.5 rounded-md text-sm font-medium hover:bg-[#5070d0]"
                                 >
                                     View Recommendations
-                                </Link>
+                                </button>
                                 <button
                                     type="button"
                                     onClick={closeNotification}

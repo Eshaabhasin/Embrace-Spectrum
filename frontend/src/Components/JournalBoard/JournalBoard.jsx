@@ -445,10 +445,10 @@ const JournalBoard = () => {
               </p>
               <div className="mt-3 flex space-x-3">
                 <Link
-                  to="/FeelReader"
+                  to="/tracker"
                   className="bg-[#6488e9] text-white px-3 py-1.5 rounded-md text-sm font-medium hover:bg-[#5070d0]"
                 >
-                  Try Feel Reader
+                  Try Tracker
                 </Link>
                 <button
                   type="button"
