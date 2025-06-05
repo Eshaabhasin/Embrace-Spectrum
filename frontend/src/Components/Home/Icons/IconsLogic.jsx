@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { gsap } from "gsap";
-import { Link } from "react-router-dom"; // ✅ Import Link
+import { Link } from "react-router-dom"; 
 import React from "react";
 import { useAudioDescription } from "../../AudioDescription/AudioDescriptionContext";
 

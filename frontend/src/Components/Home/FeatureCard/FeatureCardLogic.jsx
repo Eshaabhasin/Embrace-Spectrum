@@ -14,11 +14,9 @@ const SpotlightCard = ({
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [opacity, setOpacity] = useState(0);
   
-  // Extract title from children for accessibility
   const extractTitle = () => {
     if (!children) return '';
     
-    // Try to find h2 or h3 element in children
     let title = '';
     React.Children.forEach(children, child => {
       if (React.isValidElement(child) && 

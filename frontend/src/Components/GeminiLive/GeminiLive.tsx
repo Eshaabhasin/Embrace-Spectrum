@@ -22,11 +22,9 @@ function GeminiLive() {
   
 
   useEffect(() => {
-    // Check if notification has been shown before
     const hasShownNotification = sessionStorage.getItem('talkcoach_speechcoach_notification');
     
     if (!hasShownNotification) {
-      // Show notification after 10 seconds
       const timer = setTimeout(() => {
         setShowNotification(true);
       }, 10000);
