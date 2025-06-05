@@ -106,7 +106,7 @@ function StoryGenerator({ getCanvasImage }) {
       element.href = URL.createObjectURL(file);
       element.download = `${title.replace(/\s+/g, '_')}.pdf`;
       document.body.appendChild(element);
-      element.clic  k();
+      element.click();
       document.body.removeChild(element);
     };
     
