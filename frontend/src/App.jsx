@@ -139,7 +139,7 @@ function App() {
             <Route path="/chatbot" element={<CalmChatbot />} />
             <Route path="/sketchTales" element={<CalmPaintAndStory />} />
             <Route path="/feelReader" element={<CalmSentimentAnalyser />} />
-            <Route path="/geminiLive" element={<CalmGeminiLive />} />
+            <Route path="/geminiLive" element={<GeminiLive />} />
             <Route path="/journalboard" element={<CalmJournalBoard />} />
             <Route path="/jobs" element={<CalmJobSearchComponent />} />
             <Route path="/tracker" element={<CalmLifeSkillsTracker />} />

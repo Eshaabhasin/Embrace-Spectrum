@@ -82,10 +82,10 @@ const Home = () => {
                     aria-describedby="wellness-notification-desc"
                 >
                     <div className="flex items-start">
-                        <div className="ml-3 w-80 flex-1 pt-0.5">
-                            <p id="wellness-notification-title" className="text-sm font-medium text-gray-900">Wellness Recommendations</p>
+                        <div className="ml-3 w-100 flex-1 pt-0.5">
+                            <p id="wellness-notification-title" className="text-sm font-medium text-gray-900">✨ Wellness Recommendations 🌟</p>
                             <p id="wellness-notification-desc" className="mt-1 text-sm text-gray-500">
-                                Check out personalized wellness agent recommendations to improve your day!
+                                🎯 Check out personalized wellness agent recommendations to improve your day! 🌈
                             </p>
                             <div className="mt-3 flex space-x-3">
                                 <button
@@ -97,7 +97,7 @@ const Home = () => {
                                     className="bg-[#6488e9] text-white px-3 py-1.5 rounded-md text-sm font-medium hover:bg-[#5070d0]"
                                     aria-label="View wellness recommendations"
                                 >
-                                    View Recommendations
+                                    ✨ View Recommendations
                                 </button>
                                 <button
                                     type="button"
@@ -105,10 +105,10 @@ const Home = () => {
                                     className="bg-white text-gray-700 px-3 py-1.5 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-50"
                                     aria-label="Dismiss notification"
                                 >
-                                    Dismiss
+                                    ❌ Dismiss
                                 </button>
                             </div>
-                        </div>
+                        </div>                        
                         <div className="ml-4 flex-shrink-0 flex">
                             <button
                                 onClick={closeNotification}

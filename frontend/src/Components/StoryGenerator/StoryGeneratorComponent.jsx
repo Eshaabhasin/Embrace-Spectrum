@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import StoryGenerator from "./StoryComponent";
 import PaintApp from "./PaintComponent";
+import "./StoryComponent.css";
 
 function PaintAndStory() {
+    
     const getCanvasImage = () => {
       const canvas = document.querySelector('canvas');
       return canvas.toDataURL("image/png").split(',')[1];

@@ -7,7 +7,8 @@ import { useWebcam } from "../../hooks/use-webcam";
 import { AudioRecorder } from "../../lib/audio-recorder";
 import AudioPulse from "../audio-pulse/AudioPulse";
 import "./control-tray.scss";
-import React from "react"
+import React from "react";
+import { useAudioDescription } from "../../../AudioDescription/AudioDescriptionContext";
 
 // Add link to load Material Symbols font
 const MaterialSymbolsLink = () => (
@@ -31,17 +32,19 @@ type MediaStreamButtonProps = {
   offIcon: string;
   start: () => Promise<any>;
   stop: () => any;
+  'aria-label'?: string;
+  'aria-pressed'?: boolean;
 };
 
 const MediaStreamButton = memo(
-  ({ isStreaming, onIcon, offIcon, start, stop }: MediaStreamButtonProps) =>
+  ({ isStreaming, onIcon, offIcon, start, stop, ...props }: MediaStreamButtonProps) =>
     isStreaming ? (
-      <button className="action-button" onClick={stop}>
-        <span className="material-symbols-outlined">{onIcon}</span>
+      <button className="action-button" onClick={stop} {...props}>
+        <span className="material-symbols-outlined" aria-hidden="true">{onIcon}</span>
       </button>
     ) : (
-      <button className="action-button" onClick={start}>
-        <span className="material-symbols-outlined">{offIcon}</span>
+      <button className="action-button" onClick={start} {...props}>
+        <span className="material-symbols-outlined" aria-hidden="true">{offIcon}</span>
       </button>
     )
 );
@@ -62,6 +65,7 @@ function ControlTray({
   const [muted, setMuted] = useState(false);
   const renderCanvasRef = useRef<HTMLCanvasElement>(null);
   const connectButtonRef = useRef<HTMLButtonElement>(null);
+  const { isAudioDescriptionEnabled, speakText } = useAudioDescription();
 
   const { client, connected, connect, disconnect, volume } =
     useLiveAPIContext();
@@ -146,22 +150,44 @@ function ControlTray({
     videoStreams.filter((msr) => msr !== next).forEach((msr) => msr.stop());
   };
 
+  // Status announcements for screen readers
+  useEffect(() => {
+    const statusElement = document.getElementById('talk-coach-status');
+    if (statusElement) {
+      if (connected) {
+        statusElement.textContent = "Conversation started. You can now speak with the AI assistant.";
+      } else {
+        statusElement.textContent = "Conversation paused. Press the start button to begin.";
+      }
+    }
+  }, [connected]);
+
   return (
     <>
       <MaterialSymbolsLink />
-      <section className="control-tray">
+      <section className="control-tray" role="region">
         <canvas style={{ display: "none" }} ref={renderCanvasRef} />
         <nav className={cn("actions-nav", { disabled: !connected })}>
-          <button
-            className={cn("action-button mic-button")}
-            onClick={() => setMuted(!muted)}
+          <div
+            onMouseEnter={() => {
+              if (isAudioDescriptionEnabled) {
+                speakText(muted ? "Enable microphone" : "Disable microphone");
+              }
+            }}
           >
-            {!muted ? (
-              <span className="material-symbols-outlined filled">mic</span>
-            ) : (
-              <span className="material-symbols-outlined filled">mic_off</span>
-            )}
-          </button>
+            <button
+              className={cn("action-button mic-button")}
+              onClick={() => setMuted(!muted)}
+              aria-label={muted ? "Enable microphone" : "Disable microphone"}
+              aria-pressed={muted}
+            >
+              {!muted ? (
+                <span className="material-symbols-outlined filled" aria-hidden="true">mic</span>
+              ) : (
+                <span className="material-symbols-outlined filled" aria-hidden="true">mic_off</span>
+              )}
+            </button>
+          </div>
 
           <div className="action-button no-action outlined">
             <AudioPulse volume={volume} active={connected} hover={false} />
@@ -169,20 +195,40 @@ function ControlTray({
 
           {supportsVideo && (
             <>
-              <MediaStreamButton
-                isStreaming={screenCapture.isStreaming}
-                start={changeStreams(screenCapture)}
-                stop={changeStreams()}
-                onIcon="cancel_presentation"
-                offIcon="present_to_all"
-              />
-              <MediaStreamButton
-                isStreaming={webcam.isStreaming}
-                start={changeStreams(webcam)}
-                stop={changeStreams()}
-                onIcon="videocam_off"
-                offIcon="videocam"
-              />
+              <div 
+                onMouseEnter={() => {
+                  if (isAudioDescriptionEnabled) {
+                    speakText(screenCapture.isStreaming ? "Stop screen sharing" : "Share your screen");
+                  }
+                }}
+              >
+                <MediaStreamButton
+                  isStreaming={screenCapture.isStreaming}
+                  start={changeStreams(screenCapture)}
+                  stop={changeStreams()}
+                  onIcon="cancel_presentation"
+                  offIcon="present_to_all"
+                  aria-label={screenCapture.isStreaming ? "Stop screen sharing" : "Share your screen"}
+                  aria-pressed={screenCapture.isStreaming}
+                />
+              </div>
+              <div
+                onMouseEnter={() => {
+                  if (isAudioDescriptionEnabled) {
+                    speakText(webcam.isStreaming ? "Turn off camera" : "Turn on camera");
+                  }
+                }}
+              >
+                <MediaStreamButton
+                  isStreaming={webcam.isStreaming}
+                  start={changeStreams(webcam)}
+                  stop={changeStreams()}
+                  onIcon="videocam_off"
+                  offIcon="videocam"
+                  aria-label={webcam.isStreaming ? "Turn off camera" : "Turn on camera"}
+                  aria-pressed={webcam.isStreaming}
+                />
+              </div>
             </>
           )}
           {children}
@@ -194,10 +240,18 @@ function ControlTray({
               ref={connectButtonRef}
               className={cn("action-button connect-toggle", { connected })}
               onClick={connected ? disconnect : connect}
+              aria-label={connected ? "Pause conversation" : "Start conversation"}
+              aria-pressed={connected}
+              onMouseEnter={() => {
+                if (isAudioDescriptionEnabled) {
+                  speakText(connected ? "Pause conversation" : "Start conversation");
+                }
+              }}
             >
-              <span className="material-symbols-outlined filled">
+              <span className="material-symbols-outlined filled" aria-hidden="true">
                 {connected ? "pause" : "play_arrow"}
               </span>
+              <span className="sr-only">{connected ? "Pause" : "Start"} conversation</span>
             </button>
           </div>
         </div>

@@ -306,6 +306,7 @@ function SpeechCoach() {
   
   // Transcription and feedback
   const [transcription, setTranscription] = useState("");
+  const [interimText, setInterimText] = useState("");
   const [isListening, setIsListening] = useState(false);
   const [feedback, setFeedback] = useState(null);
   const [analyzingFeedback, setAnalyzingFeedback] = useState(false);
@@ -326,6 +327,15 @@ function SpeechCoach() {
     }
   }, []);
 
+  // Auto-scroll transcription container when content changes
+  const transcriptionRef = useRef(null);
+  
+  useEffect(() => {
+    if (transcriptionRef.current) {
+      transcriptionRef.current.scrollTop = transcriptionRef.current.scrollHeight;
+    }
+  }, [transcription, interimText]);
+  
   // Update live metrics as user speaks
   useEffect(() => {
     if (sessionActive && sessionStartTime) {
@@ -353,6 +363,7 @@ function SpeechCoach() {
       
       recognition.continuous = true;
       recognition.interimResults = true;
+      recognition.maxAlternatives = 1;
       recognition.lang = 'en-US';
 
       recognition.onstart = () => {
@@ -395,6 +406,9 @@ function SpeechCoach() {
         
         if (finalTranscript) {
           setTranscription(prev => prev + finalTranscript);
+          setInterimText('');
+        } else if (interimTranscript) {
+          setInterimText(interimTranscript);
         }
       };
 
@@ -420,6 +434,7 @@ function SpeechCoach() {
     setSessionEnded(false);
     setSessionStartTime(Date.now());
     setTranscription("");
+    setInterimText("");
     setFeedback(null);
     setLiveMetrics({ wordCount: 0, fillerCount: 0, speakingRate: 0, sessionDuration: 0 });
   };
@@ -458,6 +473,7 @@ function SpeechCoach() {
     setSessionEnded(false);
     setSessionStartTime(null);
     setTranscription("");
+    setInterimText("");
     setFeedback(null);
     setAnalyzingFeedback(false);
     setLiveMetrics({ wordCount: 0, fillerCount: 0, speakingRate: 0, sessionDuration: 0 });
@@ -701,12 +717,12 @@ function SpeechCoach() {
   // Loading/analyzing screen
   if (analyzingFeedback) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-500 border-t-transparent mx-auto mb-6"></div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Analyzing Your Performance</h2>
-          <p className="text-gray-600">AI is processing your speech patterns, tone, and communication style...</p>
-          <div className="mt-4 text-sm text-gray-500">
+          <h2 className="text-2xl font-bold text-white mb-2">Analyzing Your Performance</h2>
+          <p className="text-white">AI is processing your speech patterns, tone, and communication style...</p>
+          <div className="mt-4 text-sm text-white">
             Analyzing {liveMetrics.wordCount} words from your {Math.round(liveMetrics.sessionDuration)}-second session
           </div>
         </div>
@@ -813,11 +829,19 @@ function SpeechCoach() {
                   )}
                 </div>
                 <div 
+                  ref={transcriptionRef}
                   className="h-72 overflow-y-auto bg-gray-50 rounded-xl p-4 text-gray-800 leading-relaxed"
                   aria-live="polite"
                   aria-label="Live transcription of your speech"
                 >
-                  {transcription || (
+                  {transcription ? (
+                    <>
+                      {transcription}
+                      {interimText && (
+                        <span className="text-gray-400">{interimText}</span>
+                      )}
+                    </>
+                  ) : (
                     <p className="text-gray-500 italic">
                       Start speaking to see your words appear here in real-time...
                     </p>

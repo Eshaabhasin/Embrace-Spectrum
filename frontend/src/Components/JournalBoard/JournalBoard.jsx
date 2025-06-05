@@ -3,6 +3,7 @@ import {
   Book, Target, Sparkles, AlertCircle
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useAudioDescription } from '../AudioDescription/AudioDescriptionContext';
 
 import JournalSidebar from './JournalSideBar';
 import JournalContent from './JournalContent';
@@ -10,6 +11,7 @@ import TasksPanel from './TaskPanel';
 import GoogleAuthService from './GoogleCalendar/GoogleAuthService'
 
 const JournalBoard = () => {
+  const { isAudioDescriptionEnabled, speakText } = useAudioDescription();
   const [entries, setEntries] = useState([]);
   const [currentEntry, setCurrentEntry] = useState({
     title: '',
@@ -112,15 +114,20 @@ const JournalBoard = () => {
     // Mark notification as shown for this session
     sessionStorage.setItem('journal_tasks_notification', 'true');
     setShowNotification(false);
+    
+    // Announce notification dismissal with audio description
+    if (isAudioDescriptionEnabled) {
+      speakText("Feature notification dismissed");
+    }
   };
 
   // Mood Selection
   const moods = [
-    { id: 'happy', icon: '😊', label: 'Happy' },
-    { id: 'calm', icon: '😌', label: 'Calm' },
-    { id: 'anxious', icon: '😰', label: 'Anxious' },
-    { id: 'tired', icon: '😴', label: 'Tired' },
-    { id: 'excited', icon: '🤩', label: 'Excited' }
+    { id: 'happy', icon: '😊', label: 'Happy', description: 'Feeling joyful and content' },
+    { id: 'calm', icon: '😌', label: 'Calm', description: 'Feeling peaceful and relaxed' },
+    { id: 'anxious', icon: '😰', label: 'Anxious', description: 'Feeling worried or nervous' },
+    { id: 'tired', icon: '😴', label: 'Tired', description: 'Feeling fatigued or exhausted' },
+    { id: 'excited', icon: '🤩', label: 'Excited', description: 'Feeling enthusiastic and eager' }
   ];
 
   // Expanded Emoji Selection
@@ -136,17 +143,20 @@ const JournalBoard = () => {
     { 
       id: 'daily', 
       name: 'Daily Journal', 
-      icon: <Book className="w-5 h-5" /> 
+      icon: <Book className="w-5 h-5" aria-hidden="true" />,
+      description: 'Record your daily thoughts, experiences, and feelings'
     },
     { 
       id: 'goals', 
       name: 'Goals', 
-      icon: <Target className="w-5 h-5" /> 
+      icon: <Target className="w-5 h-5" aria-hidden="true" />,
+      description: 'Set and track your personal goals and objectives'
     },
     { 
       id: 'reflections', 
       name: 'Reflections', 
-      icon: <Sparkles className="w-5 h-5" /> 
+      icon: <Sparkles className="w-5 h-5" aria-hidden="true" />,
+      description: 'Reflect on your experiences and personal growth'
     }
   ];
 
@@ -162,7 +172,11 @@ const JournalBoard = () => {
 
   const handleSpeechToText = () => {
     if (!('webkitSpeechRecognition' in window)) {
-      alert("Speech recognition not supported in this browser");
+      if (isAudioDescriptionEnabled) {
+        speakText("Speech recognition is not supported in this browser");
+      } else {
+        alert("Speech recognition not supported in this browser");
+      }
       return;
     }
 
@@ -173,6 +187,9 @@ const JournalBoard = () => {
 
     recognition.onstart = () => {
       setIsListening(true);
+      if (isAudioDescriptionEnabled) {
+        speakText("Listening for speech input");
+      }
     };
 
     recognition.onresult = (event) => {
@@ -181,10 +198,23 @@ const JournalBoard = () => {
         ...prev,
         content: prev.content + " " + transcript
       }));
+      
+      if (isAudioDescriptionEnabled) {
+        speakText("Speech captured successfully");
+      }
     };
 
     recognition.onend = () => {
       setIsListening(false);
+      if (isAudioDescriptionEnabled) {
+        speakText("Speech recognition ended");
+      }
+    };
+
+    recognition.onerror = (event) => {
+      if (isAudioDescriptionEnabled) {
+        speakText(`Speech recognition error: ${event.error}`);
+      }
     };
 
     recognition.start();
@@ -217,7 +247,13 @@ const JournalBoard = () => {
     });
 
     entryTitleRef.current?.focus();
-    alert("Journal entry saved successfully!");
+    
+    // Use accessible notification instead of alert
+    if (isAudioDescriptionEnabled) {
+      speakText("Journal entry saved successfully!");
+    } else {
+      alert("Journal entry saved successfully!");
+    }
   };
 
   // Edit Entry Function
@@ -234,6 +270,11 @@ const JournalBoard = () => {
       timestamp: entry.timestamp,
       emojis: entry.emojis || []
     });
+    
+    // Announce editing with audio description
+    if (isAudioDescriptionEnabled) {
+      speakText(`Editing journal entry: ${entry.title || 'Untitled entry'}`);
+    }
   };
 
   // Update Existing Entry
@@ -260,7 +301,13 @@ const JournalBoard = () => {
       emojis: []
     });
     setEditingEntry(null);
-    alert("Journal entry updated successfully!");
+    
+    // Use accessible notification instead of alert
+    if (isAudioDescriptionEnabled) {
+      speakText("Journal entry updated successfully!");
+    } else {
+      alert("Journal entry updated successfully!");
+    }
   };
 
   // Delete Entry Function
@@ -268,6 +315,11 @@ const JournalBoard = () => {
     const confirmDelete = window.confirm("Are you sure you want to delete this journal entry?");
     if (confirmDelete) {
       setEntries(prev => prev.filter(entry => entry.id !== entryId));
+      
+      // Announce deletion with audio description
+      if (isAudioDescriptionEnabled) {
+        speakText("Journal entry deleted successfully");
+      }
     }
   };
 
@@ -286,23 +338,51 @@ const JournalBoard = () => {
       ...prev,
       attachments: [...prev.attachments, ...newAttachments]
     }));
+    
+    // Announce file upload with audio description
+    if (isAudioDescriptionEnabled && files.length > 0) {
+      if (files.length === 1) {
+        speakText(`File attached: ${files[0].name}`);
+      } else {
+        speakText(`${files.length} files attached successfully`);
+      }
+    }
   };
 
   // Remove Attachment
   const removeAttachment = (attachmentId) => {
+    // Find the attachment name before removing it
+    const attachmentName = currentEntry.attachments.find(a => a.id === attachmentId)?.name || "attachment";
+    
     setCurrentEntry(prev => ({
       ...prev,
       attachments: prev.attachments.filter(a => a.id !== attachmentId)
     }));
+    
+    // Announce attachment removal with audio description
+    if (isAudioDescriptionEnabled) {
+      speakText(`Removed attachment: ${attachmentName}`);
+    }
   };
 
   const addEmojiToEntry = (emoji) => {
+    const isRemoving = currentEntry.emojis.includes(emoji);
+    
     setCurrentEntry(prev => ({
       ...prev,
-      emojis: prev.emojis.includes(emoji) 
+      emojis: isRemoving
         ? prev.emojis.filter(e => e !== emoji)
         : [...prev.emojis, emoji]
     }));
+    
+    // Announce emoji action with audio description
+    if (isAudioDescriptionEnabled) {
+      if (isRemoving) {
+        speakText(`Removed emoji ${emoji}`);
+      } else {
+        speakText(`Added emoji ${emoji}`);
+      }
+    }
   };
 
   // Handle Google Auth
@@ -353,17 +433,34 @@ const JournalBoard = () => {
   // Show a notification for Google Calendar status
   const showGoogleAuthNotification = () => {
     if (googleAuthStatus.error) {
+      // Announce error with audio description when it appears
+      useEffect(() => {
+        if (isAudioDescriptionEnabled && googleAuthStatus.error) {
+          speakText(`Google Calendar connection error: ${googleAuthStatus.error}`);
+        }
+      }, [googleAuthStatus.error]);
+      
       return (
-        <div className="fixed bottom-4 right-4 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded shadow-lg max-w-md">
+        <div 
+          className="fixed bottom-4 right-4 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded shadow-lg max-w-md"
+          role="alert"
+          aria-live="assertive"
+        >
           <div className="flex">
             <div className="flex-shrink-0">
-              <AlertCircle className="h-5 w-5 text-red-500" />
+              <AlertCircle className="h-5 w-5 text-red-500" aria-hidden="true" />
             </div>
             <div className="ml-3">
               <p className="text-sm">Failed to connect to Google Calendar: {googleAuthStatus.error}</p>
               <button 
-                onClick={handleGoogleSignIn}
+                onClick={() => {
+                  handleGoogleSignIn();
+                  if (isAudioDescriptionEnabled) {
+                    speakText("Attempting to reconnect to Google Calendar");
+                  }
+                }}
                 className="mt-2 px-2 py-1 text-xs bg-red-200 text-red-800 rounded hover:bg-red-300"
+                aria-label="Try connecting to Google Calendar again"
               >
                 Try Again
               </button>
@@ -375,13 +472,39 @@ const JournalBoard = () => {
     return null;
   };
 
+  // Audio description announcements
+  useEffect(() => {
+    if (isAudioDescriptionEnabled) {
+      speakText(`Journal Board loaded. Current view: ${selectedView === 'journal' ? 'New Entry' : 'Journal History'}. Current section: ${sections.find(s => s.id === selectedSection)?.name}.`);
+    }
+  }, [isAudioDescriptionEnabled, selectedView, selectedSection, sections, speakText]);
+
+  // Announce mood selection
+  useEffect(() => {
+    if (isAudioDescriptionEnabled && currentEntry.mood) {
+      const selectedMood = moods.find(m => m.id === currentEntry.mood);
+      if (selectedMood) {
+        speakText(`Mood selected: ${selectedMood.label}`);
+      }
+    }
+  }, [currentEntry.mood, isAudioDescriptionEnabled, moods, speakText]);
+
   return (
     <>
-    <div className={`
+    <div 
+      className={`
       absolute flex h-[83vh] top-27 left-4 w-[97vw] rounded-xl bg-gradient-to-br from-indigo-50 to-sky-100
       ${assistiveTools.textSize === 'small' ? 'text-sm' : 
         assistiveTools.textSize === 'large' ? 'text-lg' : 'text-base'}
-    `}>
+      `}
+      role="main"
+      aria-describedby="journal-board-description"
+    >
+      <div id="journal-board-description" className="sr-only">
+        Journal board with sections for daily entries, goals, and reflections. 
+        You can create new entries, view history, and manage tasks.
+      </div>
+      
       <JournalSidebar 
         selectedView={selectedView}
         setSelectedView={setSelectedView}
@@ -390,9 +513,11 @@ const JournalBoard = () => {
         assistiveTools={assistiveTools}
         setAssistiveTools={setAssistiveTools}
         sections={sections}
+        isAudioDescriptionEnabled={isAudioDescriptionEnabled}
+        speakText={speakText}
       />
 
-      <div className="flex-1 flex">
+      <div className="flex-1 flex" role="group" aria-label="Journal content and tasks">
         <JournalContent 
           selectedView={selectedView}
           currentEntry={currentEntry}
@@ -418,6 +543,8 @@ const JournalBoard = () => {
           addEmojiToEntry={addEmojiToEntry}
           startEditingEntry={startEditingEntry}
           deleteEntry={deleteEntry}
+          isAudioDescriptionEnabled={isAudioDescriptionEnabled}
+          speakText={speakText}
         />
 
         {/* Tasks Panel Component with Google Calendar Integration */}
@@ -428,6 +555,8 @@ const JournalBoard = () => {
           setNewTask={setNewTask}
           draggedTask={draggedTask}
           setDraggedTask={setDraggedTask}
+          isAudioDescriptionEnabled={isAudioDescriptionEnabled}
+          speakText={speakText}
         />
       </div>
 
@@ -436,7 +565,11 @@ const JournalBoard = () => {
       
       {/* Feature Notification */}
       {showNotification && (
-        <div className="fixed bottom-5 right-5 max-w-sm bg-white rounded-lg shadow-lg p-4 border-l-4 border-[#6488e9] animate-fadeIn z-50">
+        <div 
+          className="fixed bottom-5 right-5 max-w-sm bg-white rounded-lg shadow-lg p-4 border-l-4 border-[#6488e9] animate-fadeIn z-50"
+          role="alert"
+          aria-live="polite"
+        >
           <div className="flex items-start">
             <div className="ml-3 w-70 flex-1 pt-0.5">
               <p className="text-sm font-medium text-gray-900">Generate Personalized Tasks</p>
@@ -447,13 +580,20 @@ const JournalBoard = () => {
                 <Link
                   to="/tracker"
                   className="bg-[#6488e9] text-white px-3 py-1.5 rounded-md text-sm font-medium hover:bg-[#5070d0]"
+                  aria-label="Try Tracker feature"
                 >
                   Try Tracker
                 </Link>
                 <button
                   type="button"
-                  onClick={closeNotification}
+                  onClick={() => {
+                    closeNotification();
+                    if (isAudioDescriptionEnabled) {
+                      speakText("Notification dismissed");
+                    }
+                  }}
                   className="bg-white text-gray-700 px-3 py-1.5 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-50"
+                  aria-label="Dismiss notification"
                 >
                   Dismiss
                 </button>
@@ -461,11 +601,17 @@ const JournalBoard = () => {
             </div>
             <div className="ml-4 flex-shrink-0 flex">
               <button
-                onClick={closeNotification}
+                onClick={() => {
+                  closeNotification();
+                  if (isAudioDescriptionEnabled) {
+                    speakText("Notification dismissed");
+                  }
+                }}
                 className="bg-white rounded-md inline-flex text-gray-400 hover:text-gray-500 focus:outline-none"
+                aria-label="Close notification"
               >
                 <span className="sr-only">Close</span>
-                <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                   <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
                 </svg>
               </button>

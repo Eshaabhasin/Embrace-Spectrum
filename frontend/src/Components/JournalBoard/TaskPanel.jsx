@@ -12,7 +12,9 @@ const TasksPanel = ({
   newTask,
   setNewTask,
   draggedTask,
-  setDraggedTask
+  setDraggedTask,
+  isAudioDescriptionEnabled,
+  speakText
 }) => {
   // New state variables for task scheduling
   const [taskDueDate, setTaskDueDate] = useState('');
@@ -272,35 +274,51 @@ const TasksPanel = ({
   };
 
   return (
-    <div className="w-[40vw] border-l border-blue-200 p-4 rounded-xl bg-blue-50 overflow-y-auto scrollbar-hide">
+    <div className="w-[40vw] border-l border-blue-200 p-4 rounded-xl bg-blue-50 overflow-y-auto scrollbar-hide" role="complementary" aria-label="Tasks panel">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold text-blue-900">Tasks</h2>
-        <div className="flex gap-2">
+        <h2 className="text-xl font-semibold text-blue-900" id="tasks-heading">Tasks</h2>
+        <div className="flex gap-2" role="toolbar" aria-label="Task panel controls">
           <button 
-            onClick={toggleCalendarView}
+            onClick={() => {
+              toggleCalendarView();
+              if (isAudioDescriptionEnabled) {
+                speakText(isCalendarOpen ? "Calendar view closed" : "Calendar view opened");
+              }
+            }}
             className="text-blue-600 hover:text-blue-800"
-            title="Toggle Calendar View"
+            aria-label="Toggle Calendar View"
+            aria-expanded={isCalendarOpen}
           >
-            <CalendarIcon className="w-6 h-6" />
+            <CalendarIcon className="w-6 h-6" aria-hidden="true" />
           </button>
           
           {isGoogleAuthenticated ? (
             <button 
-              onClick={signOutFromGoogle}
+              onClick={() => {
+                signOutFromGoogle();
+                if (isAudioDescriptionEnabled) {
+                  speakText("Signed out from Google Calendar");
+                }
+              }}
               className="text-red-600 hover:text-red-800"
-              title="Sign out from Google"
+              aria-label="Sign out from Google"
               disabled={isLoading}
             >
-              <LogOut className="w-6 h-6" />
+              <LogOut className="w-6 h-6" aria-hidden="true" />
             </button>
           ) : (
             <button 
-              onClick={signInWithGoogle}
+              onClick={() => {
+                signInWithGoogle();
+                if (isAudioDescriptionEnabled) {
+                  speakText("Signing in to Google Calendar");
+                }
+              }}
               className="text-green-600 hover:text-green-800"
-              title="Sign in with Google"
+              aria-label="Sign in with Google"
               disabled={isLoading}
             >
-              <LogIn className="w-6 h-6" />
+              <LogIn className="w-6 h-6" aria-hidden="true" />
             </button>
           )}
         </div>

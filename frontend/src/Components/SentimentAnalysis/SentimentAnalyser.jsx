@@ -1,16 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PDFEmotionReader from './PDFReader';
 import { Link } from 'react-router-dom';
 
 function SentimentAnalyser() {
 
   const [showNotification, setShowNotification] = useState(false);
+  const [showSecondNotification, setShowSecondNotification] = useState(false);
+  
 
 useEffect(() => {
   const hasShownNotification = sessionStorage.getItem('journal_tasks_notification');
   if (!hasShownNotification) {
     const timer = setTimeout(() => {
-      setShowNotification(true);
+      setShowSecondNotification(true);
     }, 10000);
     
     return () => clearTimeout(timer);
@@ -20,13 +22,71 @@ useEffect(() => {
 const closeNotification = () => {
   // Mark notification as shown for this session
   sessionStorage.setItem('journal_tasks_notification', 'true');
-  setShowNotification(false);
+  setShowSecondNotification(false);
 };
+
+useEffect(() => {
+      localStorage.removeItem('feelReaderNotificationSeen');
+      
+      const hasSeenNotification = localStorage.getItem('feelReaderNotificationSeen');
+      if (!hasSeenNotification) {
+        setShowNotification(true);
+      }
+    }, []);
+    
+    const dismissNotification = () => {
+      setShowNotification(false);
+      localStorage.setItem('feelReaderNotificationSeen', 'true');
+    };
 
   return (
     <div className="min-h-screen bg-[#6488EA]">
       {showNotification && (
-                      <div className="fixed bottom-5 right-5 max-w-sm bg-white rounded-lg shadow-lg p-4 border-l-4 border-[#6488e9] animate-fadeIn z-50">
+          <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/50 bg-opacity-50">
+            <div className="bg-white rounded-xl top-10 shadow-2xl p-6 max-w-2xl w-11/12 mx-auto relative border-l-8 border-blue-500 animate-fadeIn">
+              <button 
+                onClick={dismissNotification}
+                className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 text-xl font-bold"
+                aria-label="Close notification"
+              >
+                ✕
+              </button>
+              
+              <div className="flex items-center mb-4">
+                <div className="bg-blue-100 p-3 rounded-full mr-4">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <h3 className="text-2xl font-bold text-gray-800">Welcome to Feel Reader 📑</h3>
+              </div>
+              
+              <p className="mb-4 text-gray-700">
+                Feel Reader analyzes the emotional content in your PDF documents! Understand the sentiment and emotions conveyed in any text with this powerful analysis tool.
+              </p>
+              
+              <div className="bg-blue-50 p-4 rounded-lg mb-4">
+                <h4 className="font-bold text-blue-800 mb-2">How to use:</h4>
+                <ul className="list-disc pl-5 space-y-2 text-gray-700">
+                  <li>Upload your PDF document using the file selector</li>
+                  <li>View the sentiment analysis results and emotion breakdown</li>
+                  <li>Navigate through result in small paragraphs.</li>
+                </ul>
+              </div>
+              
+              <div className="flex justify-end">
+                <button 
+                  onClick={dismissNotification}
+                  className="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  Got it!
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      {showSecondNotification && (
+                      <div id="journal_tasks_notification" className="fixed bottom-5 right-5 max-w-sm bg-white rounded-lg shadow-lg p-4 border-l-4 border-[#6488e9] animate-fadeIn z-50">
                         <div className="flex items-start">
                           <div className="ml-3 w-70 flex-1 pt-0.5">
                             <p className="text-sm font-medium text-gray-900">Unleash Your Creativity</p>

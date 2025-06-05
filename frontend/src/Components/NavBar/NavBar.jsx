@@ -141,7 +141,7 @@ const NavBar = () => {
                         to="/Geminilive" 
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         onMouseEnter={() => isAudioDescriptionEnabled && speakText("Talk Coach for practicing conversations")}
-                      >Talk Coach</Link>
+                      >Human Connect</Link>
                       {activeTooltip === 'talkcoach' && (
                         <div className="absolute left-full ml-2 top-0 w-48 bg-white text-gray-800 text-sm rounded-md shadow-lg p-2 animate-fadeIn z-50">
                           <p>Practice conversations and social skills</p>
@@ -381,7 +381,7 @@ const NavBar = () => {
                 <div className="mt-2 pl-4 border-l border-gray-300 animate-fadeIn">
                   <ul className="space-y-2">
                     <li><Link to="/ChatBot" onClick={() => setIsMenuOpen(false)}>Solace</Link></li>
-                    <li><Link to="/Geminilive" onClick={() => setIsMenuOpen(false)}>Talk Coach</Link></li>
+                    <li><Link to="/Geminilive" onClick={() => setIsMenuOpen(false)}>Human Connect</Link></li>
                     <li><Link to="/SpeechCoach" onClick={() => setIsMenuOpen(false)}>Speech Coach</Link></li>
                   </ul>
                 </div>

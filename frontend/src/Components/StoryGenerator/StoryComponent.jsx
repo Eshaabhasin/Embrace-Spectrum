@@ -1,5 +1,6 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import axios from "axios";
+import "./StoryComponent.css";
 
 function StoryGenerator({ getCanvasImage }) {
     const [story, setStory] = useState("");
@@ -9,6 +10,7 @@ function StoryGenerator({ getCanvasImage }) {
     const [storyGenerated, setStoryGenerated] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [isSpeaking, setIsSpeaking] = useState(false);
+    const [showNotification, setShowNotification] = useState(false);
   
     const generateStory = async () => {
       setLoading(true);
@@ -21,7 +23,7 @@ function StoryGenerator({ getCanvasImage }) {
         const requestData = {
           imageBase64: getCanvasImage(),
           includeDrawing: true,
-          prompt: "Write a children's story with a title about this drawing. Include relevant emojis in the story text." 
+          prompt: "Write a children's story with a title about this drawing. Include relevant emojis in the story text and dont add other details just provide the story." 
         };
   
         const response = await axios.post("http://localhost:3000/generate-story", requestData);
@@ -104,13 +106,78 @@ function StoryGenerator({ getCanvasImage }) {
       element.href = URL.createObjectURL(file);
       element.download = `${title.replace(/\s+/g, '_')}.pdf`;
       document.body.appendChild(element);
-      element.click();
+      element.clic  k();
       document.body.removeChild(element);
     };
+    
+    useEffect(() => {
+      localStorage.removeItem('feelReaderNotificationSeen');
+      
+      const hasSeenNotification = localStorage.getItem('feelReaderNotificationSeen');
+      if (!hasSeenNotification) {
+        setTimeout(() => {
+          setShowNotification(true);
+        }, 1000);
+      }
+    }, []);
+    
+    const dismissNotification = () => {
+      setShowNotification(false);
+      localStorage.setItem('feelReaderNotificationSeen', 'true');
+    };
+
   
     return (
       <div className="w-full max-w-4xl h-[84vh] ml-5 mt-[-10vh] p-3 rounded-lg font-lato">
         <h2 className="text-3xl font-bold mb-4 text-white">Generate your imagination ✨</h2>
+        
+        {/* Feel Reader Notification */}
+        {showNotification && (
+          <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/50 bg-opacity-50">
+            <div className="bg-white rounded-xl top-10 shadow-2xl p-6 max-w-2xl w-11/12 mx-auto relative border-l-8 border-blue-500 animate-fadeIn">
+              <button 
+                onClick={dismissNotification}
+                className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 text-xl font-bold"
+                aria-label="Close notification"
+              >
+                ✕
+              </button>
+              
+              <div className="flex items-center mb-4">
+                <div className="bg-blue-100 p-3 rounded-full mr-4">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <h3 className="text-2xl font-bold text-gray-800">Welcome to sketch Tales 📚</h3>
+              </div>
+              
+              <p className="mb-4 text-gray-700">
+                Feel Reader transforms your drawings into personalized stories! Express your creativity and improve reading skills with this interactive tool.
+              </p>
+              
+              <div className="bg-blue-50 p-4 rounded-lg mb-4">
+                <h4 className="font-bold text-blue-800 mb-2">How to use:</h4>
+                <ul className="list-disc pl-5 space-y-2 text-gray-700">
+                  <li>Draw anything on the canvas using the drawing tools</li>
+                  <li>Click <strong>Generate Story</strong> to create a story from your drawing</li>
+                  <li>Use the <strong>Read</strong> button to listen to your story</li>
+                  <li>Navigate through pages with <strong>Next</strong> and <strong>Previous</strong> buttons</li>
+                  <li>Download your story as a PDF to save or print</li>
+                </ul>
+              </div>
+              
+              <div className="flex justify-end">
+                <button 
+                  onClick={dismissNotification}
+                  className="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  Got it!
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
         
         {!storyGenerated ? (
           <>            
