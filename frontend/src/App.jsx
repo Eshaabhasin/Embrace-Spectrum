@@ -44,7 +44,6 @@ const CalmLifeSkillsQuiz = withCalmMode(LifeSkillsQuiz);
 const CalmSpeechCoach = withCalmMode(SpeechCoach);
 const CalmSenseScape = withCalmMode(SenseScape);
 
-// Removed unsafe React.Children assignment. If React.Children is undefined, there is a critical React install or bundler issue.
 
 const AuthWrapper = () => {
   const { isSignedIn, user, isLoaded } = useUser();

@@ -133,7 +133,7 @@ const Home = () => {
                         Embrace Spectrum
                     </h1>
 
-                    {/* <RotatingText
+                    <RotatingText
                     texts={['Inclusive', 'Empowering', 'Supportive']}
                     mainClassName={`px-2 sm:px-2 md:px-3 text-6xl font-extrabold bg-[#FFFDD0] text-3xl text-black overflow-hidden py-0.5 sm:py-1 md:py-2 justify-center rounded-lg ${isCalmMode ? 'animate-none' : ''}`}
                     staggerFrom={"last"}
@@ -144,7 +144,7 @@ const Home = () => {
                     splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1"
                     transition={{ type: "spring", damping: 30, stiffness: 400 }}
                     rotationInterval={isCalmMode ? 0 : 2000}
-                    /> */}
+                    />
 
                     </div>
 
@@ -157,7 +157,7 @@ const Home = () => {
                     </p>
                 </div>
                 </div>
-            {/* <div className="px-95 justify-center items-center">
+            <div className="px-95 justify-center items-center">
             <nav aria-label="Features navigation">
               <IconsCards
                   className="custom-bounceCards mt-10"
@@ -264,7 +264,7 @@ const Home = () => {
                     Join now
                 </button>
                 </SpotlightCard>
-            </div> */}
+            </div>
             <GeminiAgent></GeminiAgent>
         </div>
     );
