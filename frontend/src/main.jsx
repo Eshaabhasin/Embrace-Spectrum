@@ -1,5 +1,15 @@
 import React from 'react';
 
+if (typeof React !== 'undefined' && !React.Children) {
+  React.Children = {
+    map: () => [],
+    forEach: () => {},
+    count: () => 0,
+    only: (c) => c,
+    toArray: (c) => Array.isArray(c) ? c : [c]
+  };
+}
+
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
