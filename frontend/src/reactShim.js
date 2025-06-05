@@ -1,1 +1,0 @@
-// File intentionally left blank. This file previously monkey-patched React.Children, which is unsafe and has been removed. If you see errors about React.Children, check your React installation and bundler configuration.

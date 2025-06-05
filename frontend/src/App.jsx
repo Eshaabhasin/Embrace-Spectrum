@@ -16,7 +16,7 @@ import NavBar from './Components/NavBar/NavBar';
 import Home from './Components/Home/Home';
 import Chatbot from './Components/Chatbot/Chatbot';
 import SentimentAnalyser from './Components/SentimentAnalysis/SentimentAnalyser';
-import GeminiLive from './Components/GeminiLive/GeminiLive';
+// import GeminiLive from './Components/GeminiLive/GeminiLive';
 import JobSearchComponent from './Components/JobSearch/JobSearch';
 import JournalBoard from './Components/JournalBoard/JournalBoard';
 import PaintAndStory from './Components/StoryGenerator/StoryGeneratorComponent';
