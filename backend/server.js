@@ -13,8 +13,9 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 app.use(cors({
-  origin: ["https://embrace-spectrum.vercel.app", "http://localhost:5173" , "https://embrace-spectrum-testing.vercel.app"], 
+  origin: ["https://embrace-spectrum.vercel.app", "http://localhost:5173" , "https://embrace-spectrum-testing.vercel.app", "https://embrace-spectrum-neuro.vercel.app"], 
   origin: [
+    "https://embrace-spectrum-neuro.vercel.app",
     "https://embrace-spectrum-testing.vercel.app",
     "https://embrace-spectrum.vercel.app",
     "http://localhost:5173"
